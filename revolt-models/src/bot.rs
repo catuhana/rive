@@ -7,16 +7,6 @@ fn if_false(t: &bool) -> bool {
     !t
 }
 
-bitflags::bitflags! {
-    /// User badge bitfield
-    #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    #[serde(transparent)]
-    pub struct BotFlags: u64 {
-        const Verified = 1;
-        const Official = 2;
-    }
-}
-
 /// Public bot
 #[derive(Deserialize, Debug, Clone)]
 pub struct PublicBot {
@@ -65,7 +55,7 @@ pub struct Bot {
 
     /// Enum of bot flags
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub flags: Option<BotFlags>,
+    pub flags: Option<u64>,
 }
 
 /// Partial representation of a bot on Revolt
@@ -106,7 +96,7 @@ pub struct PartialBot {
 
     /// Enum of bot flags
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub flags: Option<BotFlags>,
+    pub flags: Option<u64>,
 }
 
 /// Owned bot.

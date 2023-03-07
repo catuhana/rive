@@ -1,4 +1,3 @@
-use crate::permission::{Permission, UserPermission};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
@@ -47,8 +46,8 @@ pub enum ApiError {
     BotIsPrivate,
 
     // Permission errors
-    MissingPermission { permission: Permission },
-    MissingUserPermission { permission: UserPermission },
+    MissingPermission { permission: u64 },
+    MissingUserPermission { permission: u64 },
     NotElevated,
     CannotGiveMissingPermissions,
     NotOwner,
