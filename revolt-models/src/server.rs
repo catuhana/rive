@@ -69,7 +69,7 @@ pub struct SystemMessageChannels {
 
 bitflags::bitflags! {
     /// Server flag enum
-    #[derive(Deserialize)]
+    #[derive(Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     #[serde(transparent)]
     pub struct ServerFlags: u64 {
         const Verified = 1;

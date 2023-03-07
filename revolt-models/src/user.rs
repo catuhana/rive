@@ -113,7 +113,7 @@ bitflags::bitflags! {
 
 bitflags::bitflags! {
     /// User flag enum
-    #[derive(Deserialize)]
+    #[derive(Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     #[serde(transparent)]
     pub struct UserFlags: u64 {
         /// User has been suspended from the platform

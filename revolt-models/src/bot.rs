@@ -9,7 +9,7 @@ fn if_false(t: &bool) -> bool {
 
 bitflags::bitflags! {
     /// User badge bitfield
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     #[serde(transparent)]
     pub struct BotFlags: u64 {
         const Verified = 1;

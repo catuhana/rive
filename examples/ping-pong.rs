@@ -50,7 +50,7 @@ async fn main() -> Result {
 
 async fn handle_event(event: ServerToClientEvent, ctx: Arc<Context>) -> Result {
     match event {
-        ServerToClientEvent::Message { message } => {
+        ServerToClientEvent::Message(message) => {
             handle_message(message, Arc::clone(&ctx)).await?;
         }
         ServerToClientEvent::Authenticated => {

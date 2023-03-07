@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 bitflags::bitflags! {
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     #[serde(transparent)]
     #[doc = "Permission"]
     pub struct Permission: u64 {
@@ -82,7 +82,7 @@ bitflags::bitflags! {
 }
 
 bitflags::bitflags! {
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     #[serde(transparent)]
     #[doc = "User permission"]
     pub struct UserPermission: u64 {
