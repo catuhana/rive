@@ -14,10 +14,11 @@ use crate::{
 #[cfg_attr(debug_assertions, serde(deny_unknown_fields))]
 pub enum ErrorId {
     LabelMe,
-    InternalError,
+    InternalError { at: String },
     InvalidSenssion,
     OnboardingNotFinished,
     AlreadyAuthenticated,
+    MalformedData { msg: String },
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -45,10 +46,7 @@ pub enum ServerToClientEvent {
     Pong { data: u32 },
 
     /// New message
-    Message {
-        #[serde(flatten)]
-        message: Message,
-    },
+    Message(Message),
 
     /// Update existing message
     MessageUpdate {
@@ -184,11 +182,23 @@ pub enum ServerToClientEvent {
     /// Settings updated remotely
     UserSettingsUpdate { id: String, update: UserSettings },
 
+    /// User has been platform banned or deleted their account
+    ///
+    /// Clients should remove the following associated data:
+    /// - Messages
+    /// - DM Channels
+    /// - Relationships
+    /// - Server Memberships
+    ///
+    /// User flags are specified to explain why a wipe is occurring though not all reasons will necessarily ever appear.
+    UserPlatformWipe { user_id: String, flags: i32 },
+
     /// New emoji
     EmojiCreate(Emoji),
 
     /// Delete emoji
     EmojiDelete { id: String },
+
     #[serde(other)]
     Unknown,
 }

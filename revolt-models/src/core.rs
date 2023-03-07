@@ -17,6 +17,9 @@ pub struct InstanceConfiguration {
 
     /// Web Push VAPID public key
     pub vapid: String,
+
+    /// Build information
+    pub build: BuildInformation,
 }
 
 /// Features enabled on this Revolt node
@@ -82,4 +85,23 @@ pub struct VosoConfiguration {
 
     /// URL pointing to the voice WebSocket server
     pub ws: String,
+}
+
+/// Build information
+#[derive(Deserialize, Debug, Clone)]
+pub struct BuildInformation {
+    /// Commit hash
+    pub commit_sha: String,
+
+    /// Commit timestamp
+    pub commit_timestamp: String,
+
+    /// Git semver
+    pub semver: String,
+
+    /// Git origin URL
+    pub origin_url: String,
+
+    /// Build timestamp
+    pub timestamp: String,
 }
