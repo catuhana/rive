@@ -12,5 +12,5 @@ name = "ping-pong"
 path = "ping-pong.rs"
 
 [dependencies]
-futures-util = "0.3.26"
-tokio = { version = "1.26", features = ["full"] }
+futures = "0.3"
+tokio = { version = "1", features = ["full"] }
