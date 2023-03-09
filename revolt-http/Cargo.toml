@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-reqwest = { version = "0.11.14", features = ["json", "rustls-tls"] }
-serde_json = "1.0.94"
-revolt-models = { path = "../revolt-models", version = "0.1.0" }
-serde = "1.0.152"
-thiserror = "1.0.39"
-async-trait = "0.1.66"
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+serde_json = "1"
+revolt-models = { path = "../revolt-models" }
+serde = "1"
+thiserror = "1"
+async-trait = "0"
