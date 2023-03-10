@@ -81,7 +81,7 @@ impl ResponseExt for reqwest::Response {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RevoltHttp {
     base_url: String,
     client: Client,

@@ -10,12 +10,13 @@ use revolt::{
     },
     util::extensions::BuilderExt,
 };
-use std::{env, error::Error, sync::Arc, time::Duration};
-use tokio::{spawn, sync::Mutex, time::sleep};
+use std::{env, error::Error, time::Duration};
+use tokio::{spawn, time::sleep};
 
+#[derive(Clone)]
 struct Context {
     http: RevoltHttp,
-    ws: Arc<Mutex<RevoltWs>>,
+    ws: RevoltWs,
 }
 
 type Result<T = ()> = std::result::Result<T, Box<dyn Error + Send + Sync>>;
@@ -26,33 +27,27 @@ async fn main() -> Result {
 
     let http = RevoltHttp::new(Authentication::BotToken(token.clone()));
     let ws = RevoltWs::connect().await?;
-    let ws = Arc::new(Mutex::new(ws));
 
-    let ctx = Arc::new(Context { http, ws });
+    let ctx = Context { http, ws };
 
-    authenticate(ctx.clone(), token.to_owned()).await?;
+    authenticate(&ctx, token.to_owned()).await?;
     spawn_heartbeat(ctx.clone()).await?;
     listen_to_events(ctx.clone()).await?;
 
     Ok(())
 }
 
-async fn authenticate(ctx: Arc<Context>, token: String) -> Result {
+async fn authenticate(ctx: &Context, token: String) -> Result {
     ctx.ws
-        .lock()
-        .await
         .send(ClientToServerEvent::Authenticate { token })
         .await?;
     Ok(())
 }
 
-async fn spawn_heartbeat(ctx: Arc<Context>) -> Result {
-    let heartbeat_ws = Arc::clone(&ctx.ws);
+async fn spawn_heartbeat(ctx: Context) -> Result {
     spawn(async move {
         loop {
-            heartbeat_ws
-                .lock()
-                .await
+            ctx.ws
                 .send(ClientToServerEvent::Ping { data: 0 })
                 .await
                 .unwrap();
@@ -62,18 +57,19 @@ async fn spawn_heartbeat(ctx: Arc<Context>) -> Result {
     Ok(())
 }
 
-async fn listen_to_events(ctx: Arc<Context>) -> Result {
-    while let Some(event) = ctx.ws.lock().await.next().await {
-        let event = dbg!(event?);
-        handle_event(event, Arc::clone(&ctx)).await?;
+async fn listen_to_events(ctx: Context) -> Result {
+    while let Some(event) = ctx.ws.clone().next().await {
+        // let event = dbg!(event?);
+        let event = event?;
+        handle_event(event, ctx.clone()).await?;
     }
     Ok(())
 }
 
-async fn handle_event(event: ServerToClientEvent, ctx: Arc<Context>) -> Result {
+async fn handle_event(event: ServerToClientEvent, ctx: Context) -> Result {
     match event {
         ServerToClientEvent::Message(message) => {
-            handle_message(message, Arc::clone(&ctx)).await?;
+            handle_message(message, ctx).await?;
         }
         ServerToClientEvent::Authenticated => {
             println!("Client is authenticated");
@@ -84,11 +80,11 @@ async fn handle_event(event: ServerToClientEvent, ctx: Arc<Context>) -> Result {
     Ok(())
 }
 
-async fn handle_message(message: Message, ctx: Arc<Context>) -> Result {
+async fn handle_message(message: Message, ctx: Context) -> Result {
     if let Some(ref content) = message.content {
         match content.as_str() {
-            "!ping" => ping(message, Arc::clone(&ctx)).await?,
-            "!pong" => pong(message, Arc::clone(&ctx)).await?,
+            "!ping" => ping(message, ctx).await?,
+            "!pong" => pong(message, ctx).await?,
             _ => {}
         };
     }
@@ -96,14 +92,14 @@ async fn handle_message(message: Message, ctx: Arc<Context>) -> Result {
     Ok(())
 }
 
-async fn ping(message: Message, ctx: Arc<Context>) -> Result {
+async fn ping(message: Message, ctx: Context) -> Result {
     let payload = SendMessagePayload::builder().content("Pong!").build();
     ctx.http.send_message(message.channel, payload).await?;
 
     Ok(())
 }
 
-async fn pong(message: Message, ctx: Arc<Context>) -> Result {
+async fn pong(message: Message, ctx: Context) -> Result {
     let payload = SendMessagePayload::builder().content("Ping!").build();
     ctx.http.send_message(message.channel, payload).await?;
 

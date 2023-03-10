@@ -1,6 +1,10 @@
-use futures::{SinkExt, Stream, StreamExt};
+use async_channel::{self, Receiver, Sender};
+use futures::{
+    stream::{SplitSink, SplitStream},
+    SinkExt, Stream, StreamExt,
+};
 use revolt_models::event::{ClientToServerEvent, ServerToClientEvent};
-use tokio::net::TcpStream;
+use tokio::{net::TcpStream, select, spawn};
 use tokio_tungstenite::{tungstenite::Message, MaybeTlsStream, WebSocketStream};
 
 #[derive(Debug, thiserror::Error)]
@@ -13,9 +17,10 @@ pub enum Error {
 }
 
 /// A wrapper for Revolt WebSocket API
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RevoltWs {
-    socket: WebSocketStream<MaybeTlsStream<TcpStream>>,
+    client_sender: Sender<ClientToServerEvent>,
+    server_receiver: Receiver<Result<ServerToClientEvent, Error>>,
 }
 
 impl RevoltWs {
@@ -27,14 +32,52 @@ impl RevoltWs {
     /// Connect to gateway with specified URL
     pub async fn connect_with_url(url: String) -> Result<Self, Error> {
         let (socket, _) = tokio_tungstenite::connect_async(url).await?;
+        let (socket_sink, socket_stream) = socket.split();
+        let (client_sender, client_receiver) = async_channel::unbounded();
+        let (server_sender, server_receiver) = async_channel::unbounded();
 
-        Ok(RevoltWs { socket })
+        let revolt = RevoltWs {
+            client_sender,
+            server_receiver,
+        };
+
+        spawn(RevoltWs::handle(
+            client_receiver,
+            socket_sink,
+            server_sender,
+            socket_stream,
+        ));
+
+        Ok(revolt)
     }
 
     /// Send an event to server
-    pub async fn send(&mut self, event: ClientToServerEvent) -> Result<(), Error> {
-        let msg = Self::encode_client_event(event)?;
-        self.socket.send(msg).await.map_err(Error::from)?;
+    pub async fn send(&self, event: ClientToServerEvent) -> Result<(), Error> {
+        self.client_sender.send(event).await.unwrap();
+
+        Ok(())
+    }
+
+    async fn handle(
+        mut client_receiver: Receiver<ClientToServerEvent>,
+        mut sink: SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>,
+        server_sender: Sender<Result<ServerToClientEvent, Error>>,
+        mut stream: SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
+    ) -> Result<(), Error> {
+        loop {
+            select! {
+                Some(event) = client_receiver.next() => {
+                    let msg = Self::encode_client_event(event)?;
+                    sink.send(msg).await?;
+                },
+                Some(msg) = stream.next() => {
+                    let msg = msg.map_err(Error::from)?;
+                    let event = Self::decode_server_event(msg);
+                    server_sender.send(event).await.unwrap();
+                },
+                else => break,
+            };
+        }
 
         Ok(())
     }
@@ -61,9 +104,6 @@ impl Stream for RevoltWs {
         mut self: std::pin::Pin<&mut Self>,
         cx: &mut std::task::Context<'_>,
     ) -> std::task::Poll<Option<Self::Item>> {
-        self.socket
-            .poll_next_unpin(cx)
-            .map_ok(Self::decode_server_event)
-            .map_err(Error::from)?
+        self.server_receiver.poll_next_unpin(cx)
     }
 }
