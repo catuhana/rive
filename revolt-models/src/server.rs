@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{attachment::Attachment, permission::OverrideField};
+use crate::{
+    attachment::Attachment,
+    permission::{OverrideField, Permission},
+};
 
 /// Representation of a server role
 #[derive(Deserialize, Debug, Clone)]
@@ -64,6 +67,16 @@ pub struct SystemMessageChannels {
     pub user_banned: Option<String>,
 }
 
+bitflags::bitflags! {
+    /// Server flag enum
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct ServerFlags: u64 {
+        const Verified = 1;
+        const Official = 2;
+    }
+}
+crate::impl_serde_bitflags!(ServerFlags);
+
 /// Representation of a server on Revolt
 #[derive(Deserialize, Debug, Clone)]
 pub struct Server {
@@ -90,7 +103,7 @@ pub struct Server {
     #[serde(default = "HashMap::<String, Role>::new")]
     pub roles: HashMap<String, Role>,
     /// Default set of server and channel permissions
-    pub default_permissions: u64,
+    pub default_permissions: Permission,
 
     /// Icon attachment
     pub icon: Option<Attachment>,
@@ -98,7 +111,7 @@ pub struct Server {
     pub banner: Option<Attachment>,
 
     /// Enum of server flags
-    pub flags: Option<u64>,
+    pub flags: Option<ServerFlags>,
 
     /// Whether this server is flagged as not safe for work
     #[serde(default)]
@@ -133,7 +146,7 @@ pub struct PartialServer {
     /// Roles for this server
     pub roles: Option<HashMap<String, Role>>,
     /// Default set of server and channel permissions
-    pub default_permissions: Option<u64>,
+    pub default_permissions: Option<Permission>,
 
     /// Icon attachment
     pub icon: Option<Attachment>,
@@ -141,7 +154,7 @@ pub struct PartialServer {
     pub banner: Option<Attachment>,
 
     /// Enum of server flags
-    pub flags: Option<u64>,
+    pub flags: Option<ServerFlags>,
 
     /// Whether this server is flagged as not safe for work
     pub nsfw: Option<bool>,

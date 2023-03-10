@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{attachment::Attachment, permission::OverrideField};
+use crate::{
+    attachment::Attachment,
+    permission::{OverrideField, Permission},
+};
 
 /// Representation of a channel on Revolt
 #[derive(Deserialize, Debug, Clone)]
@@ -53,7 +56,7 @@ pub enum Channel {
 
         /// Permissions assigned to members of this group
         /// (does not apply to the owner of the group)
-        permissions: Option<i64>,
+        permissions: Option<Permission>,
 
         /// Whether this group is marked as not safe for work
         #[serde(default)]
@@ -132,7 +135,7 @@ pub struct PartialChannel {
     /// Whether this direct message channel is currently open on both sides
     pub active: Option<bool>,
     /// Permissions assigned to members of this channel
-    pub permissions: Option<i64>,
+    pub permissions: Option<Permission>,
     /// Permissions assigned based on role to this channel
     pub role_permissions: Option<HashMap<String, OverrideField>>,
     /// Default permissions assigned to users in this channel

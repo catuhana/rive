@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::permission::{Permission, UserPermission};
+
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[serde(tag = "type")]
 pub enum ApiError {
@@ -46,8 +48,8 @@ pub enum ApiError {
     BotIsPrivate,
 
     // Permission errors
-    MissingPermission { permission: u64 },
-    MissingUserPermission { permission: u64 },
+    MissingPermission { permission: Permission },
+    MissingUserPermission { permission: UserPermission },
     NotElevated,
     CannotGiveMissingPermissions,
     NotOwner,

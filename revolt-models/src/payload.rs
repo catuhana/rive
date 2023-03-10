@@ -5,7 +5,7 @@ use crate::{
     channel::{ChannelType, FieldsChannel},
     embed::SendableEmbed,
     message::{Interactions, Masquerade, MessageSort, Reply},
-    permission::Override,
+    permission::{Override, Permission},
     server::{Category, FieldsServer, SystemMessageChannels},
     user::{FieldsUser, PartialUserProfile, UserStatus},
 };
@@ -105,7 +105,7 @@ pub struct SetRolePermissionPayload {
 pub enum SetDefaultPermissionPayload {
     Value {
         /// Permission values to set for members in a [Channel::Group]
-        permissions: u64,
+        permissions: Permission,
     },
     Field {
         /// Allow / deny values to set for members in this [Channels::TextChannel] or [Channels::VoiceChannel]
