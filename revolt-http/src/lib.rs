@@ -76,7 +76,7 @@ impl ResponseExt for reqwest::Response {
                 return Err(RevoltHttpError::Api(ApiError::Unauthenticated));
             }
 
-            Err(RevoltHttpError::Api(ApiError::from(self.json().await?)))
+            Err(RevoltHttpError::Api(self.json().await?))
         }
     }
 }

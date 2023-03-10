@@ -1,6 +1,6 @@
 use revolt_models::payload::SendMessagePayload;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct SendMessagePayloadBuilder {
     content: Option<String>,
 }
