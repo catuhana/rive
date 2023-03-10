@@ -1,8 +1,5 @@
 use async_channel::{self, Receiver, Sender};
-use futures::{
-    stream::{SplitSink, SplitStream},
-    SinkExt, Stream, StreamExt,
-};
+use futures::{SinkExt, Stream, StreamExt};
 use revolt_models::event::{ClientToServerEvent, ServerToClientEvent};
 use tokio::{net::TcpStream, select, spawn};
 use tokio_tungstenite::{tungstenite::Message, MaybeTlsStream, WebSocketStream};
