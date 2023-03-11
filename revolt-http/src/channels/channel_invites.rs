@@ -1,12 +1,11 @@
-use revolt_models::channel::Invite;
-
 use crate::prelude::*;
+use revolt_models::channel::PartialInvite;
 
 impl RevoltHttp {
     /// Creates an invite to this channel.
     ///
     /// Channel must be a [Channel::TextChannel].
-    pub async fn create_invite(&self, id: impl Into<String>) -> Result<Invite> {
+    pub async fn create_invite(&self, id: impl Into<String>) -> Result<PartialInvite> {
         Ok(self
             .client
             .post(ep!(self, "/channels/{}/invites", id.into()))

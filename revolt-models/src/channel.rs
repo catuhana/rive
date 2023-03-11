@@ -168,7 +168,7 @@ pub enum FieldsChannel {
 /// Representation of an invite to a channel on Revolt
 #[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "type")]
-pub enum Invite {
+pub enum PartialInvite {
     /// Invite to a specific server channel
     Server {
         /// Invite code

@@ -6,6 +6,7 @@ pub mod core;
 pub mod embed;
 pub mod emoji;
 pub mod event;
+pub mod invite;
 pub mod member;
 pub mod message;
 pub mod payload;
