@@ -1,5 +1,6 @@
 mod bots;
 mod channels;
+mod customisation;
 mod invites;
 mod revolt;
 mod servers;

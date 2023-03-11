@@ -4,6 +4,7 @@ use crate::{
     bot::FieldsBot,
     channel::{ChannelType, FieldsChannel},
     embed::SendableEmbed,
+    emoji::EmojiParent,
     message::{Interactions, Masquerade, MessageSort, Reply},
     permission::{Override, Permission},
     server::{Category, FieldsServer, SystemMessageChannels},
@@ -315,4 +316,15 @@ pub struct CreateChannelPayload {
     /// Whether this channel is age restricted
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nsfw: Option<bool>,
+}
+
+/// Create emoji data
+#[derive(Serialize, Debug, Clone)]
+pub struct CreateEmojiPayload {
+    /// Server name
+    name: String,
+    /// Parent information
+    parent: EmojiParent,
+    /// Whether the emoji is mature
+    nsfw: bool,
 }
