@@ -192,3 +192,25 @@ pub enum PartialInvite {
         channel: String,
     },
 }
+
+/// Composite primary key consisting of channel and user ID
+#[derive(Deserialize, Debug, PartialEq, Clone)]
+pub struct ChannelCompositeKey {
+    /// Channel ID
+    pub channel: String,
+    /// User ID
+    pub user: String,
+}
+
+/// Representation of the state of a channel from the perspective of a user
+#[derive(Deserialize, Debug, Clone)]
+pub struct ChannelUnread {
+    /// Composite key pointing to a user's view of a channel
+    #[serde(rename = "_id")]
+    pub id: ChannelCompositeKey,
+
+    /// ID of the last message read in this channel by a user
+    pub last_id: Option<String>,
+    /// Array of message ids that mention the user
+    pub mentions: Option<Vec<String>>,
+}

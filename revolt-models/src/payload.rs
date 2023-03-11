@@ -328,3 +328,10 @@ pub struct CreateEmojiPayload {
     /// Whether the emoji is mature
     nsfw: bool,
 }
+
+/// Fetch settings data
+#[derive(Serialize, Debug, Clone)]
+pub struct FetchSettingsPayload {
+    /// Keys to fetch
+    keys: Vec<String>,
+}
