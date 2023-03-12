@@ -335,3 +335,11 @@ pub struct FetchSettingsPayload {
     /// Keys to fetch
     keys: Vec<String>,
 }
+
+/// Web push subscription data
+#[derive(Serialize, Debug, Clone)]
+pub struct PushSubscribePayload {
+    endpoint: String,
+    p256dh: String,
+    auth: String,
+}
