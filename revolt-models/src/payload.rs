@@ -7,7 +7,7 @@ use crate::{
     emoji::EmojiParent,
     message::{Interactions, Masquerade, MessageSort, Reply},
     permission::{Override, Permission},
-    server::{Category, FieldsServer, SystemMessageChannels},
+    server::{Category, FieldsRole, FieldsServer, SystemMessageChannels},
     user::{FieldsUser, PartialUserProfile, UserStatus},
 };
 
@@ -342,4 +342,52 @@ pub struct PushSubscribePayload {
     endpoint: String,
     p256dh: String,
     auth: String,
+}
+
+/// Create role data
+#[derive(Serialize, Debug, Clone)]
+pub struct CreateRolePayload {
+    /// Role name
+    name: String,
+    /// Ranking position
+    ///
+    /// Smaller values take priority.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    rank: Option<i64>,
+}
+
+/// Edit role data
+#[derive(Serialize, Debug, Clone)]
+pub struct EditRolePayload {
+    /// Role name
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name: Option<String>,
+    /// Role colour
+    #[serde(skip_serializing_if = "Option::is_none")]
+    colour: Option<String>,
+    /// Whether this role should be displayed separately
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hoist: Option<bool>,
+    /// Ranking position
+    ///
+    /// Smaller values take priority.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    rank: Option<i64>,
+    /// Fields to remove from role object
+    #[serde(skip_serializing_if = "Option::is_none")]
+    remove: Option<Vec<FieldsRole>>,
+}
+
+/// Server role permission value
+#[derive(Serialize, Debug, Clone)]
+pub struct SetServerRolePermissionPayload {
+    /// Allow / deny values for the role in this server.
+    permissions: Override,
+}
+
+/// Default server role permission value
+#[derive(Serialize, Debug, Clone)]
+pub struct SetDefaultRolePermissionPayload {
+    /// Allow / deny values for the role in this server.
+    permissions: Override,
 }

@@ -26,6 +26,15 @@ pub struct Role {
     pub rank: i64,
 }
 
+/// New role response
+#[derive(Deserialize, Debug, Clone)]
+pub struct NewRole {
+    /// ID of the role
+    pub id: String,
+    /// New role
+    pub role: Role,
+}
+
 /// Partial representation of a server role
 #[derive(Deserialize, Debug, Clone)]
 pub struct PartialRole {
@@ -175,7 +184,7 @@ pub enum FieldsServer {
 }
 
 /// Optional fields on server object
-#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum FieldsRole {
     Colour,
 }
