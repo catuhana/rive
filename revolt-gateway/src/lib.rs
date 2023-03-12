@@ -11,6 +11,12 @@ pub enum Error {
 
     #[error("Serde JSON deserialization/serialization error: {0}")]
     SerializationError(#[from] serde_json::Error),
+
+    #[error("Client event sender error: {0}")]
+    ClientSenderError(#[from] async_channel::SendError<ClientToServerEvent>),
+
+    #[error("Server event sender error: {0}")]
+    ServerSenderError(#[from] Box<async_channel::SendError<Result<ServerToClientEvent, Error>>>),
 }
 
 /// A wrapper for Revolt WebSocket API
@@ -44,7 +50,7 @@ impl RevoltWs {
 
     /// Send an event to server
     pub async fn send(&self, event: ClientToServerEvent) -> Result<(), Error> {
-        self.client_sender.send(event).await.unwrap();
+        self.client_sender.send(event).await.map_err(Error::from)?;
 
         Ok(())
     }
@@ -63,7 +69,7 @@ impl RevoltWs {
                 Some(msg) = socket.next() => {
                     let msg = msg.map_err(Error::from)?;
                     let event = Self::decode_server_event(msg);
-                    server_sender.send(event).await.unwrap();
+                    server_sender.send(event).await.map_err(|err| Error::from(Box::new(err)))?;
                 },
                 else => break,
             };
