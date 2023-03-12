@@ -322,38 +322,38 @@ pub struct CreateChannelPayload {
 #[derive(Serialize, Debug, Clone)]
 pub struct CreateEmojiPayload {
     /// Server name
-    name: String,
+    pub name: String,
     /// Parent information
-    parent: EmojiParent,
+    pub parent: EmojiParent,
     /// Whether the emoji is mature
-    nsfw: bool,
+    pub nsfw: bool,
 }
 
 /// Fetch settings data
 #[derive(Serialize, Debug, Clone)]
 pub struct FetchSettingsPayload {
     /// Keys to fetch
-    keys: Vec<String>,
+    pub keys: Vec<String>,
 }
 
 /// Web push subscription data
 #[derive(Serialize, Debug, Clone)]
 pub struct PushSubscribePayload {
-    endpoint: String,
-    p256dh: String,
-    auth: String,
+    pub endpoint: String,
+    pub p256dh: String,
+    pub auth: String,
 }
 
 /// Create role data
 #[derive(Serialize, Debug, Clone)]
 pub struct CreateRolePayload {
     /// Role name
-    name: String,
+    pub name: String,
     /// Ranking position
     ///
     /// Smaller values take priority.
     #[serde(skip_serializing_if = "Option::is_none")]
-    rank: Option<i64>,
+    pub rank: Option<i64>,
 }
 
 /// Edit role data
@@ -361,33 +361,33 @@ pub struct CreateRolePayload {
 pub struct EditRolePayload {
     /// Role name
     #[serde(skip_serializing_if = "Option::is_none")]
-    name: Option<String>,
+    pub name: Option<String>,
     /// Role colour
     #[serde(skip_serializing_if = "Option::is_none")]
-    colour: Option<String>,
+    pub colour: Option<String>,
     /// Whether this role should be displayed separately
     #[serde(skip_serializing_if = "Option::is_none")]
-    hoist: Option<bool>,
+    pub hoist: Option<bool>,
     /// Ranking position
     ///
     /// Smaller values take priority.
     #[serde(skip_serializing_if = "Option::is_none")]
-    rank: Option<i64>,
+    pub rank: Option<i64>,
     /// Fields to remove from role object
     #[serde(skip_serializing_if = "Option::is_none")]
-    remove: Option<Vec<FieldsRole>>,
+    pub remove: Option<Vec<FieldsRole>>,
 }
 
 /// Server role permission value
 #[derive(Serialize, Debug, Clone)]
 pub struct SetServerRolePermissionPayload {
     /// Allow / deny values for the role in this server.
-    permissions: Override,
+    pub permissions: Override,
 }
 
 /// Default server role permission value
 #[derive(Serialize, Debug, Clone)]
 pub struct SetDefaultRolePermissionPayload {
     /// Allow / deny values for the role in this server.
-    permissions: Override,
+    pub permissions: Override,
 }
