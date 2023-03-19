@@ -4,7 +4,7 @@ use rive_models::{
     user::{User, UserProfile},
 };
 
-impl RevoltHttp {
+impl Client {
     /// Retrieve your user information.
     pub async fn fetch_self(&self) -> Result<User> {
         Ok(self

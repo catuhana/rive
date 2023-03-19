@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::channel::PartialInvite;
 
-impl RevoltHttp {
+impl Client {
     /// Creates an invite to this channel.
     ///
     /// Channel must be a [Channel::TextChannel].

@@ -2,7 +2,7 @@ use rive_models::core::InstanceConfiguration;
 
 use crate::prelude::*;
 
-impl RevoltHttp {
+impl Client {
     pub async fn query_node(&self) -> Result<InstanceConfiguration> {
         Ok(self
             .client

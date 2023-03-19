@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::invite::{Invite, InviteJoin};
 
-impl RevoltHttp {
+impl Client {
     /// Fetch an invite by its ID.
     pub async fn fetch_invite(&self, id: impl Into<String>) -> Result<Invite> {
         Ok(self

@@ -7,7 +7,7 @@ use rive_models::{
     server::{NewRole, Role, Server},
 };
 
-impl RevoltHttp {
+impl Client {
     /// Creates a new server role.
     pub async fn create_role(
         &self,

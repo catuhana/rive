@@ -1,6 +1,6 @@
 use async_channel::{self, Receiver, Sender};
 use futures::{SinkExt, Stream, StreamExt};
-use rive_models::event::{ClientToServerEvent, ServerToClientEvent};
+use rive_models::event::{ClientEvent, ServerEvent};
 use tokio::{net::TcpStream, select, spawn};
 use tokio_tungstenite::{tungstenite::Message, MaybeTlsStream, WebSocketStream};
 
@@ -13,23 +13,23 @@ pub enum Error {
     SerializationError(#[from] serde_json::Error),
 
     #[error("Client event sender error: {0}")]
-    ClientSenderError(#[from] async_channel::SendError<ClientToServerEvent>),
+    ClientSenderError(#[from] async_channel::SendError<ClientEvent>),
 
     #[error("Server event sender error: {0}")]
-    ServerSenderError(#[from] Box<async_channel::SendError<Result<ServerToClientEvent, Error>>>),
+    ServerSenderError(#[from] Box<async_channel::SendError<Result<ServerEvent, Error>>>),
 }
 
 /// A wrapper for Revolt WebSocket API
 #[derive(Debug, Clone)]
-pub struct RevoltWs {
-    client_sender: Sender<ClientToServerEvent>,
-    server_receiver: Receiver<Result<ServerToClientEvent, Error>>,
+pub struct Gateway {
+    client_sender: Sender<ClientEvent>,
+    server_receiver: Receiver<Result<ServerEvent, Error>>,
 }
 
-impl RevoltWs {
+impl Gateway {
     /// Connect to gateway with default Revolt WebSocket URL
     pub async fn connect() -> Result<Self, Error> {
-        RevoltWs::connect_with_url("wss://ws.revolt.chat".to_string()).await
+        Gateway::connect_with_url("wss://ws.revolt.chat".to_string()).await
     }
 
     /// Connect to gateway with specified URL
@@ -38,26 +38,26 @@ impl RevoltWs {
         let (client_sender, client_receiver) = async_channel::unbounded();
         let (server_sender, server_receiver) = async_channel::unbounded();
 
-        let revolt = RevoltWs {
+        let revolt = Gateway {
             client_sender,
             server_receiver,
         };
 
-        spawn(RevoltWs::handle(client_receiver, server_sender, socket));
+        spawn(Gateway::handle(client_receiver, server_sender, socket));
 
         Ok(revolt)
     }
 
     /// Send an event to server
-    pub async fn send(&self, event: ClientToServerEvent) -> Result<(), Error> {
+    pub async fn send(&self, event: ClientEvent) -> Result<(), Error> {
         self.client_sender.send(event).await.map_err(Error::from)?;
 
         Ok(())
     }
 
     async fn handle(
-        mut client_receiver: Receiver<ClientToServerEvent>,
-        server_sender: Sender<Result<ServerToClientEvent, Error>>,
+        mut client_receiver: Receiver<ClientEvent>,
+        server_sender: Sender<Result<ServerEvent, Error>>,
         mut socket: WebSocketStream<MaybeTlsStream<TcpStream>>,
     ) -> Result<(), Error> {
         loop {
@@ -78,14 +78,14 @@ impl RevoltWs {
         Ok(())
     }
 
-    fn encode_client_event(event: ClientToServerEvent) -> Result<Message, Error> {
+    fn encode_client_event(event: ClientEvent) -> Result<Message, Error> {
         let json = serde_json::to_string(&event).map_err(Error::from)?;
         let msg = Message::Text(json);
 
         Ok(msg)
     }
 
-    fn decode_server_event(msg: Message) -> Result<ServerToClientEvent, Error> {
+    fn decode_server_event(msg: Message) -> Result<ServerEvent, Error> {
         let text = msg.to_text().map_err(Error::from)?;
         let event = serde_json::from_str(text).map_err(Error::from)?;
 
@@ -93,8 +93,8 @@ impl RevoltWs {
     }
 }
 
-impl Stream for RevoltWs {
-    type Item = Result<ServerToClientEvent, Error>;
+impl Stream for Gateway {
+    type Item = Result<ServerEvent, Error>;
 
     fn poll_next(
         mut self: std::pin::Pin<&mut Self>,

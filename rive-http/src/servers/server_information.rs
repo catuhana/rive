@@ -5,7 +5,7 @@ use rive_models::{
     server::Server,
 };
 
-impl RevoltHttp {
+impl Client {
     /// Create a new server.
     pub async fn create_server(&self, payload: CreateServerPayload) -> Result<Server> {
         Ok(self

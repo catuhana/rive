@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::{channel::Channel, payload::CreateGroupPayload, user::User};
 
-impl RevoltHttp {
+impl Client {
     /// Retrieves all users who are part of this group.
     pub async fn fetch_group_members(&self, id: impl Into<String>) -> Result<Vec<User>> {
         Ok(self

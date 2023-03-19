@@ -4,7 +4,7 @@ use rive_models::{
     payload::{CreateBotPayload, EditBotPayload, InviteBotPayload},
 };
 
-impl RevoltHttp {
+impl Client {
     /// Create a new Revolt bot.
     pub async fn create_bot(&self, payload: CreateBotPayload) -> Result<Bot> {
         Ok(self

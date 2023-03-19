@@ -4,7 +4,7 @@ use rive_models::{
     payload::{SetDefaultPermissionPayload, SetRolePermissionPayload},
 };
 
-impl RevoltHttp {
+impl Client {
     /// Sets permissions for the specified role in this channel.
     ///
     /// Channel must be a [Channel::TextChannel] or [Channel::VoiceChannel].

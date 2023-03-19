@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::payload::PushSubscribePayload;
 
-impl RevoltHttp {
+impl Client {
     /// Create a new Web Push subscription.
     ///
     /// If an existing subscription exists on this session, it will be removed.

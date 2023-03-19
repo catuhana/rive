@@ -2,7 +2,7 @@ use crate::prelude::*;
 use rive_models::{channel::ChannelUnread, payload::FetchMessagesPayload, user::UserSettings};
 use std::collections::HashMap;
 
-impl RevoltHttp {
+impl Client {
     /// Fetch settings from server filtered by keys.
     pub async fn fetch_settings(&self, payload: FetchMessagesPayload) -> Result<UserSettings> {
         Ok(self

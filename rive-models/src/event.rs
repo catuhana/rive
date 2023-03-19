@@ -21,11 +21,12 @@ pub enum ErrorId {
     MalformedData { msg: String },
 }
 
+/// Event sent by server
 #[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "type")]
-pub enum ServerToClientEvent {
+pub enum ServerEvent {
     /// Multiple events
-    Bulk { v: Vec<ServerToClientEvent> },
+    Bulk { v: Vec<ServerEvent> },
 
     /// Error
     Error { error: ErrorId },
@@ -203,9 +204,10 @@ pub enum ServerToClientEvent {
     Unknown,
 }
 
+/// Event sent by client
 #[derive(Serialize, Debug, Clone, Eq, PartialEq)]
 #[serde(tag = "type")]
-pub enum ClientToServerEvent {
+pub enum ClientEvent {
     Authenticate { token: String },
     Ping { data: i32 },
     BeginTyping { channel: String },

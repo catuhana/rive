@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::{channel::Channel, payload::EditChannelPayload};
 
-impl RevoltHttp {
+impl Client {
     /// Fetch channel by its ID.
     pub async fn fetch_channel(&self, id: impl Into<String>) -> Result<Channel> {
         Ok(self

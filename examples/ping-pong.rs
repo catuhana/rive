@@ -1,10 +1,10 @@
 use futures::StreamExt;
-use revolt::{
-    gateway::RevoltWs,
-    http::RevoltHttp,
+use rive::{
+    gateway::Gateway,
+    http::Client,
     models::{
         authentication::Authentication,
-        event::{ClientToServerEvent, ServerToClientEvent},
+        event::{ClientEvent, ServerEvent},
         message::Message,
         payload::SendMessagePayload,
     },
@@ -15,8 +15,8 @@ use tokio::{spawn, time::sleep};
 
 #[derive(Clone)]
 struct Context {
-    http: RevoltHttp,
-    ws: RevoltWs,
+    client: Client,
+    gateway: Gateway,
 }
 
 type Result<T = ()> = std::result::Result<T, Box<dyn Error + Send + Sync>>;
@@ -25,10 +25,10 @@ type Result<T = ()> = std::result::Result<T, Box<dyn Error + Send + Sync>>;
 async fn main() -> Result {
     let token = env::var("TOKEN")?;
 
-    let http = RevoltHttp::new(Authentication::BotToken(token.clone()));
-    let ws = RevoltWs::connect().await?;
+    let client = Client::new(Authentication::BotToken(token.clone()));
+    let gateway = Gateway::connect().await?;
 
-    let ctx = Context { http, ws };
+    let ctx = Context { client, gateway };
 
     authenticate(&ctx, token.to_owned()).await?;
     spawn_heartbeat(ctx.clone()).await?;
@@ -38,8 +38,8 @@ async fn main() -> Result {
 }
 
 async fn authenticate(ctx: &Context, token: String) -> Result {
-    ctx.ws
-        .send(ClientToServerEvent::Authenticate { token })
+    ctx.gateway
+        .send(ClientEvent::Authenticate { token })
         .await?;
     Ok(())
 }
@@ -47,8 +47,8 @@ async fn authenticate(ctx: &Context, token: String) -> Result {
 async fn spawn_heartbeat(ctx: Context) -> Result {
     spawn(async move {
         loop {
-            ctx.ws
-                .send(ClientToServerEvent::Ping { data: 0 })
+            ctx.gateway
+                .send(ClientEvent::Ping { data: 0 })
                 .await
                 .unwrap();
             sleep(Duration::from_secs(15)).await;
@@ -58,7 +58,7 @@ async fn spawn_heartbeat(ctx: Context) -> Result {
 }
 
 async fn listen_to_events(ctx: Context) -> Result {
-    while let Some(event) = ctx.ws.clone().next().await {
+    while let Some(event) = ctx.gateway.clone().next().await {
         // let event = dbg!(event?);
         let event = event?;
         handle_event(event, ctx.clone()).await?;
@@ -66,12 +66,12 @@ async fn listen_to_events(ctx: Context) -> Result {
     Ok(())
 }
 
-async fn handle_event(event: ServerToClientEvent, ctx: Context) -> Result {
+async fn handle_event(event: ServerEvent, ctx: Context) -> Result {
     match event {
-        ServerToClientEvent::Message(message) => {
+        ServerEvent::Message(message) => {
             handle_message(message, ctx).await?;
         }
-        ServerToClientEvent::Authenticated => {
+        ServerEvent::Authenticated => {
             println!("Client is authenticated");
         }
         _ => {}
@@ -94,14 +94,14 @@ async fn handle_message(message: Message, ctx: Context) -> Result {
 
 async fn ping(message: Message, ctx: Context) -> Result {
     let payload = SendMessagePayload::builder().content("Pong!").build();
-    ctx.http.send_message(message.channel, payload).await?;
+    ctx.client.send_message(message.channel, payload).await?;
 
     Ok(())
 }
 
 async fn pong(message: Message, ctx: Context) -> Result {
     let payload = SendMessagePayload::builder().content("Ping!").build();
-    ctx.http.send_message(message.channel, payload).await?;
+    ctx.client.send_message(message.channel, payload).await?;
 
     Ok(())
 }

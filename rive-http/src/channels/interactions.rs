@@ -2,7 +2,7 @@ use rive_models::payload::RemoveReactionToMessagePayload;
 
 use crate::prelude::*;
 
-impl RevoltHttp {
+impl Client {
     /// React to a given message.
     pub async fn add_reaction_to_message(
         &self,

@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::channel::Channel;
 
-impl RevoltHttp {
+impl Client {
     /// This fetches your direct messages, including any DM and group DM conversations.
     pub async fn fetch_direct_message_channels(&self) -> Result<Vec<Channel>> {
         Ok(self
@@ -15,7 +15,7 @@ impl RevoltHttp {
             .json()
             .await?)
     }
-    
+
     /// Open a DM with another user.
     ///
     /// If the target is oneself, a saved messages channel is returned.

@@ -4,7 +4,7 @@ use rive_models::{
     user::{Mutuals, User},
 };
 
-impl RevoltHttp {
+impl Client {
     /// This fetches your direct messages, including any DM and group DM conversations.
     pub async fn fetch_mutual_friends_and_servers(&self, id: impl Into<String>) -> Result<Mutuals> {
         Ok(self

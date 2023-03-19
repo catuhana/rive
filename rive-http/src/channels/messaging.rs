@@ -7,7 +7,7 @@ use rive_models::{
     },
 };
 
-impl RevoltHttp {
+impl Client {
     /// Lets the server and all other clients know that we've seen this message id in this channel.
     pub async fn acknowledge_message(
         &self,

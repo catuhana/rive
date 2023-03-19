@@ -2,7 +2,7 @@ use rive_models::{emoji::Emoji, payload::CreateEmojiPayload};
 
 use crate::prelude::*;
 
-impl RevoltHttp {
+impl Client {
     /// Fetch an emoji by its ID.
     pub async fn fetch_emoji(&self, id: impl Into<String>) -> Result<Emoji> {
         Ok(self
