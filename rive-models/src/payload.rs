@@ -11,7 +11,7 @@ use crate::{
     user::{FieldsUser, PartialUserProfile, UserStatus},
 };
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct SendMessagePayload {
     /// Message content to send
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -36,7 +36,7 @@ pub struct SendMessagePayload {
 }
 
 /// User data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditUserPayload {
     /// New user status
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -71,7 +71,7 @@ pub struct SendFriendRequestPayload {
 }
 
 /// Edit channel data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditChannelPayload {
     /// Channel name
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -94,7 +94,7 @@ pub struct EditChannelPayload {
 }
 
 /// Set role permission payload data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct SetRolePermissionPayload {
     /// Representation of a single permission override
     pub permissions: Override,
@@ -115,7 +115,7 @@ pub enum SetDefaultPermissionPayload {
 }
 
 /// Query parameters
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct FetchMessagesPayload {
     /// Maximum number of messages to fetch
     ///
@@ -144,7 +144,7 @@ pub struct FetchMessagesPayload {
 }
 
 /// Search Parameters
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct SearchForMessagesPayload {
     /// Full-text search query
     ///
@@ -171,7 +171,7 @@ pub struct SearchForMessagesPayload {
 }
 
 /// Message details
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditMessagePayload {
     /// New message content
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -189,7 +189,7 @@ pub struct BulkDeleteMessagesPayload {
 }
 
 /// Reactions remove options
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct RemoveReactionToMessagePayload {
     /// Remove a specific user's reaction
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -200,7 +200,7 @@ pub struct RemoveReactionToMessagePayload {
 }
 
 /// Group create data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct CreateGroupPayload {
     /// Group name
     name: String,
@@ -239,7 +239,7 @@ pub enum InviteBotPayload {
 }
 
 /// Bot edit data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditBotPayload {
     /// Bot username
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -261,7 +261,7 @@ pub struct EditBotPayload {
 }
 
 /// Create server data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct CreateServerPayload {
     /// Server name
     pub name: String,
@@ -273,7 +273,7 @@ pub struct CreateServerPayload {
 }
 
 /// Edit server data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditServerPayload {
     /// Server name
     pub name: Option<String>,
@@ -304,7 +304,7 @@ pub struct EditServerPayload {
 }
 
 /// Create channel data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct CreateChannelPayload {
     /// Channel type
     #[serde(rename = "type", default = "ChannelType::default")]
@@ -345,7 +345,7 @@ pub struct PushSubscribePayload {
 }
 
 /// Create role data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct CreateRolePayload {
     /// Role name
     pub name: String,
@@ -357,7 +357,7 @@ pub struct CreateRolePayload {
 }
 
 /// Edit role data
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct EditRolePayload {
     /// Role name
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -379,14 +379,14 @@ pub struct EditRolePayload {
 }
 
 /// Server role permission value
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct SetServerRolePermissionPayload {
     /// Allow / deny values for the role in this server.
     pub permissions: Override,
 }
 
 /// Default server role permission value
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct SetDefaultRolePermissionPayload {
     /// Allow / deny values for the role in this server.
     pub permissions: Override,

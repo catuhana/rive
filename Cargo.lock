@@ -860,7 +860,6 @@ dependencies = [
  "rive-gateway",
  "rive-http",
  "rive-models",
- "rive-util",
 ]
 
 [[package]]
@@ -896,13 +895,6 @@ dependencies = [
  "iso8601-timestamp",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "rive-util"
-version = "0.1.0"
-dependencies = [
- "rive-models",
 ]
 
 [[package]]

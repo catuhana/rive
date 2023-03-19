@@ -7,4 +7,3 @@ edition = "2021"
 rive-models = { path = "../rive-models" }
 rive-gateway = { path = "../rive-gateway" }
 rive-http = { path = "../rive-http" }
-rive-util = { path = "../rive-util" }

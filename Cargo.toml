@@ -4,6 +4,5 @@ members = [
     "rive",
     "rive-models",
     "rive-http",
-    "rive-gateway",
-    "rive-util"
+    "rive-gateway"
 ]

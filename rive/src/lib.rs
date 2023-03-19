@@ -9,7 +9,3 @@ pub mod http {
 pub mod gateway {
     pub use rive_gateway::*;
 }
-
-pub mod util {
-    pub use rive_util::*;
-}

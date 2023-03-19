@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 bitflags::bitflags! {
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
     /// Permission
     pub struct Permission: u64 {
         // * Generic permissions
@@ -95,7 +95,7 @@ crate::impl_serde_bitflags!(UserPermission);
 
 /// Representation of a single permission override
 /// as it appears on models and in the database
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct OverrideField {
     /// Allow bit flags
     a: Permission,
@@ -104,7 +104,7 @@ pub struct OverrideField {
 }
 
 /// Representation of a single permission override
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Override {
     /// Allow bit flags
     allow: Permission,

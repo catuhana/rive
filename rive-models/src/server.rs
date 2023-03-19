@@ -64,7 +64,7 @@ pub struct Category {
 }
 
 /// System message channel assignments
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct SystemMessageChannels {
     /// ID of channel to send user join messages in
     pub user_joined: Option<String>,

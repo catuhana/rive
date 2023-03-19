@@ -8,7 +8,6 @@ use rive::{
         message::Message,
         payload::SendMessagePayload,
     },
-    util::extensions::BuilderExt,
 };
 use std::{env, error::Error, time::Duration};
 use tokio::{spawn, time::sleep};
@@ -59,7 +58,6 @@ async fn spawn_heartbeat(ctx: Context) -> Result {
 
 async fn listen_to_events(ctx: Context) -> Result {
     while let Some(event) = ctx.gateway.clone().next().await {
-        // let event = dbg!(event?);
         let event = event?;
         handle_event(event, ctx.clone()).await?;
     }
@@ -84,7 +82,6 @@ async fn handle_message(message: Message, ctx: Context) -> Result {
     if let Some(ref content) = message.content {
         match content.as_str() {
             "!ping" => ping(message, ctx).await?,
-            "!pong" => pong(message, ctx).await?,
             _ => {}
         };
     }
@@ -93,14 +90,10 @@ async fn handle_message(message: Message, ctx: Context) -> Result {
 }
 
 async fn ping(message: Message, ctx: Context) -> Result {
-    let payload = SendMessagePayload::builder().content("Pong!").build();
-    ctx.client.send_message(message.channel, payload).await?;
-
-    Ok(())
-}
-
-async fn pong(message: Message, ctx: Context) -> Result {
-    let payload = SendMessagePayload::builder().content("Ping!").build();
+    let payload = SendMessagePayload {
+        content: Some("Pong!".to_owned()),
+        ..Default::default()
+    };
     ctx.client.send_message(message.channel, payload).await?;
 
     Ok(())

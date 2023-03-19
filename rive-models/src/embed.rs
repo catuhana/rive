@@ -13,7 +13,7 @@ pub enum Embed {
 }
 
 /// Representation of a text embed before it is sent.
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct SendableEmbed {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub icon_url: Option<String>,
