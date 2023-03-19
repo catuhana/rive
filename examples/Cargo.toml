@@ -5,7 +5,7 @@ publish = false
 edition = "2021"
 
 [dev-dependencies]
-revolt = { path = "../revolt" }
+rive = { path = "../rive" }
 
 [[example]]
 name = "ping-pong"
