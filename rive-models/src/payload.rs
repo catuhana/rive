@@ -1,3 +1,4 @@
+use iso8601_timestamp::Timestamp;
 use serde::Serialize;
 
 use crate::{
@@ -5,11 +6,17 @@ use crate::{
     channel::{ChannelType, FieldsChannel},
     embed::SendableEmbed,
     emoji::EmojiParent,
+    member::FieldsMember,
     message::{Interactions, Masquerade, MessageSort, Reply},
     permission::{Override, Permission},
     server::{Category, FieldsRole, FieldsServer, SystemMessageChannels},
     user::{FieldsUser, PartialUserProfile, UserStatus},
 };
+
+#[allow(dead_code)]
+fn if_false(t: &bool) -> bool {
+    !t
+}
 
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct SendMessagePayload {
@@ -390,4 +397,40 @@ pub struct SetServerRolePermissionPayload {
 pub struct SetDefaultRolePermissionPayload {
     /// Allow / deny values for the role in this server.
     pub permissions: Override,
+}
+
+/// Members query options
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct FetchMembersPayload {
+    /// Whether to exclude offline users
+    #[serde(skip_serializing_if = "if_false")]
+    pub exclude_offline: bool,
+}
+
+/// Member edit data
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct EditMemberPayload {
+    /// Member nickname
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nickname: Option<String>,
+    /// Attachment Id to set for avatar
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub avatar: Option<String>,
+    /// Array of role ids
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub roles: Option<Vec<String>>,
+    /// Timestamp this member is timed out until
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timeout: Option<Timestamp>,
+    /// Fields to remove from channel object
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub remove: Option<Vec<FieldsMember>>,
+}
+
+/// Ban information
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct BanUserPayload {
+    /// Ban reason
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
 }

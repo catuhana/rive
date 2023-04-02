@@ -1,7 +1,7 @@
 use iso8601_timestamp::Timestamp;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-use crate::attachment::Attachment;
+use crate::{attachment::Attachment, user::User};
 
 /// Composite primary key consisting of server and user id
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Hash)]
@@ -55,8 +55,19 @@ pub struct PartialMember {
     pub timeout: Option<Timestamp>,
 }
 
+/// Member List
+///
+/// Both lists are sorted by ID.
+#[derive(Deserialize, Debug, Clone)]
+pub struct MemberList {
+    /// List of members
+    pub members: Vec<Member>,
+    /// List of users
+    pub users: Vec<User>,
+}
+
 /// Optional fields on server member object
-#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum FieldsMember {
     Nickname,
     Avatar,

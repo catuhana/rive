@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     attachment::Attachment,
+    member::MemberCompositeKey,
     permission::{OverrideField, Permission},
 };
 
@@ -171,6 +172,39 @@ pub struct PartialServer {
     pub analytics: Option<bool>,
     /// Whether this server should be publicly discoverable
     pub discoverable: Option<bool>,
+}
+
+/// Representation of a server ban
+#[derive(Deserialize, Debug, Clone)]
+pub struct ServerBan {
+    /// Unique member id
+    #[serde(rename = "_id")]
+    pub id: MemberCompositeKey,
+    /// Reason for ban creation
+    pub reason: Option<String>,
+}
+
+/// Banned user
+///
+/// Just enoguh user information to list bans.
+#[derive(Deserialize, Debug, Clone)]
+pub struct BannedUser {
+    /// Id of the banned user
+    #[serde(rename = "_id")]
+    pub id: String,
+    /// Username of the banned user
+    pub username: String,
+    /// Avatar of the banned user
+    pub avatar: Option<Attachment>,
+}
+
+/// Ban list
+#[derive(Deserialize, Debug, Clone)]
+pub struct BanList {
+    /// Users objects
+    pub users: Vec<BannedUser>,
+    /// Ban objects
+    pub bans: Vec<ServerBan>,
 }
 
 /// Optional fields on server object
