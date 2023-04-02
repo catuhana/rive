@@ -12,6 +12,7 @@ pub mod message;
 pub mod payload;
 pub mod permission;
 pub mod server;
+pub mod stats;
 pub mod user;
 pub mod voice;
 

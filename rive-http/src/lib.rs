@@ -3,6 +3,7 @@ mod channels;
 mod customisation;
 mod invites;
 mod miscellaneous;
+mod platform_administration;
 mod revolt;
 mod servers;
 mod users;
