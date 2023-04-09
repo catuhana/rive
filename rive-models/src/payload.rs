@@ -9,6 +9,7 @@ use crate::{
     member::FieldsMember,
     message::{Interactions, Masquerade, MessageSort, Reply},
     permission::{Override, Permission},
+    report::{ReportStatus, ReportedContent},
     server::{Category, FieldsRole, FieldsServer, SystemMessageChannels},
     user::{FieldsUser, PartialUserProfile, UserStatus},
 };
@@ -512,4 +513,25 @@ pub struct PasswordResetPayload {
 pub struct CompleteOnboardingPayload {
     /// New username which will be used to identify the user on the platform
     pub username: String,
+}
+
+/// Edit report data
+#[derive(Serialize, Debug, Clone)]
+pub struct EditReportPayload {
+    /// New report status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ReportStatus>,
+    /// Report notes
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub notes: Option<String>,
+}
+
+/// Report data
+#[derive(Serialize, Debug, Clone)]
+pub struct ReportContentPayload {
+    /// Content being reported
+    pub content: ReportedContent,
+    /// Additional report description
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub additional_context: Option<String>,
 }
