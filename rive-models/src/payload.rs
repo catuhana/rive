@@ -434,3 +434,77 @@ pub struct BanUserPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
 }
+
+/// New account data
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct CreateAccountPayload {
+    /// Valid email address
+    pub email: String,
+    /// Password
+    pub password: String,
+    /// Invite code
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub invite: Option<String>,
+    /// Captcha verification code
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub captcha: Option<String>,
+}
+
+/// Resend information
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct ResendVerificationPayload {
+    /// Email associated with the account
+    pub email: String,
+    /// Captcha verification code
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub captcha: Option<String>,
+}
+
+/// Account deletion data
+#[derive(Serialize, Debug, Clone)]
+pub struct ConfirmAccountDeletionPayload {
+    /// Deletion token
+    pub token: String,
+}
+
+/// Change password data
+#[derive(Serialize, Debug, Clone)]
+pub struct ChangePasswordPayload {
+    /// New password
+    pub password: String,
+    /// Current password
+    pub current_password: String,
+}
+
+/// Change email data
+#[derive(Serialize, Debug, Clone)]
+pub struct ChangeEmailPayload {
+    /// Valid email address
+    pub email: String,
+    /// Current password
+    pub current_password: String,
+}
+
+/// Reset password information
+#[derive(Serialize, Debug, Clone)]
+pub struct SendPasswordResetPayload {
+    /// Email associated with the account
+    pub email: String,
+    /// Captcha verification code
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub captcha: Option<String>,
+}
+
+/// Password reset data
+#[derive(Serialize, Debug, Clone)]
+pub struct PasswordResetPayload {
+    /// Reset token
+    pub token: String,
+
+    /// New password
+    pub password: String,
+
+    /// Whether to logout all sessions
+    #[serde(default)]
+    pub remove_sessions: bool,
+}

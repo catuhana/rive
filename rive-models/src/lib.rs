@@ -1,3 +1,4 @@
+pub mod account;
 pub mod attachment;
 pub mod authentication;
 pub mod bot;
@@ -9,6 +10,7 @@ pub mod event;
 pub mod invite;
 pub mod member;
 pub mod message;
+pub mod mfa;
 pub mod payload;
 pub mod permission;
 pub mod server;
