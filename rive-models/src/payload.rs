@@ -500,11 +500,16 @@ pub struct SendPasswordResetPayload {
 pub struct PasswordResetPayload {
     /// Reset token
     pub token: String,
-
     /// New password
     pub password: String,
-
     /// Whether to logout all sessions
     #[serde(default)]
     pub remove_sessions: bool,
+}
+
+/// New user data
+#[derive(Serialize, Debug, Clone)]
+pub struct CompleteOnboardingPayload {
+    /// New username which will be used to identify the user on the platform
+    pub username: String,
 }

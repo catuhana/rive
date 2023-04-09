@@ -11,6 +11,7 @@ pub mod invite;
 pub mod member;
 pub mod message;
 pub mod mfa;
+pub mod onboarding;
 pub mod payload;
 pub mod permission;
 pub mod server;
