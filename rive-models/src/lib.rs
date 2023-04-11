@@ -16,6 +16,7 @@ pub mod payload;
 pub mod permission;
 pub mod report;
 pub mod server;
+pub mod session;
 pub mod snapshot;
 pub mod stats;
 pub mod user;

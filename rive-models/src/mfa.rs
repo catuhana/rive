@@ -1,4 +1,21 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+
+/// MFA response
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum MFAResponse {
+    Password { password: String },
+    Recovery { recovery_code: String },
+    Totp { totp_code: String },
+}
+
+/// MFA method
+#[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
+pub enum MFAMethod {
+    Password,
+    Recovery,
+    Totp,
+}
 
 /// Multi-factor auth ticket
 #[derive(Deserialize, Debug, Clone)]

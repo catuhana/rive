@@ -8,6 +8,7 @@ use crate::{
     emoji::EmojiParent,
     member::FieldsMember,
     message::{Interactions, Masquerade, MessageSort, Reply},
+    mfa::MFAResponse,
     permission::{Override, Permission},
     report::{ReportStatus, ReportedContent},
     server::{Category, FieldsRole, FieldsServer, SystemMessageChannels},
@@ -534,4 +535,47 @@ pub struct ReportContentPayload {
     /// Additional report description
     #[serde(skip_serializing_if = "Option::is_none")]
     pub additional_context: Option<String>,
+}
+
+/// Login data
+#[derive(Serialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum LoginPayload {
+    Email {
+        /// Email
+        email: String,
+        /// Password
+        password: String,
+        /// Friendly name used for the session
+        #[serde(skip_serializing_if = "Option::is_none")]
+        friendly_name: Option<String>,
+    },
+    MFA {
+        /// Unvalidated or authorised MFA ticket
+        ///
+        /// Used to resolve the correct account
+        mfa_ticket: String,
+        /// Valid MFA response
+        ///
+        /// This will take precedence over the `password` field where applicable
+        #[serde(skip_serializing_if = "Option::is_none")]
+        mfa_response: Option<MFAResponse>,
+        /// Friendly name used for the session
+        #[serde(skip_serializing_if = "Option::is_none")]
+        friendly_name: Option<String>,
+    },
+}
+
+/// Sessions clear data
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct DeleteAllSessionsPayload {
+    #[serde(skip_serializing_if = "if_false")]
+    pub revoke_self: bool,
+}
+
+/// Session edit data
+#[derive(Serialize, Debug, Clone)]
+pub struct EditSessionPayload {
+    /// Session friendly name
+    pub friendly_name: String,
 }
