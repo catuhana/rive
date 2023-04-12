@@ -8,7 +8,7 @@ use crate::{
     emoji::EmojiParent,
     member::FieldsMember,
     message::{Interactions, Masquerade, MessageSort, Reply},
-    mfa::MFAResponse,
+    mfa::MFAData,
     permission::{Override, Permission},
     report::{ReportStatus, ReportedContent},
     server::{Category, FieldsRole, FieldsServer, SystemMessageChannels},
@@ -559,7 +559,7 @@ pub enum LoginPayload {
         ///
         /// This will take precedence over the `password` field where applicable
         #[serde(skip_serializing_if = "Option::is_none")]
-        mfa_response: Option<MFAResponse>,
+        mfa_response: Option<MFAData>,
         /// Friendly name used for the session
         #[serde(skip_serializing_if = "Option::is_none")]
         friendly_name: Option<String>,

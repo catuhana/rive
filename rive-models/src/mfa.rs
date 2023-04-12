@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-/// MFA response
+/// MFA request/response data
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum MFAResponse {
+pub enum MFAData {
     Password { password: String },
     Recovery { recovery_code: String },
     Totp { totp_code: String },
