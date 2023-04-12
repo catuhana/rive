@@ -6,3 +6,11 @@ members = [
     "rive-http",
     "rive-gateway"
 ]
+
+[workspace.package]
+authors = ["Rive contributors"]
+edition = "2021"
+license = "LGPL-2.1-or-later"
+repository = "https://codeberg.org/rive/rive.git"
+rust-version = "1.64"
+keywords = ["revolt", "revolt-api", "rive"]
