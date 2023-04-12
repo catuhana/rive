@@ -2,7 +2,7 @@
 name = "rive-http"
 description = "Revolt REST API client for the Rive ecosystem."
 categories = ["api-bindings"]
-version = "0.1.0"
+version = "0.1.1"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -13,7 +13,7 @@ keywords.workspace = true
 [dependencies]
 reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
 serde_json = "1"
-rive-models = { path = "../rive-models", version = "0.1.0" }
+rive-models = { path = "../rive-models", version = "0.1.1" }
 serde = "1"
 thiserror = "1"
 async-trait = "0"
