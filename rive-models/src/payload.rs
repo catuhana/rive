@@ -579,3 +579,9 @@ pub struct EditSessionPayload {
     /// Session friendly name
     pub friendly_name: String,
 }
+
+/// MFA ticket create data
+pub type CreateMFATicketPayload = MFAData;
+
+/// TOTP secret generate data
+pub type EnableTOTP2FAPayload = MFAData;

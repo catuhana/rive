@@ -17,6 +17,26 @@ pub enum MFAMethod {
     Totp,
 }
 
+/// MFA recovery code
+pub type MFARecoveryCode = String;
+
+/// MFA status
+#[derive(Deserialize, Debug, Clone)]
+pub struct MFAStatus {
+    pub email_otp: bool,
+    pub trusted_handover: bool,
+    pub email_mfa: bool,
+    pub totp_mfa: bool,
+    pub security_key_mfa: bool,
+    pub recovery_active: bool,
+}
+
+/// TOTP secret response
+#[derive(Deserialize, Debug, Clone)]
+pub struct TOTPSecret {
+    pub secret: String,
+}
+
 /// Multi-factor auth ticket
 #[derive(Deserialize, Debug, Clone)]
 pub struct MFATicket {
