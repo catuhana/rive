@@ -9,11 +9,9 @@ mod revolt;
 mod servers;
 mod users;
 
-use reqwest::StatusCode;
 use rive_models::{authentication::Authentication, ApiError};
-use std::result::Result as StdResult;
 
-type Result<T> = StdResult<T, Error>;
+type Result<T> = std::result::Result<T, Error>;
 
 pub(crate) mod prelude {
     pub(crate) use crate::{ep, Client, RequestBuilderExt, ResponseExt, Result};
@@ -69,19 +67,12 @@ impl ResponseExt for reqwest::Response {
     where
         Self: Sized,
     {
-        let status = self.status();
-
-        if status.is_success() {
-            Ok(self)
-        } else {
-            // NOTE: it's a workaround thing but there are no alternative methods
-            // because API returns HTML instead of parseable JSON
-            // uhhhm also sorry for my broken english
-            if status == StatusCode::UNAUTHORIZED {
-                return Err(Error::Api(ApiError::Unauthenticated));
-            }
-
-            Err(Error::Api(self.json().await?))
+        match self.status().as_u16() {
+            200..=299 => Ok(self),
+            // NOTE: it's a workaround thing but there are no alternative ways
+            // because API returns some rocket's HTML instead of parseable JSON
+            401 => Err(Error::Api(ApiError::Unauthenticated)),
+            _ => Err(Error::Api(self.json().await?)),
         }
     }
 }
