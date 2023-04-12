@@ -1,9 +1,16 @@
 [package]
 name = "rive"
+description = "The Rive ecosystem crate."
+categories = ["api-bindings", "data-structures"]
 version = "0.1.0"
-edition = "2021"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+keywords.workspace = true
 
 [dependencies]
-rive-models = { path = "../rive-models" }
-rive-gateway = { path = "../rive-gateway" }
-rive-http = { path = "../rive-http" }
+rive-models = { path = "../rive-models", version = "0" }
+rive-gateway = { path = "../rive-gateway", version = "0" }
+rive-http = { path = "../rive-http", version = "0" }
