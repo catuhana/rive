@@ -18,7 +18,7 @@ pub enum SnapshotContent {
 
         /// Message
         #[serde(flatten)]
-        message: Message,
+        message: Box<Message>,
     },
     Server(Server),
     User(User),
