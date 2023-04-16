@@ -35,7 +35,6 @@ pub enum Error {
     Api(ApiError),
 }
 
-#[macro_export]
 macro_rules! ep {
     ($self:ident, $ep:literal, $($args:tt)*) => {
         format!(concat!("{}", $ep), $self.base_url, $($args)*)
@@ -49,6 +48,7 @@ macro_rules! ep {
         format!(concat!("{}", $ep), $api_root, $($args)*)
     };
 }
+pub(crate) use ep;
 
 trait RequestBuilderExt {
     fn auth(self, authentication: &Authentication) -> Self;
