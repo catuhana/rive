@@ -37,8 +37,8 @@ These are crates that most users will use together for a full development experi
 ## Credits
 
 - Models were taken directly from the Revolt's [backend](https://github.com/revoltchat/backend).
-- This project is heavily inspired by [`twilight`](https://github.com/twilight-rs/twilight/) <3
+- This project is heavily inspired by [`twilight`](https://github.com/twilight-rs/twilight/). <3
+- Rive logo was remixed from [Google Icons](https://fonts.google.com/icons).
 
 ## License
-
-[GNU Lesser General Public License v2.1](https://codeberg.org/rive/rive/src/branch/main/LICENSE)
+Crates are distributed under [GNU Lesser General Public License v2.1](https://codeberg.org/rive/rive/src/branch/main/LICENSE). Branding assets are distributed under [Apache License 2.0](https://codeberg.org/rive/rive/src/branch/main/assets/LICENSE).
