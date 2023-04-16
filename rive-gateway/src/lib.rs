@@ -6,17 +6,22 @@ use rive_models::event::{ClientEvent, ServerEvent};
 use tokio::{net::TcpStream, select, spawn};
 use tokio_tungstenite::{tungstenite::Message, MaybeTlsStream, WebSocketStream};
 
+/// Gateway client error
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// WebSocket error
     #[error("Tungstenite error: {0}")]
     WsError(#[from] tokio_tungstenite::tungstenite::Error),
 
+    /// Data serialization/deserialization error
     #[error("Serde JSON deserialization/serialization error: {0}")]
     SerializationError(#[from] serde_json::Error),
 
+    /// Internal client event channel sender error
     #[error("Client event sender error: {0}")]
     ClientSenderError(#[from] async_channel::SendError<ClientEvent>),
 
+    /// Internal server event channel sender error
     #[error("Server event sender error: {0}")]
     ServerSenderError(#[from] Box<async_channel::SendError<Result<ServerEvent, Error>>>),
 }

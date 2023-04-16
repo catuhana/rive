@@ -19,14 +19,18 @@ pub(crate) mod prelude {
     pub(crate) use crate::{ep, Client, RequestBuilderExt, ResponseExt, Result};
 }
 
+/// Client error
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Data serialization/deserialization error
     #[error("Serde JSON serialization/deserialization error: {0}")]
     Serialization(#[from] serde_json::Error),
 
+    /// HTTP error
     #[error("Error while processing an HTTP request: {0}")]
     HttpRequest(#[from] reqwest::Error),
 
+    /// An error returned from Revolt API
     #[error("Error returned from API")]
     Api(ApiError),
 }
@@ -87,10 +91,12 @@ pub struct Client {
 }
 
 impl Client {
+    /// Create a client instance with the API base URL of Revolt official instance.
     pub fn new(authentication: Authentication) -> Self {
         Client::new_base_url(authentication, "https://api.revolt.chat")
     }
 
+    /// Create a client instance with given base URL.
     pub fn new_base_url(authentication: Authentication, base_url: impl Into<String>) -> Self {
         Client {
             base_url: base_url.into(),
