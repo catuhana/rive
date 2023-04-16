@@ -30,7 +30,7 @@ These are crates that most users will use together for a full development experi
 
 - [`rive-gateway`](https://crates.io/crates/rive-gateway)
 
-    Implementation of Revolts WebSocket API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
+    Implementation of Revolt's WebSocket API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
 
     Please note that the client itself does not do a heartbeat (periodic ping to keep the connection alive), so this has to be done manually, for example by making an async task.
 
