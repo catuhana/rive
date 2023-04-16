@@ -1,10 +1,11 @@
 use serde::Deserialize;
 
 /// Metadata associated with attachment
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, Default)]
 #[serde(tag = "type")]
 pub enum Metadata {
     /// Attachment is just a generic uncategorised file
+    #[default]
     File,
 
     /// Attachment contains textual data and should be displayed as such
@@ -18,12 +19,6 @@ pub enum Metadata {
 
     /// Attachment is audio
     Audio,
-}
-
-impl Default for Metadata {
-    fn default() -> Metadata {
-        Metadata::File
-    }
 }
 
 /// Representation of an attachment on Revolt

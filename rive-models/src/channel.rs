@@ -145,16 +145,11 @@ pub struct PartialChannel {
 }
 
 /// Channel type
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
 pub enum ChannelType {
+    #[default]
     Text,
     Voice,
-}
-
-impl Default for ChannelType {
-    fn default() -> Self {
-        ChannelType::Text
-    }
 }
 
 /// Optional fields on channel object
