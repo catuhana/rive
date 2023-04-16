@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 mod authentication;
 mod bots;
 mod channels;

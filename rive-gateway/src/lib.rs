@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 use async_channel::{self, Receiver, Sender};
 use futures::{SinkExt, Stream, StreamExt};
 use rive_models::event::{ClientEvent, ServerEvent};
