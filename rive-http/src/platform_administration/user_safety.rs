@@ -1,8 +1,11 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::{EditReportPayload, ReportContentPayload},
+    payload::{
+        CreateStrikePayload, EditAccountStrikePayload, EditReportPayload, ReportContentPayload,
+    },
     report::Report,
     snapshot::Snapshot,
+    strike::AccountStrike,
 };
 
 impl Client {
@@ -78,5 +81,59 @@ impl Client {
             .await?
             .json()
             .await?)
+    }
+
+    /// Create a new account strike.
+    pub async fn create_strike(&self, payload: CreateStrikePayload) -> Result<AccountStrike> {
+        Ok(self
+            .client
+            .post(ep!(self, "/safety/strikes"))
+            .auth(&self.authentication)
+            .json(&payload)
+            .send()
+            .await?
+            .json()
+            .await?)
+    }
+
+    /// Fetch strikes for a user by their ID.
+    pub async fn fetch_strikes(&self, user_id: impl Into<String>) -> Result<AccountStrike> {
+        Ok(self
+            .client
+            .get(ep!(self, "/safety/strikes/{}", user_id.into()))
+            .auth(&self.authentication)
+            .send()
+            .await?
+            .json()
+            .await?)
+    }
+
+    /// Edit a strike by its ID.
+    pub async fn edit_strike(
+        &self,
+        strike_id: impl Into<String>,
+        payload: EditAccountStrikePayload,
+    ) -> Result<()> {
+        self.client
+            .patch(ep!(self, "/safety/strikes/{}", strike_id.into()))
+            .auth(&self.authentication)
+            .json(&payload)
+            .send()
+            .await?
+            .json()
+            .await?;
+        Ok(())
+    }
+
+    /// Edit a strike by its ID.
+    pub async fn delete_strike(&self, strike_id: impl Into<String>) -> Result<()> {
+        self.client
+            .delete(ep!(self, "/safety/strikes/{}", strike_id.into()))
+            .auth(&self.authentication)
+            .send()
+            .await?
+            .json()
+            .await?;
+        Ok(())
     }
 }
