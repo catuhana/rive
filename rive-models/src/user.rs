@@ -121,6 +121,8 @@ bitflags::bitflags! {
         const Deleted = 2;
         /// User was banned off the platform
         const Banned = 4;
+        /// User was marked as spam and removed from platform
+        const Spam = 8;
     }
 }
 crate::impl_serde_bitflags!(UserFlags);
@@ -140,6 +142,10 @@ pub struct User {
     pub id: String,
     /// Username
     pub username: String,
+    /// User discriminator (four numbers after the username)
+    pub discriminator: String,
+    /// User's display name
+    pub display_name: Option<String>,
     /// Avatar attachment
     pub avatar: Option<Attachment>,
     /// Relationships with other users
@@ -207,6 +213,7 @@ pub enum FieldsUser {
     StatusPresence,
     ProfileContent,
     ProfileBackground,
+    DisplayName,
 }
 
 /// HashMap of user settings

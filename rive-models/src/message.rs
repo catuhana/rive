@@ -144,6 +144,7 @@ pub enum SystemMessage {
     ChannelRenamed { name: String, by: String },
     ChannelDescriptionChanged { by: String },
     ChannelIconChanged { by: String },
+    ChannelOwnershipChanged { from: String, to: String },
 }
 
 /// Sort used for retrieving messages
