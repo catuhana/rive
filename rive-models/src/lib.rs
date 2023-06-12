@@ -21,6 +21,7 @@ pub mod server;
 pub mod session;
 pub mod snapshot;
 pub mod stats;
+pub mod strike;
 pub mod user;
 pub mod voice;
 

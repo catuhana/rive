@@ -537,6 +537,23 @@ pub struct ReportContentPayload {
     pub additional_context: Option<String>,
 }
 
+/// New strike information
+#[derive(Serialize, Debug, Clone)]
+pub struct CreateStrikePayload {
+    /// ID of reported user
+    pub user_id: String,
+
+    /// Attached reason
+    pub reason: String,
+}
+
+/// Strike information edit data
+#[derive(Serialize, Debug, Clone)]
+pub struct EditAccountStrikePayload {
+    /// New attached reason
+    pub reason: String,
+}
+
 /// Login data
 #[derive(Serialize, Debug, Clone)]
 #[serde(untagged)]
