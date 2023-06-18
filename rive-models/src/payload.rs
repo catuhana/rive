@@ -603,7 +603,7 @@ pub type CreateMFATicketPayload = MFAData;
 /// TOTP secret generate data
 pub type EnableTOTP2FAPayload = MFAData;
 
-/// Creates a webhook which 3rd party platforms can use to send messages
+/// Webhook create data
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct CreateWebhookPayload {
     /// Webhook name
