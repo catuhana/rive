@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::attachment::Attachment;
 
@@ -35,4 +35,10 @@ pub struct PartialWebhook {
 
     /// The private token for the webhook
     pub token: Option<String>,
+}
+
+/// Optional fields on webhook object
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum FieldsWebhook {
+    Avatar,
 }

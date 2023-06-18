@@ -5,8 +5,10 @@ use crate::{
     emoji::Emoji,
     member::{FieldsMember, Member, MemberCompositeKey, PartialMember},
     message::{AppendMessage, Message, PartialMessage},
+    report::Report,
     server::{FieldsRole, FieldsServer, PartialRole, PartialServer, Server},
     user::{FieldsUser, PartialUser, RelationshipStatus, User, UserSettings},
+    webhook::{FieldsWebhook, PartialWebhook, Webhook},
 };
 
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
@@ -143,6 +145,21 @@ pub enum ServerEvent {
     /// Delete emoji
     EmojiDelete(EmojiDelete),
 
+    /// New webhook
+    WebhookCreate(Webhook),
+
+    /// Update existing webhook
+    WebhookUpdate(WebhookUpdate),
+
+    /// Delete webhook
+    WebhookDelete { id: String },
+
+    /// New report
+    ReportCreate(Report),
+
+    /// Auth event
+    Auth(AuthifierEvent),
+
     /// Unknown event
     ///
     /// If you received this event, please open an issue!
@@ -158,6 +175,20 @@ pub enum ClientEvent {
     Ping { data: i32 },
     BeginTyping { channel: String },
     EndTyping { channel: String },
+}
+
+/// Authentication related events
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "event_type")]
+pub enum AuthifierEvent {
+    DeleteSession {
+        user_id: String,
+        session_id: String,
+    },
+    DeleteAllSessions {
+        user_id: String,
+        exclude_session_id: Option<String>,
+    },
 }
 
 /// Bulk event data
@@ -457,5 +488,22 @@ pub struct UserPlatformWipe {
 #[derive(Deserialize, Debug, Clone)]
 pub struct EmojiDelete {
     /// Deleted emoji ID
+    pub id: String,
+}
+
+/// Webhook update event data
+#[derive(Deserialize, Debug, Clone)]
+pub struct WebhookUpdate {
+    /// Webhook ID
+    pub id: String,
+    /// Updated webhook data
+    pub data: PartialWebhook,
+    /// Fields removed from webhook
+    pub remove: Vec<FieldsWebhook>,
+}
+
+/// Webhook delete event data
+#[derive(Deserialize, Debug, Clone)]
+pub struct WebhookDelete {
     pub id: String,
 }
