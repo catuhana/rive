@@ -602,3 +602,13 @@ pub type CreateMFATicketPayload = MFAData;
 
 /// TOTP secret generate data
 pub type EnableTOTP2FAPayload = MFAData;
+
+/// Creates a webhook which 3rd party platforms can use to send messages
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct CreateWebhookPayload {
+    /// Webhook name
+    pub name: String,
+    /// Avatar's attachment ID
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub avatar: Option<String>,
+}

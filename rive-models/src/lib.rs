@@ -24,6 +24,7 @@ pub mod stats;
 pub mod strike;
 pub mod user;
 pub mod voice;
+pub mod webhook;
 
 mod error;
 pub use error::ApiError;
