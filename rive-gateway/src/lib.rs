@@ -1,10 +1,18 @@
 #![doc = include_str!("../README.md")]
 
+use std::time::Duration;
+
 use async_channel::{self, Receiver, Sender};
 use futures::{SinkExt, Stream, StreamExt};
-use rive_models::event::{ClientEvent, ServerEvent};
-use tokio::{net::TcpStream, select, spawn};
+use rive_models::{
+    authentication::Authentication,
+    event::{ClientEvent, ServerEvent},
+};
+use tokio::{net::TcpStream, select, spawn, time::sleep};
 use tokio_tungstenite::{tungstenite::Message, MaybeTlsStream, WebSocketStream};
+
+/// Base WebSocket API URL of official Revolt instance
+pub const BASE_URL: &str = "wss://ws.revolt.chat";
 
 /// Gateway client error
 #[derive(Debug, thiserror::Error)]
@@ -26,6 +34,38 @@ pub enum Error {
     ServerSenderError(#[from] Box<async_channel::SendError<Result<ServerEvent, Error>>>),
 }
 
+/// Gateway configuration
+#[derive(Debug, Clone)]
+pub struct GatewayConfig {
+    /// Auth token. If it is not [`Authentication::None`] then the event will be sent automatically.
+    pub auth: Authentication,
+    /// WebSocket API base URL
+    pub base_url: String,
+    /// Whether auto heartbeat is enabled
+    pub heartbeat: bool,
+}
+
+impl Default for GatewayConfig {
+    fn default() -> Self {
+        Self {
+            auth: Authentication::None,
+            base_url: BASE_URL.to_string(),
+            heartbeat: true,
+        }
+    }
+}
+
+impl GatewayConfig {
+    /// Creates a new [`GatewayConfig`].
+    pub fn new(auth: Authentication, base_url: String, heartbeat: bool) -> Self {
+        Self {
+            auth,
+            base_url,
+            heartbeat,
+        }
+    }
+}
+
 /// A wrapper for Revolt WebSocket API
 #[derive(Debug, Clone)]
 pub struct Gateway {
@@ -34,23 +74,41 @@ pub struct Gateway {
 }
 
 impl Gateway {
-    /// Connect to gateway with default Revolt WebSocket URL
-    pub async fn connect() -> Result<Self, Error> {
-        Gateway::connect_with_url("wss://ws.revolt.chat".to_string()).await
+    /// Connect to gateway with default Revolt WebSocket URL ([`BASE_URL`])
+    pub async fn connect(auth: Authentication) -> Result<Self, Error> {
+        Gateway::connect_with_url(BASE_URL, auth).await
     }
 
     /// Connect to gateway with specified URL
-    pub async fn connect_with_url(url: String) -> Result<Self, Error> {
-        let (socket, _) = tokio_tungstenite::connect_async(url).await?;
+    pub async fn connect_with_url(
+        url: impl Into<String>,
+        auth: Authentication,
+    ) -> Result<Self, Error> {
+        Self::connect_with_config(GatewayConfig::new(auth, url.into(), true)).await
+    }
+
+    pub async fn connect_with_config(config: GatewayConfig) -> Result<Self, Error> {
+        let (socket, _) = tokio_tungstenite::connect_async(&config.base_url).await?;
         let (client_sender, client_receiver) = async_channel::unbounded();
         let (server_sender, server_receiver) = async_channel::unbounded();
 
         let revolt = Gateway {
-            client_sender,
+            client_sender: client_sender.clone(),
             server_receiver,
         };
 
         spawn(Gateway::handle(client_receiver, server_sender, socket));
+
+        if config.heartbeat {
+            spawn(Self::heartbeat(client_sender));
+        }
+
+        if !matches!(config.auth, Authentication::None) {
+            let event = ClientEvent::Authenticate {
+                token: config.auth.value(),
+            };
+            revolt.send(event).await?;
+        }
 
         Ok(revolt)
     }
@@ -60,6 +118,15 @@ impl Gateway {
         self.client_sender.send(event).await.map_err(Error::from)?;
 
         Ok(())
+    }
+
+    async fn heartbeat(client_sender: Sender<ClientEvent>) -> Result<(), Error> {
+        loop {
+            // TODO: an ability to send custom value somehow
+            // it can be useful for ping measure for example
+            client_sender.send(ClientEvent::Ping { data: 0 }).await?;
+            sleep(Duration::from_secs(15)).await;
+        }
     }
 
     async fn handle(
