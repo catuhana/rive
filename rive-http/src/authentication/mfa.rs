@@ -1,6 +1,6 @@
 use rive_models::{
-    mfa::{MFAMethod, MFARecoveryCode, MFAStatus, MFATicket, TOTPSecret},
     data::{CreateMFATicketData, EnableTOTP2FAData},
+    mfa::{MFAMethod, MFARecoveryCode, MFAStatus, MFATicket, TOTPSecret},
 };
 
 use crate::prelude::*;

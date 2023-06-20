@@ -1,8 +1,7 @@
 use crate::prelude::*;
 use rive_models::{
     data::{
-        CreateRoleData, EditRoleData, SetDefaultRolePermissionData,
-        SetServerRolePermissionData,
+        CreateRoleData, EditRoleData, SetDefaultRolePermissionData, SetServerRolePermissionData,
     },
     server::{NewRole, Role, Server},
 };

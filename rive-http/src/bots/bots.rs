@@ -35,11 +35,7 @@ impl Client {
     }
 
     /// Invite a bot to a server or group by its id.
-    pub async fn invite_bot(
-        &self,
-        bot_id: impl Into<String>,
-        data: InviteBotData,
-    ) -> Result<()> {
+    pub async fn invite_bot(&self, bot_id: impl Into<String>, data: InviteBotData) -> Result<()> {
         self.client
             .post(ep!(self, "/bots/{}/invite", bot_id.into()))
             .json(&data)

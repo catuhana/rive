@@ -1,4 +1,4 @@
-use rive_models::{emoji::Emoji, data::CreateEmojiData};
+use rive_models::{data::CreateEmojiData, emoji::Emoji};
 
 use crate::prelude::*;
 

@@ -1,10 +1,10 @@
 use crate::prelude::*;
 use rive_models::{
-    message::{BulkMessageResponse, Message},
     data::{
-        BulkDeleteMessagesData, EditMessageData, FetchMessagesData,
-        SearchForMessagesData, SendMessageData,
+        BulkDeleteMessagesData, EditMessageData, FetchMessagesData, SearchForMessagesData,
+        SendMessageData,
     },
+    message::{BulkMessageResponse, Message},
 };
 
 impl Client {

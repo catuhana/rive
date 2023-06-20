@@ -1,8 +1,8 @@
 use crate::prelude::*;
 use rive_models::{
     channel::PartialInvite,
-    member::{Member, MemberList},
     data::{BanUserData, EditMemberData, FetchMembersData},
+    member::{Member, MemberList},
     server::{BanList, ServerBan},
 };
 

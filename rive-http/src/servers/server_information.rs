@@ -50,11 +50,7 @@ impl Client {
     }
 
     /// Edit a server by its id.
-    pub async fn edit_server(
-        &self,
-        id: impl Into<String>,
-        data: EditServerData,
-    ) -> Result<Server> {
+    pub async fn edit_server(&self, id: impl Into<String>, data: EditServerData) -> Result<Server> {
         Ok(self
             .client
             .patch(ep!(self, "/servers/{}", id.into()))

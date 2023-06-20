@@ -1,8 +1,6 @@
 use crate::prelude::*;
 use rive_models::{
-    data::{
-        CreateStrikeData, EditAccountStrikeData, EditReportData, ReportContentData,
-    },
+    data::{CreateStrikeData, EditAccountStrikeData, EditReportData, ReportContentData},
     report::Report,
     snapshot::Snapshot,
     strike::AccountStrike,

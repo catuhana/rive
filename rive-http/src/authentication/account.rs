@@ -2,9 +2,8 @@ use crate::prelude::*;
 use rive_models::{
     account::{AccountInfo, EmailVerification},
     data::{
-        ChangeEmailData, ChangePasswordData, ConfirmAccountDeletionData,
-        CreateAccountData, PasswordResetData, ResendVerificationData,
-        SendPasswordResetData,
+        ChangeEmailData, ChangePasswordData, ConfirmAccountDeletionData, CreateAccountData,
+        PasswordResetData, ResendVerificationData, SendPasswordResetData,
     },
 };
 
@@ -34,10 +33,7 @@ impl Client {
     }
 
     /// Schedule an account for deletion by confirming the received token.
-    pub async fn confirm_account_deletion(
-        &self,
-        data: ConfirmAccountDeletionData,
-    ) -> Result<()> {
+    pub async fn confirm_account_deletion(&self, data: ConfirmAccountDeletionData) -> Result<()> {
         self.client
             .put(ep!(self, "/auth/account/delete"))
             .json(&data)

@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use rive_models::{message::BulkMessageResponse, data::FetchMessagesData, stats::Stats};
+use rive_models::{data::FetchMessagesData, message::BulkMessageResponse, stats::Stats};
 
 impl Client {
     /// Fetch various technical statistics.

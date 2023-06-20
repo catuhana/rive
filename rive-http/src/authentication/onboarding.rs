@@ -1,4 +1,4 @@
-use rive_models::{onboarding::OnboardingStatus, data::CompleteOnboardingData};
+use rive_models::{data::CompleteOnboardingData, onboarding::OnboardingStatus};
 
 use crate::prelude::*;
 
