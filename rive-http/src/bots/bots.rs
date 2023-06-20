@@ -1,16 +1,16 @@
 use crate::prelude::*;
 use rive_models::{
     bot::{Bot, OwnedBot, OwnedBots, PublicBot},
-    payload::{CreateBotPayload, EditBotPayload, InviteBotPayload},
+    data::{CreateBotData, EditBotData, InviteBotData},
 };
 
 impl Client {
     /// Create a new Revolt bot.
-    pub async fn create_bot(&self, payload: CreateBotPayload) -> Result<Bot> {
+    pub async fn create_bot(&self, data: CreateBotData) -> Result<Bot> {
         Ok(self
             .client
             .post(ep!(self, "/bots/create"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -38,11 +38,11 @@ impl Client {
     pub async fn invite_bot(
         &self,
         bot_id: impl Into<String>,
-        payload: InviteBotPayload,
+        data: InviteBotData,
     ) -> Result<()> {
         self.client
             .post(ep!(self, "/bots/{}/invite", bot_id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -78,11 +78,11 @@ impl Client {
     }
 
     /// Edit bot details by its id.
-    pub async fn edit_bot(&self, id: impl Into<String>, payload: EditBotPayload) -> Result<Bot> {
+    pub async fn edit_bot(&self, id: impl Into<String>, data: EditBotData) -> Result<Bot> {
         Ok(self
             .client
             .patch(ep!(self, "/bots/{}", id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

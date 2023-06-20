@@ -1,4 +1,4 @@
-use rive_models::{emoji::Emoji, payload::CreateEmojiPayload};
+use rive_models::{emoji::Emoji, data::CreateEmojiData};
 
 use crate::prelude::*;
 
@@ -21,12 +21,12 @@ impl Client {
     pub async fn create_new_emoji(
         &self,
         id: impl Into<String>,
-        payload: CreateEmojiPayload,
+        data: CreateEmojiData,
     ) -> Result<Emoji> {
         Ok(self
             .client
             .put(ep!(self, "/custom/emoji/{}", id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

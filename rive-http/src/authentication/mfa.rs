@@ -1,18 +1,18 @@
 use rive_models::{
     mfa::{MFAMethod, MFARecoveryCode, MFAStatus, MFATicket, TOTPSecret},
-    payload::{CreateMFATicketPayload, EnableTOTP2FAPayload},
+    data::{CreateMFATicketData, EnableTOTP2FAData},
 };
 
 use crate::prelude::*;
 
 impl Client {
     /// Create a new MFA ticket or validate an existing one.
-    pub async fn create_mfa_ticket(&self, payload: CreateMFATicketPayload) -> Result<MFATicket> {
+    pub async fn create_mfa_ticket(&self, data: CreateMFATicketData) -> Result<MFATicket> {
         Ok(self
             .client
             .put(ep!(self, "/auth/mfa/ticket"))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -78,10 +78,10 @@ impl Client {
     }
 
     /// Enable TOTP 2FA for an account.
-    pub async fn enable_totp_2fa(&self, payload: EnableTOTP2FAPayload) -> Result<()> {
+    pub async fn enable_totp_2fa(&self, data: EnableTOTP2FAData) -> Result<()> {
         self.client
             .put(ep!(self, "/auth/mfa/totp"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

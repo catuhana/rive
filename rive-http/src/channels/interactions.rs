@@ -1,4 +1,4 @@
-use rive_models::payload::RemoveReactionToMessagePayload;
+use rive_models::data::RemoveReactionToMessageData;
 
 use crate::prelude::*;
 
@@ -34,7 +34,7 @@ impl Client {
         channel_id: impl Into<String>,
         message_id: impl Into<String>,
         emoji: impl Into<String>,
-        payload: RemoveReactionToMessagePayload,
+        data: RemoveReactionToMessageData,
     ) -> Result<()> {
         self.client
             .delete(ep!(
@@ -44,7 +44,7 @@ impl Client {
                 message_id.into(),
                 emoji.into()
             ))
-            .query(&payload)
+            .query(&data)
             .auth(&self.authentication)
             .send()
             .await?

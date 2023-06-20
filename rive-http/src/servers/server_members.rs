@@ -2,7 +2,7 @@ use crate::prelude::*;
 use rive_models::{
     channel::PartialInvite,
     member::{Member, MemberList},
-    payload::{BanUserPayload, EditMemberPayload, FetchMembersPayload},
+    data::{BanUserData, EditMemberData, FetchMembersData},
     server::{BanList, ServerBan},
 };
 
@@ -11,12 +11,12 @@ impl Client {
     pub async fn fetch_members(
         &self,
         server_id: impl Into<String>,
-        payload: FetchMembersPayload,
+        data: FetchMembersData,
     ) -> Result<MemberList> {
         Ok(self
             .client
             .get(ep!(self, "/servers/{}/members", server_id.into()))
-            .query(&payload)
+            .query(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -75,7 +75,7 @@ impl Client {
         &self,
         server_id: impl Into<String>,
         member_id: impl Into<String>,
-        payload: EditMemberPayload,
+        data: EditMemberData,
     ) -> Result<Member> {
         Ok(self
             .client
@@ -85,7 +85,7 @@ impl Client {
                 server_id.into(),
                 member_id.into()
             ))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -100,7 +100,7 @@ impl Client {
         &self,
         server_id: impl Into<String>,
         user_id: impl Into<String>,
-        payload: BanUserPayload,
+        data: BanUserData,
     ) -> Result<ServerBan> {
         Ok(self
             .client
@@ -110,7 +110,7 @@ impl Client {
                 server_id.into(),
                 user_id.into()
             ))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

@@ -1,16 +1,16 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::{DeleteAllSessionsPayload, EditSessionPayload, LoginPayload},
+    data::{DeleteAllSessionsData, EditSessionData, LoginData},
     session::{LoginResponse, SessionInfo},
 };
 
 impl Client {
     /// Login to an account.
-    pub async fn login(&self, payload: LoginPayload) -> Result<LoginResponse> {
+    pub async fn login(&self, data: LoginData) -> Result<LoginResponse> {
         Ok(self
             .client
             .post(ep!(self, "/auth/session/login"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -46,10 +46,10 @@ impl Client {
     }
 
     /// Delete all active sessions, optionally including current one.
-    pub async fn delete_all_sessions(&self, payload: DeleteAllSessionsPayload) -> Result<()> {
+    pub async fn delete_all_sessions(&self, data: DeleteAllSessionsData) -> Result<()> {
         self.client
             .delete(ep!(self, "/auth/session/all"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -74,12 +74,12 @@ impl Client {
     pub async fn edit_session(
         &self,
         id: impl Into<String>,
-        payload: EditSessionPayload,
+        data: EditSessionData,
     ) -> Result<SessionInfo> {
         Ok(self
             .client
             .patch(ep!(self, "/auth/session/{}", id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

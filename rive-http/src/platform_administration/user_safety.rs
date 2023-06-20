@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::{
-        CreateStrikePayload, EditAccountStrikePayload, EditReportPayload, ReportContentPayload,
+    data::{
+        CreateStrikeData, EditAccountStrikeData, EditReportData, ReportContentData,
     },
     report::Report,
     snapshot::Snapshot,
@@ -13,13 +13,13 @@ impl Client {
     pub async fn edit_report(
         &self,
         report: impl Into<String>,
-        payload: EditReportPayload,
+        data: EditReportData,
     ) -> Result<Report> {
         Ok(self
             .client
             .patch(ep!(self, "/safety/reports/{}", report.into()))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -57,10 +57,10 @@ impl Client {
     }
 
     /// Report a piece of content to the moderation team.
-    pub async fn report_content(&self, payload: ReportContentPayload) -> Result<()> {
+    pub async fn report_content(&self, data: ReportContentData) -> Result<()> {
         self.client
             .post(ep!(self, "/safety/report"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -84,12 +84,12 @@ impl Client {
     }
 
     /// Create a new account strike.
-    pub async fn create_strike(&self, payload: CreateStrikePayload) -> Result<AccountStrike> {
+    pub async fn create_strike(&self, data: CreateStrikeData) -> Result<AccountStrike> {
         Ok(self
             .client
             .post(ep!(self, "/safety/strikes"))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .json()
@@ -112,12 +112,12 @@ impl Client {
     pub async fn edit_strike(
         &self,
         strike_id: impl Into<String>,
-        payload: EditAccountStrikePayload,
+        data: EditAccountStrikeData,
     ) -> Result<()> {
         self.client
             .patch(ep!(self, "/safety/strikes/{}", strike_id.into()))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .json()

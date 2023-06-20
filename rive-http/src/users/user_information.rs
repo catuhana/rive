@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::{ChangeUsernamePayload, EditUserPayload},
+    data::{ChangeUsernameData, EditUserData},
     user::{User, UserProfile},
 };
 
@@ -20,12 +20,12 @@ impl Client {
     }
 
     /// Edit currently authenticated user.
-    pub async fn edit_user(&self, payload: EditUserPayload) -> Result<User> {
+    pub async fn edit_user(&self, data: EditUserData) -> Result<User> {
         Ok(self
             .client
             .patch(ep!(self, "/users/@me"))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -49,12 +49,12 @@ impl Client {
     }
 
     /// Change your username.
-    pub async fn change_username(&self, payload: ChangeUsernamePayload) -> Result<User> {
+    pub async fn change_username(&self, data: ChangeUsernameData) -> Result<User> {
         Ok(self
             .client
             .patch(ep!(self, "/users/@me/username"))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

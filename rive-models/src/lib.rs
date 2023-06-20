@@ -14,7 +14,7 @@ pub mod member;
 pub mod message;
 pub mod mfa;
 pub mod onboarding;
-pub mod payload;
+pub mod data;
 pub mod permission;
 pub mod report;
 pub mod server;

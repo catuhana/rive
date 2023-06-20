@@ -21,7 +21,7 @@ fn if_false(t: &bool) -> bool {
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SendMessagePayload {
+pub struct SendMessageData {
     /// Message content to send
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
@@ -46,7 +46,7 @@ pub struct SendMessagePayload {
 
 /// User data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditUserPayload {
+pub struct EditUserData {
     /// New user status
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<UserStatus>,
@@ -65,7 +65,7 @@ pub struct EditUserPayload {
 
 /// Change username data
 #[derive(Serialize, Debug, Clone)]
-pub struct ChangeUsernamePayload {
+pub struct ChangeUsernameData {
     /// New username
     pub username: String,
     /// Current username password
@@ -74,14 +74,14 @@ pub struct ChangeUsernamePayload {
 
 /// Send friend request data
 #[derive(Serialize, Debug, Clone)]
-pub struct SendFriendRequestPayload {
+pub struct SendFriendRequestData {
     /// Friend's usernane
     pub username: String,
 }
 
 /// Edit channel data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditChannelPayload {
+pub struct EditChannelData {
     /// Channel name
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -102,17 +102,17 @@ pub struct EditChannelPayload {
     pub remove: Option<Vec<FieldsChannel>>,
 }
 
-/// Set role permission payload data
+/// Set role permission data data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SetRolePermissionPayload {
+pub struct SetRolePermissionData {
     /// Representation of a single permission override
     pub permissions: Override,
 }
 
-/// Set role permission payload data
+/// Set role permission data data
 #[derive(Serialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum SetDefaultPermissionPayload {
+pub enum SetDefaultPermissionData {
     Value {
         /// Permission values to set for members in a [Channel::Group]
         permissions: Permission,
@@ -125,7 +125,7 @@ pub enum SetDefaultPermissionPayload {
 
 /// Query parameters
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct FetchMessagesPayload {
+pub struct FetchMessagesData {
     /// Maximum number of messages to fetch
     ///
     /// For fetching nearby messages, this is `(limit + 1)`.
@@ -154,7 +154,7 @@ pub struct FetchMessagesPayload {
 
 /// Search Parameters
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SearchForMessagesPayload {
+pub struct SearchForMessagesData {
     /// Full-text search query
     ///
     /// See [MongoDB documentation](https://docs.mongodb.com/manual/text-search/#-text-operator) for more information.
@@ -181,7 +181,7 @@ pub struct SearchForMessagesPayload {
 
 /// Message details
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditMessagePayload {
+pub struct EditMessageData {
     /// New message content
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
@@ -192,14 +192,14 @@ pub struct EditMessagePayload {
 
 /// Search parameters
 #[derive(Serialize, Debug, Clone)]
-pub struct BulkDeleteMessagesPayload {
+pub struct BulkDeleteMessagesData {
     /// Message IDs
     pub ids: Vec<String>,
 }
 
 /// Reactions remove options
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct RemoveReactionToMessagePayload {
+pub struct RemoveReactionToMessageData {
     /// Remove a specific user's reaction
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
@@ -210,7 +210,7 @@ pub struct RemoveReactionToMessagePayload {
 
 /// Group create data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateGroupPayload {
+pub struct CreateGroupData {
     /// Group name
     name: String,
     /// Group description
@@ -226,7 +226,7 @@ pub struct CreateGroupPayload {
 
 /// Bot create data
 #[derive(Serialize, Debug, Clone)]
-pub struct CreateBotPayload {
+pub struct CreateBotData {
     /// Bot username
     name: String,
 }
@@ -234,7 +234,7 @@ pub struct CreateBotPayload {
 /// Bot invite data
 #[derive(Serialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum InviteBotPayload {
+pub enum InviteBotData {
     /// Invite to a server
     Server {
         /// Server Id
@@ -249,7 +249,7 @@ pub enum InviteBotPayload {
 
 /// Bot edit data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditBotPayload {
+pub struct EditBotData {
     /// Bot username
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -271,7 +271,7 @@ pub struct EditBotPayload {
 
 /// Create server data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateServerPayload {
+pub struct CreateServerData {
     /// Server name
     pub name: String,
     /// Server description
@@ -283,7 +283,7 @@ pub struct CreateServerPayload {
 
 /// Edit server data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditServerPayload {
+pub struct EditServerData {
     /// Server name
     pub name: Option<String>,
     /// Server description
@@ -314,7 +314,7 @@ pub struct EditServerPayload {
 
 /// Create channel data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateChannelPayload {
+pub struct CreateChannelData {
     /// Channel type
     #[serde(rename = "type", default = "ChannelType::default")]
     pub channel_type: ChannelType,
@@ -329,7 +329,7 @@ pub struct CreateChannelPayload {
 
 /// Create emoji data
 #[derive(Serialize, Debug, Clone)]
-pub struct CreateEmojiPayload {
+pub struct CreateEmojiData {
     /// Server name
     pub name: String,
     /// Parent information
@@ -340,14 +340,14 @@ pub struct CreateEmojiPayload {
 
 /// Fetch settings data
 #[derive(Serialize, Debug, Clone)]
-pub struct FetchSettingsPayload {
+pub struct FetchSettingsData {
     /// Keys to fetch
     pub keys: Vec<String>,
 }
 
 /// Web push subscription data
 #[derive(Serialize, Debug, Clone)]
-pub struct PushSubscribePayload {
+pub struct PushSubscribeData {
     pub endpoint: String,
     pub p256dh: String,
     pub auth: String,
@@ -355,7 +355,7 @@ pub struct PushSubscribePayload {
 
 /// Create role data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateRolePayload {
+pub struct CreateRoleData {
     /// Role name
     pub name: String,
     /// Ranking position
@@ -367,7 +367,7 @@ pub struct CreateRolePayload {
 
 /// Edit role data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditRolePayload {
+pub struct EditRoleData {
     /// Role name
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -389,21 +389,21 @@ pub struct EditRolePayload {
 
 /// Server role permission value
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SetServerRolePermissionPayload {
+pub struct SetServerRolePermissionData {
     /// Allow / deny values for the role in this server.
     pub permissions: Override,
 }
 
 /// Default server role permission value
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SetDefaultRolePermissionPayload {
+pub struct SetDefaultRolePermissionData {
     /// Allow / deny values for the role in this server.
     pub permissions: Override,
 }
 
 /// Members query options
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct FetchMembersPayload {
+pub struct FetchMembersData {
     /// Whether to exclude offline users
     #[serde(skip_serializing_if = "if_false")]
     pub exclude_offline: bool,
@@ -411,7 +411,7 @@ pub struct FetchMembersPayload {
 
 /// Member edit data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct EditMemberPayload {
+pub struct EditMemberData {
     /// Member nickname
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nickname: Option<String>,
@@ -431,7 +431,7 @@ pub struct EditMemberPayload {
 
 /// Ban information
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct BanUserPayload {
+pub struct BanUserData {
     /// Ban reason
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
@@ -439,7 +439,7 @@ pub struct BanUserPayload {
 
 /// New account data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateAccountPayload {
+pub struct CreateAccountData {
     /// Valid email address
     pub email: String,
     /// Password
@@ -454,7 +454,7 @@ pub struct CreateAccountPayload {
 
 /// Resend information
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct ResendVerificationPayload {
+pub struct ResendVerificationData {
     /// Email associated with the account
     pub email: String,
     /// Captcha verification code
@@ -464,14 +464,14 @@ pub struct ResendVerificationPayload {
 
 /// Account deletion data
 #[derive(Serialize, Debug, Clone)]
-pub struct ConfirmAccountDeletionPayload {
+pub struct ConfirmAccountDeletionData {
     /// Deletion token
     pub token: String,
 }
 
 /// Change password data
 #[derive(Serialize, Debug, Clone)]
-pub struct ChangePasswordPayload {
+pub struct ChangePasswordData {
     /// New password
     pub password: String,
     /// Current password
@@ -480,7 +480,7 @@ pub struct ChangePasswordPayload {
 
 /// Change email data
 #[derive(Serialize, Debug, Clone)]
-pub struct ChangeEmailPayload {
+pub struct ChangeEmailData {
     /// Valid email address
     pub email: String,
     /// Current password
@@ -489,7 +489,7 @@ pub struct ChangeEmailPayload {
 
 /// Reset password information
 #[derive(Serialize, Debug, Clone)]
-pub struct SendPasswordResetPayload {
+pub struct SendPasswordResetData {
     /// Email associated with the account
     pub email: String,
     /// Captcha verification code
@@ -499,7 +499,7 @@ pub struct SendPasswordResetPayload {
 
 /// Password reset data
 #[derive(Serialize, Debug, Clone)]
-pub struct PasswordResetPayload {
+pub struct PasswordResetData {
     /// Reset token
     pub token: String,
     /// New password
@@ -511,14 +511,14 @@ pub struct PasswordResetPayload {
 
 /// New user data
 #[derive(Serialize, Debug, Clone)]
-pub struct CompleteOnboardingPayload {
+pub struct CompleteOnboardingData {
     /// New username which will be used to identify the user on the platform
     pub username: String,
 }
 
 /// Edit report data
 #[derive(Serialize, Debug, Clone)]
-pub struct EditReportPayload {
+pub struct EditReportData {
     /// New report status
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<ReportStatus>,
@@ -529,7 +529,7 @@ pub struct EditReportPayload {
 
 /// Report data
 #[derive(Serialize, Debug, Clone)]
-pub struct ReportContentPayload {
+pub struct ReportContentData {
     /// Content being reported
     pub content: ReportedContent,
     /// Additional report description
@@ -539,7 +539,7 @@ pub struct ReportContentPayload {
 
 /// New strike information
 #[derive(Serialize, Debug, Clone)]
-pub struct CreateStrikePayload {
+pub struct CreateStrikeData {
     /// ID of reported user
     pub user_id: String,
 
@@ -549,7 +549,7 @@ pub struct CreateStrikePayload {
 
 /// Strike information edit data
 #[derive(Serialize, Debug, Clone)]
-pub struct EditAccountStrikePayload {
+pub struct EditAccountStrikeData {
     /// New attached reason
     pub reason: String,
 }
@@ -557,7 +557,7 @@ pub struct EditAccountStrikePayload {
 /// Login data
 #[derive(Serialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum LoginPayload {
+pub enum LoginData {
     Email {
         /// Email
         email: String,
@@ -585,27 +585,27 @@ pub enum LoginPayload {
 
 /// Sessions clear data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct DeleteAllSessionsPayload {
+pub struct DeleteAllSessionsData {
     #[serde(skip_serializing_if = "if_false")]
     pub revoke_self: bool,
 }
 
 /// Session edit data
 #[derive(Serialize, Debug, Clone)]
-pub struct EditSessionPayload {
+pub struct EditSessionData {
     /// Session friendly name
     pub friendly_name: String,
 }
 
 /// MFA ticket create data
-pub type CreateMFATicketPayload = MFAData;
+pub type CreateMFATicketData = MFAData;
 
 /// TOTP secret generate data
-pub type EnableTOTP2FAPayload = MFAData;
+pub type EnableTOTP2FAData = MFAData;
 
 /// Webhook create data
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct CreateWebhookPayload {
+pub struct CreateWebhookData {
     /// Webhook name
     pub name: String,
     /// Avatar's attachment ID

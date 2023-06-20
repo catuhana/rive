@@ -6,7 +6,7 @@ use rive::{
         authentication::Authentication,
         event::{ClientEvent, ServerEvent},
         message::Message,
-        payload::SendMessagePayload,
+        data::SendMessageData,
     },
 };
 use std::{env, error::Error, time::Duration};
@@ -90,11 +90,11 @@ async fn handle_message(message: Message, ctx: Context) -> Result {
 }
 
 async fn ping(message: Message, ctx: Context) -> Result {
-    let payload = SendMessagePayload {
+    let data = SendMessageData {
         content: Some("Pong!".to_owned()),
         ..Default::default()
     };
-    ctx.client.send_message(message.channel, payload).await?;
+    ctx.client.send_message(message.channel, data).await?;
 
     Ok(())
 }

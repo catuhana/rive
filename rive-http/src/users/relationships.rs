@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::SendFriendRequestPayload,
+    data::SendFriendRequestData,
     user::{Mutuals, User},
 };
 
@@ -76,12 +76,12 @@ impl Client {
     }
 
     /// Send a friend request to another user.
-    pub async fn send_friend_request(&self, payload: SendFriendRequestPayload) -> Result<User> {
+    pub async fn send_friend_request(&self, data: SendFriendRequestData) -> Result<User> {
         Ok(self
             .client
             .post(ep!(self, "/users/friend"))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

@@ -20,7 +20,7 @@ These are crates that most users will use together for a full development experi
 
 - [`rive-models`](https://crates.io/crates/rive-models)
 
-    Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from WebSocket or `payload` for containing fields used in API requests.
+    Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from WebSocket or `data` for containing fields used in API requests.
 
     Models can be serialized or deserialized using [`Serde`](https://serde.rs).
 

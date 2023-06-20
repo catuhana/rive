@@ -1,14 +1,14 @@
 use crate::prelude::*;
-use rive_models::{channel::ChannelUnread, payload::FetchMessagesPayload, user::UserSettings};
+use rive_models::{channel::ChannelUnread, data::FetchMessagesData, user::UserSettings};
 use std::collections::HashMap;
 
 impl Client {
     /// Fetch settings from server filtered by keys.
-    pub async fn fetch_settings(&self, payload: FetchMessagesPayload) -> Result<UserSettings> {
+    pub async fn fetch_settings(&self, data: FetchMessagesData) -> Result<UserSettings> {
         Ok(self
             .client
             .post(ep!(self, "/sync/settings/fetch"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -19,10 +19,10 @@ impl Client {
     }
 
     /// Upload data to save to settings.
-    pub async fn set_settings(&self, payload: HashMap<String, String>) -> Result<()> {
+    pub async fn set_settings(&self, data: HashMap<String, String>) -> Result<()> {
         self.client
             .post(ep!(self, "/sync/settings/set"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

@@ -1,19 +1,19 @@
 use crate::prelude::*;
 use rive_models::{
     account::{AccountInfo, EmailVerification},
-    payload::{
-        ChangeEmailPayload, ChangePasswordPayload, ConfirmAccountDeletionPayload,
-        CreateAccountPayload, PasswordResetPayload, ResendVerificationPayload,
-        SendPasswordResetPayload,
+    data::{
+        ChangeEmailData, ChangePasswordData, ConfirmAccountDeletionData,
+        CreateAccountData, PasswordResetData, ResendVerificationData,
+        SendPasswordResetData,
     },
 };
 
 impl Client {
     /// Create a new account.
-    pub async fn create_account(&self, payload: CreateAccountPayload) -> Result<()> {
+    pub async fn create_account(&self, data: CreateAccountData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/create"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -22,10 +22,10 @@ impl Client {
     }
 
     /// Resend account creation verification email.
-    pub async fn resend_verification(&self, payload: ResendVerificationPayload) -> Result<()> {
+    pub async fn resend_verification(&self, data: ResendVerificationData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/reverify"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -36,11 +36,11 @@ impl Client {
     /// Schedule an account for deletion by confirming the received token.
     pub async fn confirm_account_deletion(
         &self,
-        payload: ConfirmAccountDeletionPayload,
+        data: ConfirmAccountDeletionData,
     ) -> Result<()> {
         self.client
             .put(ep!(self, "/auth/account/delete"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -87,10 +87,10 @@ impl Client {
     }
 
     /// Change the current account password.
-    pub async fn change_password(&self, payload: ChangePasswordPayload) -> Result<()> {
+    pub async fn change_password(&self, data: ChangePasswordData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/change/password"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -100,10 +100,10 @@ impl Client {
     }
 
     /// Change the associated account email.
-    pub async fn change_email(&self, payload: ChangeEmailPayload) -> Result<()> {
+    pub async fn change_email(&self, data: ChangeEmailData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/change/email"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -126,10 +126,10 @@ impl Client {
     }
 
     /// Send an email to reset account password.
-    pub async fn send_password_reset(&self, payload: SendPasswordResetPayload) -> Result<()> {
+    pub async fn send_password_reset(&self, data: SendPasswordResetData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/reset_password"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -138,10 +138,10 @@ impl Client {
     }
 
     /// Confirm password reset and change the password.
-    pub async fn password_reset(&self, payload: PasswordResetPayload) -> Result<()> {
+    pub async fn password_reset(&self, data: PasswordResetData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/reset_password"))
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

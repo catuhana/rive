@@ -1,17 +1,17 @@
 use crate::prelude::*;
 use rive_models::{
     channel::Channel,
-    payload::{CreateChannelPayload, CreateServerPayload, EditServerPayload},
+    data::{CreateChannelData, CreateServerData, EditServerData},
     server::Server,
 };
 
 impl Client {
     /// Create a new server.
-    pub async fn create_server(&self, payload: CreateServerPayload) -> Result<Server> {
+    pub async fn create_server(&self, data: CreateServerData) -> Result<Server> {
         Ok(self
             .client
             .post(ep!(self, "/servers/create"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -53,12 +53,12 @@ impl Client {
     pub async fn edit_server(
         &self,
         id: impl Into<String>,
-        payload: EditServerPayload,
+        data: EditServerData,
     ) -> Result<Server> {
         Ok(self
             .client
             .patch(ep!(self, "/servers/{}", id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -86,12 +86,12 @@ impl Client {
     pub async fn create_channel(
         &self,
         server_id: impl Into<String>,
-        payload: CreateChannelPayload,
+        data: CreateChannelData,
     ) -> Result<Channel> {
         Ok(self
             .client
             .post(ep!(self, "/servers/{}/channels", server_id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

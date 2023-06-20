@@ -1,9 +1,9 @@
 use crate::prelude::*;
 use rive_models::{
     message::{BulkMessageResponse, Message},
-    payload::{
-        BulkDeleteMessagesPayload, EditMessagePayload, FetchMessagesPayload,
-        SearchForMessagesPayload, SendMessagePayload,
+    data::{
+        BulkDeleteMessagesData, EditMessageData, FetchMessagesData,
+        SearchForMessagesData, SendMessageData,
     },
 };
 
@@ -33,13 +33,13 @@ impl Client {
     pub async fn fetch_messages(
         &self,
         channel_id: impl Into<String>,
-        payload: FetchMessagesPayload,
+        data: FetchMessagesData,
     ) -> Result<BulkMessageResponse> {
         Ok(self
             .client
             .get(ep!(self, "/channels/{}/messages", channel_id.into()))
             .auth(&self.authentication)
-            .query(&payload)
+            .query(&data)
             .send()
             .await?
             .process_error()
@@ -52,13 +52,13 @@ impl Client {
     pub async fn send_message(
         &self,
         channel_id: impl Into<String>,
-        payload: SendMessagePayload,
+        data: SendMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
             .post(ep!(self, "/channels/{}/messages", channel_id.into()))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -71,13 +71,13 @@ impl Client {
     pub async fn search_for_messages(
         &self,
         channel_id: impl Into<String>,
-        payload: SearchForMessagesPayload,
+        data: SearchForMessagesData,
     ) -> Result<Message> {
         Ok(self
             .client
             .post(ep!(self, "/channels/{}/messages/search", channel_id.into()))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -134,7 +134,7 @@ impl Client {
         &self,
         channel_id: impl Into<String>,
         message_id: impl Into<String>,
-        payload: EditMessagePayload,
+        data: EditMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
@@ -145,7 +145,7 @@ impl Client {
                 message_id.into()
             ))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -162,12 +162,12 @@ impl Client {
     pub async fn bulk_delete_messages(
         &self,
         channel_id: impl Into<String>,
-        payload: BulkDeleteMessagesPayload,
+        data: BulkDeleteMessagesData,
     ) -> Result<()> {
         self.client
             .delete(ep!(self, "/channels/{}/messages/bulk", channel_id.into(),))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

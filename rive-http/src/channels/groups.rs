@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use rive_models::{channel::Channel, payload::CreateGroupPayload, user::User};
+use rive_models::{channel::Channel, data::CreateGroupData, user::User};
 
 impl Client {
     /// Retrieves all users who are part of this group.
@@ -17,11 +17,11 @@ impl Client {
     }
 
     /// Create a new group channel.
-    pub async fn create_group(&self, payload: CreateGroupPayload) -> Result<Channel> {
+    pub async fn create_group(&self, data: CreateGroupData) -> Result<Channel> {
         Ok(self
             .client
             .post(ep!(self, "/channels/create"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

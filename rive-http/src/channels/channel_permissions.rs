@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use rive_models::{
     channel::Channel,
-    payload::{SetDefaultPermissionPayload, SetRolePermissionPayload},
+    data::{SetDefaultPermissionData, SetRolePermissionData},
 };
 
 impl Client {
@@ -12,7 +12,7 @@ impl Client {
         &self,
         channel_id: impl Into<String>,
         role_id: impl Into<String>,
-        payload: SetRolePermissionPayload,
+        data: SetRolePermissionData,
     ) -> Result<Channel> {
         Ok(self
             .client
@@ -23,7 +23,7 @@ impl Client {
                 role_id.into()
             ))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()
@@ -38,7 +38,7 @@ impl Client {
     pub async fn set_default_channel_permissions(
         &self,
         channel_id: impl Into<String>,
-        payload: SetDefaultPermissionPayload,
+        data: SetDefaultPermissionData,
     ) -> Result<Channel> {
         Ok(self
             .client
@@ -48,7 +48,7 @@ impl Client {
                 channel_id.into(),
             ))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

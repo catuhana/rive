@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use rive_models::{message::BulkMessageResponse, payload::FetchMessagesPayload, stats::Stats};
+use rive_models::{message::BulkMessageResponse, data::FetchMessagesData, stats::Stats};
 
 impl Client {
     /// Fetch various technical statistics.
@@ -17,12 +17,12 @@ impl Client {
     /// This is a privileged route to globally fetch messages.
     pub async fn globally_fetch_messages(
         &self,
-        payload: FetchMessagesPayload,
+        data: FetchMessagesData,
     ) -> Result<BulkMessageResponse> {
         Ok(self
             .client
             .get(ep!(self, "/admin/messages"))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

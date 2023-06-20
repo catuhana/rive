@@ -1,4 +1,4 @@
-use rive_models::{payload::CreateWebhookPayload, webhook::Webhook};
+use rive_models::{data::CreateWebhookData, webhook::Webhook};
 
 use crate::prelude::*;
 
@@ -7,12 +7,12 @@ impl Client {
     pub async fn create_webhook(
         &self,
         channel_id: impl Into<String>,
-        payload: CreateWebhookPayload,
+        data: CreateWebhookData,
     ) -> Result<Webhook> {
         Ok(self
             .client
             .post(ep!(self, "/channels/{}/webhooks", channel_id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?

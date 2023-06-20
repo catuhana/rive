@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use rive_models::{channel::Channel, payload::EditChannelPayload};
+use rive_models::{channel::Channel, data::EditChannelData};
 
 impl Client {
     /// Fetch channel by its ID.
@@ -32,13 +32,13 @@ impl Client {
     pub async fn edit_channel(
         &self,
         id: impl Into<String>,
-        payload: EditChannelPayload,
+        data: EditChannelData,
     ) -> Result<Channel> {
         Ok(self
             .client
             .patch(ep!(self, "/channels/{}", id.into()))
             .auth(&self.authentication)
-            .json(&payload)
+            .json(&data)
             .send()
             .await?
             .process_error()

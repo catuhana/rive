@@ -1,8 +1,8 @@
 use crate::prelude::*;
 use rive_models::{
-    payload::{
-        CreateRolePayload, EditRolePayload, SetDefaultRolePermissionPayload,
-        SetServerRolePermissionPayload,
+    data::{
+        CreateRoleData, EditRoleData, SetDefaultRolePermissionData,
+        SetServerRolePermissionData,
     },
     server::{NewRole, Role, Server},
 };
@@ -12,12 +12,12 @@ impl Client {
     pub async fn create_role(
         &self,
         server_id: impl Into<String>,
-        payload: CreateRolePayload,
+        data: CreateRoleData,
     ) -> Result<NewRole> {
         Ok(self
             .client
             .post(ep!(self, "/servers/{}/roles", server_id.into()))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -53,7 +53,7 @@ impl Client {
         &self,
         server_id: impl Into<String>,
         role_id: impl Into<String>,
-        payload: EditRolePayload,
+        data: EditRoleData,
     ) -> Result<Role> {
         Ok(self
             .client
@@ -63,7 +63,7 @@ impl Client {
                 server_id.into(),
                 role_id.into()
             ))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -78,7 +78,7 @@ impl Client {
         &self,
         server_id: impl Into<String>,
         role_id: impl Into<String>,
-        payload: SetServerRolePermissionPayload,
+        data: SetServerRolePermissionData,
     ) -> Result<Server> {
         Ok(self
             .client
@@ -88,7 +88,7 @@ impl Client {
                 server_id.into(),
                 role_id.into()
             ))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
@@ -102,7 +102,7 @@ impl Client {
     pub async fn set_default_permission(
         &self,
         server_id: impl Into<String>,
-        payload: SetDefaultRolePermissionPayload,
+        data: SetDefaultRolePermissionData,
     ) -> Result<Server> {
         Ok(self
             .client
@@ -111,7 +111,7 @@ impl Client {
                 "/servers/{}/permissions/default",
                 server_id.into(),
             ))
-            .json(&payload)
+            .json(&data)
             .auth(&self.authentication)
             .send()
             .await?
