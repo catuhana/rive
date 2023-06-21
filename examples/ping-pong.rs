@@ -8,11 +8,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     while let Some(event) = rive.gateway.next().await {
         if let ServerEvent::Message(message) = event? {
             if message.content.is_some_and(|c| c.starts_with("!ping")) {
-                let payload = SendMessageData {
+                let data = SendMessageData {
                     content: Some("Pong!".to_owned()),
                     ..Default::default()
                 };
-                rive.http.send_message(message.channel, payload).await?;
+                rive.http.send_message(message.channel, data).await?;
             };
         }
     }
