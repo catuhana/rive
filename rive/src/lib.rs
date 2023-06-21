@@ -34,11 +34,11 @@ pub mod prelude {
         voice::*, webhook::*, *,
     };
 
-    pub use rive_http::{Error as HttpError, Client};
     pub use rive_gateway::{Error as GatewayError, Gateway, GatewayConfig};
+    pub use rive_http::{Client, Error as HttpError};
 
-    pub use futures::StreamExt;
     pub use crate::Rive;
+    pub use futures::StreamExt;
 }
 
 #[derive(Debug, Clone)]
