@@ -14,3 +14,4 @@ keywords.workspace = true
 rive-models = { path = "../rive-models", version = "0" }
 rive-gateway = { path = "../rive-gateway", version = "0" }
 rive-http = { path = "../rive-http", version = "0" }
+futures = "0.3"

@@ -857,6 +857,7 @@ dependencies = [
 name = "rive"
 version = "0.1.2"
 dependencies = [
+ "futures",
  "rive-gateway",
  "rive-http",
  "rive-models",
