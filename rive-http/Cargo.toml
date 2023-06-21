@@ -2,7 +2,7 @@
 name = "rive-http"
 description = "Revolt REST API client for the Rive ecosystem."
 categories = ["api-bindings"]
-version = "0.1.1"
+version = "1.0.0"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
