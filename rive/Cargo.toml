@@ -11,7 +11,7 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-rive-models = { path = "../rive-models", version = "0" }
-rive-gateway = { path = "../rive-gateway", version = "0" }
-rive-http = { path = "../rive-http", version = "0" }
+rive-models = { path = "../rive-models", version = "1" }
+rive-gateway = { path = "../rive-gateway", version = "1" }
+rive-http = { path = "../rive-http", version = "1" }
 futures = "0.3"
