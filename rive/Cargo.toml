@@ -2,7 +2,7 @@
 name = "rive"
 description = "The Rive ecosystem crate."
 categories = ["api-bindings", "data-structures"]
-version = "1.0.0"
+version = "1.0.1"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
