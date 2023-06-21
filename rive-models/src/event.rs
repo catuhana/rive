@@ -33,100 +33,100 @@ pub enum ErrorId {
 #[serde(tag = "type")]
 pub enum ServerEvent {
     /// Multiple events
-    Bulk(Bulk),
+    Bulk(BulkEvent),
 
     /// Error
-    Error(Error),
+    Error(ErrorEvent),
 
     /// Successfully authenticated
     Authenticated,
 
     /// Basic data to cache
-    Ready(Ready),
+    Ready(ReadyEvent),
 
     /// Ping response
-    Pong(Pong),
+    Pong(PongEvent),
 
     /// New message
     Message(Message),
 
     /// Update existing message
-    MessageUpdate(MessageUpdate),
+    MessageUpdate(MessageUpdateEvent),
 
     /// Append information to existing message
-    MessageAppend(MessageAppend),
+    MessageAppend(MessageAppendEvent),
 
     /// Delete message
-    MessageDelete(MessageDelete),
+    MessageDelete(MessageDeleteEvent),
 
     /// New reaction to a message
-    MessageReact(MessageReact),
+    MessageReact(MessageReactEvent),
 
     /// Remove user's reaction from message
-    MessageUnreact(MessageUnreact),
+    MessageUnreact(MessageUnreactEvent),
 
     /// Remove a reaction from message
-    MessageRemoveReaction(MessageRemoveReaction),
+    MessageRemoveReaction(MessageRemoveReactionEvent),
 
     /// Bulk delete messages
-    BulkMessageDelete(BulkMessageDelete),
+    BulkMessageDelete(BulkMessageDeleteEvent),
 
     /// New channel
     ChannelCreate(Channel),
 
     /// Update existing channel
-    ChannelUpdate(ChannelUpdate),
+    ChannelUpdate(ChannelUpdateEvent),
 
     /// Delete channel
-    ChannelDelete(ChannelDelete),
+    ChannelDelete(ChannelDeleteEvent),
 
     /// User joins a group
-    ChannelGroupJoin(ChannelGroupJoin),
+    ChannelGroupJoin(ChannelGroupJoinEvent),
 
     /// User leaves a group
-    ChannelGroupLeave(ChannelGroupLeave),
+    ChannelGroupLeave(ChannelGroupLeaveEvent),
 
     /// User started typing in a channel
-    ChannelStartTyping(ChannelStartTyping),
+    ChannelStartTyping(ChannelStartTypingEvent),
 
     /// User stopped typing in a channel
-    ChannelStopTyping(ChannelStartTyping),
+    ChannelStopTyping(ChannelStopTypingEvent),
 
     /// User acknowledged message in channel
-    ChannelAck(ChannelAck),
+    ChannelAck(ChannelAckEvent),
 
     /// New server
-    ServerCreate(ServerCreate),
+    ServerCreate(ServerCreateEvent),
 
     /// Update existing server
-    ServerUpdate(ServerUpdate),
+    ServerUpdate(ServerUpdateEvent),
 
     /// Delete server
-    ServerDelete(ServerDelete),
+    ServerDelete(ServerDeleteEvent),
 
     /// Update existing server member
-    ServerMemberUpdate(ServerMemberUpdate),
+    ServerMemberUpdate(ServerMemberUpdateEvent),
 
     /// User joins server
-    ServerMemberJoin(ServerMemberJoin),
+    ServerMemberJoin(ServerMemberJoinEvent),
 
     /// User left server
-    ServerMemberLeave(ServerMemberLeave),
+    ServerMemberLeave(ServerMemberLeaveEvent),
 
     /// Server role created or updated
-    ServerRoleUpdate(ServerRoleUpdate),
+    ServerRoleUpdate(ServerRoleUpdateEvent),
 
     /// Server role deleted
-    ServerRoleDelete(ServerRoleDelete),
+    ServerRoleDelete(ServerRoleDeleteEvent),
 
     /// Update existing user
-    UserUpdate(UserUpdate),
+    UserUpdate(UserUpdateEvent),
 
     /// Relationship with another user changed
-    UserRelationship(UserRelationship),
+    UserRelationship(UserRelationshipEvent),
 
     /// Settings updated remotely
-    UserSettingsUpdate(UserSettingsUpdate),
+    UserSettingsUpdate(UserSettingsUpdateEvent),
 
     /// User has been platform banned or deleted their account
     ///
@@ -137,22 +137,22 @@ pub enum ServerEvent {
     /// - Server Memberships
     ///
     /// User flags are specified to explain why a wipe is occurring though not all reasons will necessarily ever appear.
-    UserPlatformWipe(UserPlatformWipe),
+    UserPlatformWipe(UserPlatformWipeEvent),
 
     /// New emoji
     EmojiCreate(Emoji),
 
     /// Delete emoji
-    EmojiDelete(EmojiDelete),
+    EmojiDelete(EmojiDeleteEvent),
 
     /// New webhook
     WebhookCreate(Webhook),
 
     /// Update existing webhook
-    WebhookUpdate(WebhookUpdate),
+    WebhookUpdate(WebhookUpdateEvent),
 
     /// Delete webhook
-    WebhookDelete { id: String },
+    WebhookDelete(WebhookDeleteEvent),
 
     /// New report
     ReportCreate(Report),
@@ -193,21 +193,21 @@ pub enum AuthifierEvent {
 
 /// Bulk event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct Bulk {
+pub struct BulkEvent {
     /// List of events
     pub v: Vec<ServerEvent>,
 }
 
 /// Error event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct Error {
+pub struct ErrorEvent {
     /// Error ID
     pub error: ErrorId,
 }
 
 /// Ready event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct Ready {
+pub struct ReadyEvent {
     /// List of users
     pub users: Vec<User>,
     /// List of servers
@@ -222,14 +222,14 @@ pub struct Ready {
 
 /// Server pong event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct Pong {
+pub struct PongEvent {
     /// Client echo data
     pub data: u32,
 }
 
 /// Message update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageUpdate {
+pub struct MessageUpdateEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -240,7 +240,7 @@ pub struct MessageUpdate {
 
 /// Message append event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageAppend {
+pub struct MessageAppendEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -251,7 +251,7 @@ pub struct MessageAppend {
 
 /// Message delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageDelete {
+pub struct MessageDeleteEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -260,7 +260,7 @@ pub struct MessageDelete {
 
 /// Message react event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageReact {
+pub struct MessageReactEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -273,7 +273,7 @@ pub struct MessageReact {
 
 /// Message reaction remove event
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageUnreact {
+pub struct MessageUnreactEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -286,7 +286,7 @@ pub struct MessageUnreact {
 
 /// Message remove reaction event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct MessageRemoveReaction {
+pub struct MessageRemoveReactionEvent {
     /// Message ID
     pub id: String,
     /// Channel ID
@@ -297,7 +297,7 @@ pub struct MessageRemoveReaction {
 
 /// Bulk message delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct BulkMessageDelete {
+pub struct BulkMessageDeleteEvent {
     /// Channel ID
     pub channel: String,
     /// List of messages IDs
@@ -306,7 +306,7 @@ pub struct BulkMessageDelete {
 
 /// Channel update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelUpdate {
+pub struct ChannelUpdateEvent {
     pub id: String,
     pub data: PartialChannel,
     pub clear: Vec<FieldsChannel>,
@@ -314,14 +314,14 @@ pub struct ChannelUpdate {
 
 /// Channel delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelDelete {
+pub struct ChannelDeleteEvent {
     /// Deleted channel ID
     pub id: String,
 }
 
 /// Group join event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelGroupJoin {
+pub struct ChannelGroupJoinEvent {
     /// Group ID
     pub id: String,
     /// User ID
@@ -330,7 +330,7 @@ pub struct ChannelGroupJoin {
 
 /// Group leave event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelGroupLeave {
+pub struct ChannelGroupLeaveEvent {
     /// Group ID
     pub id: String,
     /// User ID
@@ -339,7 +339,7 @@ pub struct ChannelGroupLeave {
 
 /// Channel start typing event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelStartTyping {
+pub struct ChannelStartTypingEvent {
     /// Channel ID
     pub id: String,
     /// Typing user ID
@@ -348,7 +348,7 @@ pub struct ChannelStartTyping {
 
 /// Channel stop typing event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelStopTyping {
+pub struct ChannelStopTypingEvent {
     /// Channel ID
     pub id: String,
     /// Typing user ID
@@ -357,7 +357,7 @@ pub struct ChannelStopTyping {
 
 /// Channel acknowledge event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ChannelAck {
+pub struct ChannelAckEvent {
     /// Channel ID
     pub id: String,
     /// User ID
@@ -368,7 +368,7 @@ pub struct ChannelAck {
 
 /// New server data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerCreate {
+pub struct ServerCreateEvent {
     /// Server ID
     pub id: String,
     /// Server information
@@ -379,7 +379,7 @@ pub struct ServerCreate {
 
 /// Server update data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerUpdate {
+pub struct ServerUpdateEvent {
     /// Server ID
     pub id: String,
     /// Server changed data
@@ -390,14 +390,14 @@ pub struct ServerUpdate {
 
 /// Server delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerDelete {
+pub struct ServerDeleteEvent {
     /// Deleted server ID
     pub id: String,
 }
 
 /// Server member update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerMemberUpdate {
+pub struct ServerMemberUpdateEvent {
     /// Member ID
     pub id: MemberCompositeKey,
     /// Member changed data
@@ -408,7 +408,7 @@ pub struct ServerMemberUpdate {
 
 /// Member join event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerMemberJoin {
+pub struct ServerMemberJoinEvent {
     /// Server ID
     pub id: String,
     /// User ID
@@ -417,7 +417,7 @@ pub struct ServerMemberJoin {
 
 /// Server member leave event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerMemberLeave {
+pub struct ServerMemberLeaveEvent {
     /// Server ID
     pub id: String,
     /// Leaved user ID
@@ -426,7 +426,7 @@ pub struct ServerMemberLeave {
 
 /// Server role update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerRoleUpdate {
+pub struct ServerRoleUpdateEvent {
     /// Server ID
     pub id: String,
     /// Role  ID
@@ -439,7 +439,7 @@ pub struct ServerRoleUpdate {
 
 /// Server role delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct ServerRoleDelete {
+pub struct ServerRoleDeleteEvent {
     /// Server ID
     pub id: String,
     /// Role ID
@@ -448,7 +448,7 @@ pub struct ServerRoleDelete {
 
 /// User update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct UserUpdate {
+pub struct UserUpdateEvent {
     /// User ID
     pub id: String,
     /// Changed user data
@@ -459,7 +459,7 @@ pub struct UserUpdate {
 
 /// User relationship update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct UserRelationship {
+pub struct UserRelationshipEvent {
     pub id: String,
     /// User with whom relationship changed
     pub user: User,
@@ -469,7 +469,7 @@ pub struct UserRelationship {
 
 /// Settings update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct UserSettingsUpdate {
+pub struct UserSettingsUpdateEvent {
     pub id: String,
     /// Updated settings
     pub update: UserSettings,
@@ -477,7 +477,7 @@ pub struct UserSettingsUpdate {
 
 /// User wipe event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct UserPlatformWipe {
+pub struct UserPlatformWipeEvent {
     /// Deleted user ID
     pub user_id: String,
     /// User flags
@@ -486,14 +486,14 @@ pub struct UserPlatformWipe {
 
 /// Emoji delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct EmojiDelete {
+pub struct EmojiDeleteEvent {
     /// Deleted emoji ID
     pub id: String,
 }
 
 /// Webhook update event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct WebhookUpdate {
+pub struct WebhookUpdateEvent {
     /// Webhook ID
     pub id: String,
     /// Updated webhook data
@@ -504,6 +504,6 @@ pub struct WebhookUpdate {
 
 /// Webhook delete event data
 #[derive(Deserialize, Debug, Clone)]
-pub struct WebhookDelete {
+pub struct WebhookDeleteEvent {
     pub id: String,
 }

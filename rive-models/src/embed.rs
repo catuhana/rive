@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "type")]
 pub enum Embed {
-    Website(Metadata),
+    Website(WebsiteMetadata),
     Image(Image),
     Video(Video),
     Text(Text),
@@ -155,7 +155,7 @@ pub enum BandcampType {
 
 /// Website metadata
 #[derive(Deserialize, Debug, Clone)]
-pub struct Metadata {
+pub struct WebsiteMetadata {
     /// Direct URL to web page
     pub url: Option<String>,
 

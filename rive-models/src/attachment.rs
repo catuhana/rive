@@ -3,7 +3,7 @@ use serde::Deserialize;
 /// Metadata associated with attachment
 #[derive(Deserialize, Debug, Clone, Default)]
 #[serde(tag = "type")]
-pub enum Metadata {
+pub enum AttachmentMetadata {
     /// Attachment is just a generic uncategorised file
     #[default]
     File,
@@ -35,7 +35,7 @@ pub struct Attachment {
     pub filename: String,
 
     /// Parsed metadata of this attachment
-    pub metadata: Metadata,
+    pub metadata: AttachmentMetadata,
 
     /// Raw content type of this attachment
     pub content_type: String,
