@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 use std::borrow::Cow;
 
 use reqwest::multipart::{Form, Part};
@@ -24,6 +26,7 @@ pub enum Error {
     Api(AutumnError),
 }
 
+/// A wrapper for Autumn API
 #[derive(Debug, Clone)]
 pub struct Client {
     base_url: String,
