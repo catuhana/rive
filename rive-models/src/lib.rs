@@ -9,6 +9,7 @@ pub mod core;
 pub mod data;
 pub mod embed;
 pub mod emoji;
+pub mod error;
 pub mod event;
 pub mod invite;
 pub mod member;
@@ -26,7 +27,7 @@ pub mod user;
 pub mod voice;
 pub mod webhook;
 
-mod error;
+#[deprecated = "Please import `rive_models::error::ApiError` instead"]
 pub use error::ApiError;
 
 macro_rules! impl_serde_bitflags(
