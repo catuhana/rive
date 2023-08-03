@@ -3,6 +3,7 @@
 pub mod account;
 pub mod attachment;
 pub mod authentication;
+pub mod autumn;
 pub mod bot;
 pub mod channel;
 pub mod core;
