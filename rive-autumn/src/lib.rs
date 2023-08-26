@@ -43,6 +43,12 @@ pub struct Client {
     client: reqwest::Client,
 }
 
+impl Default for Client {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Client {
     /// Create a client with Revolt official instance base URL.
     pub fn new() -> Self {
