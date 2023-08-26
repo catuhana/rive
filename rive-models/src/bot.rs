@@ -2,11 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::{attachment::Attachment, user::User};
 
-#[allow(dead_code)]
-fn if_false(t: &bool) -> bool {
-    !t
-}
-
 bitflags::bitflags! {
     /// User badge bitfield
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -48,23 +43,19 @@ pub struct Bot {
     pub public: bool,
 
     /// Whether to enable analytics
-    #[serde(skip_serializing_if = "if_false", default)]
+    #[serde(default)]
     pub analytics: bool,
     /// Whether this bot should be publicly discoverable
-    #[serde(skip_serializing_if = "if_false", default)]
+    #[serde(default)]
     pub discoverable: bool,
     /// Reserved; URL for handling interactions
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub interactions_url: Option<String>,
     /// URL for terms of service
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub terms_of_service_url: Option<String>,
     /// URL for privacy policy
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub privacy_policy_url: Option<String>,
 
     /// Enum of bot flags
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub flags: Option<BotFlags>,
 }
 
@@ -75,37 +66,27 @@ pub struct PartialBot {
     ///
     /// This equals the associated bot user's id.
     #[serde(rename = "_id")]
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// User Id of the bot owner
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<String>,
     /// Token used to authenticate requests for this bot
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub token: Option<String>,
     /// Whether the bot is public
     /// (may be invited by anyone)
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub public: Option<bool>,
 
     /// Whether to enable analytics
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub analytics: Option<bool>,
     /// Whether this bot should be publicly discoverable
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub discoverable: Option<bool>,
     /// Reserved; URL for handling interactions
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub interactions_url: Option<String>,
     /// URL for terms of service
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub terms_of_service_url: Option<String>,
     /// URL for privacy policy
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub privacy_policy_url: Option<String>,
 
     /// Enum of bot flags
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub flags: Option<BotFlags>,
 }
 
