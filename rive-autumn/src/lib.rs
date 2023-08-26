@@ -1,9 +1,16 @@
 #![doc = include_str!("../README.md")]
 
-use std::borrow::Cow;
-
-use reqwest::multipart::{Form, Part};
+use futures::TryStreamExt;
+use reqwest::{
+    multipart::{Form, Part},
+    Body,
+};
 use rive_models::{autumn::UploadData, error::AutumnError};
+use tokio::io::AsyncRead;
+use tokio_util::{
+    codec::{BytesCodec, FramedRead},
+    io::StreamReader,
+};
 
 /// Revolt official instance base URL
 pub const BASE_URL: &str = "https://autumn.revolt.chat";
@@ -48,7 +55,11 @@ impl Client {
     }
 
     /// Download an attachment by its tag and ID.
-    pub async fn download(&self, tag: impl Into<String>, id: impl Into<String>) -> Result<Vec<u8>> {
+    pub async fn download(
+        &self,
+        tag: impl Into<String>,
+        id: impl Into<String>,
+    ) -> Result<impl AsyncRead> {
         let response = self
             .client
             .get(format!("{}/{}/{}", self.base_url, tag.into(), id.into()))
@@ -56,7 +67,14 @@ impl Client {
             .await?;
 
         match response.status().as_u16() {
-            200..=299 => Ok(response.bytes().await?.to_vec()),
+            200..=299 => {
+                let st = StreamReader::new(
+                    response
+                        .bytes_stream()
+                        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e)),
+                );
+                Ok(st)
+            }
             _ => Err(Error::Api(response.json().await?)),
         }
     }
@@ -66,9 +84,11 @@ impl Client {
         &self,
         tag: impl Into<String>,
         filename: impl Into<String>,
-        contents: impl Into<Cow<'static, [u8]>>,
+        contents: impl AsyncRead + Send + Sync + 'static,
     ) -> Result<UploadData> {
-        let part = Part::bytes(contents).file_name(filename.into());
+        let stream = FramedRead::new(contents, BytesCodec::new());
+        let body = Body::wrap_stream(stream);
+        let part = Part::stream(body).file_name(filename.into());
         let form = Form::new().part("file", part);
 
         let response = self
