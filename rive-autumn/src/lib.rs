@@ -5,7 +5,10 @@ use reqwest::{
     multipart::{Form, Part},
     Body,
 };
-use rive_models::{autumn::UploadData, error::AutumnError};
+use rive_models::{
+    autumn::{Config, UploadData},
+    error::AutumnError,
+};
 use tokio::io::AsyncRead;
 use tokio_util::{
     codec::{BytesCodec, FramedRead},
@@ -51,6 +54,19 @@ impl Client {
         Client {
             base_url: base_url.into(),
             client: reqwest::Client::new(),
+        }
+    }
+
+    pub async fn fetch_config(&self) -> Result<Config> {
+        let response = self
+            .client
+            .get(format!("{}/", self.base_url))
+            .send()
+            .await?;
+
+        match response.status().as_u16() {
+            200..=299 => Ok(response.json().await?),
+            _ => Err(Error::Api(response.json().await?)),
         }
     }
 
