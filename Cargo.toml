@@ -4,7 +4,8 @@ members = [
     "rive",
     "rive-models",
     "rive-http",
-    "rive-gateway"
+    "rive-gateway",
+    "rive-autumn"
 ]
 
 [workspace.package]

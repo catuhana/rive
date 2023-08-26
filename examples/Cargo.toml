@@ -6,10 +6,21 @@ edition = "2021"
 
 [dev-dependencies]
 rive = { path = "../rive" }
+rive-autumn = { path = "../rive-autumn" }
+rive-http = { path = "../rive-http" }
+rive-models = { path = "../rive-models" }
 
 [[example]]
 name = "ping-pong"
 path = "ping-pong.rs"
+
+[[example]]
+name = "file-download"
+path = "file-download.rs"
+
+[[example]]
+name = "file-upload"
+path = "file-upload.rs"
 
 [dependencies]
 futures = "0.3"

@@ -2,6 +2,11 @@ use serde::Deserialize;
 
 use crate::permission::{Permission, UserPermission};
 
+/// A representation of an API error.
+///
+/// Please consider importing this type as `rive_models::error::ApiError`
+/// instead of `rive_models::ApiError` as this export is deprecated and
+/// will be removed in next major release.
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[serde(tag = "type")]
 pub enum ApiError {
@@ -68,4 +73,23 @@ pub enum ApiError {
 
     // Other errors that API does not return but it's still API related things
     Unauthenticated,
+}
+
+/// Revolt file storage API error
+#[derive(Deserialize, Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[serde(tag = "type")]
+pub enum AutumnError {
+    FileTooLarge { max_size: usize },
+    FileTypeNotAllowed,
+    FailedToReceive,
+    BlockingError,
+    DatabaseError,
+    MissingData,
+    UnknownTag,
+    ProbeError,
+    NotFound,
+    Malware,
+    IOError,
+    S3Error,
+    LabelMe,
 }

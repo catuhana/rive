@@ -2,7 +2,7 @@
 name = "rive"
 description = "The Rive ecosystem crate."
 categories = ["api-bindings", "data-structures"]
-version = "1.0.2"
+version = "1.1.0"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -14,4 +14,5 @@ keywords.workspace = true
 rive-models = { path = "../rive-models", version = "1" }
 rive-gateway = { path = "../rive-gateway", version = "1" }
 rive-http = { path = "../rive-http", version = "1" }
+rive-autumn = { path = "../rive-autumn", version = "1" }
 futures = "0.3"
