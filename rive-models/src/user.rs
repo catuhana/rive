@@ -180,6 +180,10 @@ pub struct PartialUser {
     pub id: Option<String>,
     /// Username
     pub username: Option<String>,
+    /// User discriminator
+    pub discriminator: Option<String>,
+    /// Display name
+    pub display_name: Option<String>,
     /// Avatar attachment
     pub avatar: Option<Attachment>,
     /// Relationships with other users
