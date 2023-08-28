@@ -1,9 +1,11 @@
+pub mod iter;
 pub mod patch;
 mod reference;
 pub mod remove;
 mod stats;
 pub mod update;
 
+pub use iter::InMemoryCacheIter;
 pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
 
@@ -28,6 +30,10 @@ impl InMemoryCache {
 
     pub const fn stats(&self) -> InMemoryCacheStats {
         InMemoryCacheStats::new(self)
+    }
+
+    pub const fn iter(&self) -> InMemoryCacheIter {
+        InMemoryCacheIter::new(self)
     }
 
     pub fn user(&self, id: impl Into<String>) -> Option<Reference<String, User>> {
