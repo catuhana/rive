@@ -212,6 +212,7 @@ dependencies = [
  "futures",
  "rive",
  "rive-autumn",
+ "rive-cache-inmemory",
  "rive-http",
  "rive-models",
  "tokio",
@@ -924,8 +925,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rive-cache"
-version = "0.1.0"
+name = "rive-cache-inmemory"
+version = "1.0.0"
 dependencies = [
  "dashmap",
  "rive-models",

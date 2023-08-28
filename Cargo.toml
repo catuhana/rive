@@ -6,7 +6,7 @@ members = [
     "rive-http",
     "rive-gateway",
     "rive-autumn",
-    "rive-cache"
+    "rive-cache-inmemory"
 ]
 
 [workspace.package]
