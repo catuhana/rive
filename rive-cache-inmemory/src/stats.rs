@@ -11,4 +11,8 @@ impl<'a> InMemoryCacheStats<'a> {
     pub fn users(&self) -> usize {
         self.0.users.len()
     }
+
+    pub fn serevrs(&self) -> usize {
+        self.0.servers.len()
+    }
 }
