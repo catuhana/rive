@@ -1,4 +1,7 @@
-use rive_models::user::{FieldsUser, User, UserProfile, UserStatus};
+use rive_models::{
+    server::{FieldsServer, Server},
+    user::{FieldsUser, User, UserProfile, UserStatus},
+};
 
 // TODO: maybe move this to rive_models?
 pub trait Remove<T> {
@@ -36,6 +39,30 @@ impl Remove<FieldsUser> for User {
             },
             FieldsUser::DisplayName => User {
                 avatar: None,
+                ..self
+            },
+        }
+    }
+}
+
+impl Remove<FieldsServer> for Server {
+    fn remove(self, field: &FieldsServer) -> Self {
+        match field {
+            FieldsServer::Description => Server {
+                description: None,
+                ..self
+            },
+            FieldsServer::Categories => Server {
+                categories: None,
+                ..self
+            },
+            FieldsServer::SystemMessages => Server {
+                system_messages: None,
+                ..self
+            },
+            FieldsServer::Icon => Server { icon: None, ..self },
+            FieldsServer::Banner => Server {
+                banner: None,
                 ..self
             },
         }
