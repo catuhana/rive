@@ -11,7 +11,7 @@ pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
 
 use dashmap::DashMap;
-use rive_models::{channel::Channel, server::Server, user::User};
+use rive_models::{channel::Channel, message::Message, server::Server, user::User};
 use update::CacheUpdate;
 
 #[derive(Debug, Clone, Default)]
@@ -19,6 +19,7 @@ pub struct InMemoryCache {
     users: DashMap<String, User>,
     servers: DashMap<String, Server>,
     channels: DashMap<String, Channel>,
+    messages: DashMap<String, Message>,
 }
 
 impl InMemoryCache {
@@ -30,6 +31,7 @@ impl InMemoryCache {
         self.users.clear();
         self.servers.clear();
         self.channels.clear();
+        self.messages.clear();
     }
 
     pub const fn stats(&self) -> InMemoryCacheStats {
@@ -50,6 +52,10 @@ impl InMemoryCache {
 
     pub fn channel(&self, id: impl Into<String>) -> Option<Reference<String, Channel>> {
         self.channels.get(&id.into()).map(Reference::new)
+    }
+
+    pub fn message(&self, id: impl Into<String>) -> Option<Reference<String, Message>> {
+        self.messages.get(&id.into()).map(Reference::new)
     }
 
     pub fn update(&self, event: &impl CacheUpdate) {

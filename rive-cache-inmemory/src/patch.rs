@@ -1,5 +1,6 @@
 use rive_models::{
     channel::{Channel, PartialChannel},
+    message::{Message, PartialMessage},
     server::{PartialServer, Server},
     user::{PartialUser, User},
 };
@@ -138,6 +139,27 @@ impl Patch<PartialChannel> for Channel {
                 role_permissions: unwrap(&partial.role_permissions, role_permissions),
                 nsfw: unwrap(&partial.nsfw, nsfw),
             },
+        }
+    }
+}
+
+impl Patch<PartialMessage> for Message {
+    fn patch(self, partial: &PartialMessage) -> Self {
+        Message {
+            id: unwrap(&partial.id, self.id),
+            nonce: either(&partial.nonce, self.nonce),
+            channel: unwrap(&partial.channel, self.channel),
+            author: unwrap(&partial.author, self.author),
+            content: either(&partial.content, self.content),
+            system: either(&partial.system, self.system),
+            attachments: either(&partial.attachments, self.attachments),
+            edited: either(&partial.edited, self.edited),
+            embeds: either(&partial.embeds, self.embeds),
+            mentions: either(&partial.mentions, self.mentions),
+            replies: either(&partial.replies, self.replies),
+            reactions: unwrap(&partial.reactions, self.reactions),
+            interactions: unwrap(&partial.interactions, self.interactions),
+            masquerade: either(&partial.masquerade, self.masquerade),
         }
     }
 }

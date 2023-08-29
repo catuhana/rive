@@ -19,4 +19,8 @@ impl<'a> InMemoryCacheStats<'a> {
     pub fn channels(&'a self) -> usize {
         self.0.channels.len()
     }
+
+    pub fn messages(&'a self) -> usize {
+        self.0.messages.len()
+    }
 }

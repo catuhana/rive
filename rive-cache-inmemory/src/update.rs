@@ -1,9 +1,14 @@
+use std::collections::hash_map::Entry;
+
 use rive_models::{
     channel::Channel,
     event::{
-        BulkEvent, ChannelDeleteEvent, ChannelUpdateEvent, ReadyEvent, ServerCreateEvent,
-        ServerDeleteEvent, ServerEvent, ServerUpdateEvent, UserUpdateEvent,
+        BulkEvent, BulkMessageDeleteEvent, ChannelDeleteEvent, ChannelUpdateEvent,
+        MessageAppendEvent, MessageDeleteEvent, MessageReactEvent, MessageRemoveReactionEvent,
+        MessageUnreactEvent, MessageUpdateEvent, ReadyEvent, ServerCreateEvent, ServerDeleteEvent,
+        ServerEvent, ServerUpdateEvent, UserUpdateEvent,
     },
+    message::Message,
 };
 
 use crate::{patch::Patch, remove::Remove, util::channel_id, InMemoryCache};
@@ -34,6 +39,14 @@ impl CacheUpdate for ServerEvent {
             ServerEvent::ChannelCreate(event) => cache.update(event),
             ServerEvent::ChannelUpdate(event) => cache.update(event),
             ServerEvent::ChannelDelete(event) => cache.update(event),
+            ServerEvent::Message(event) => cache.update(event),
+            ServerEvent::MessageUpdate(event) => cache.update(event),
+            ServerEvent::MessageAppend(event) => cache.update(event),
+            ServerEvent::MessageReact(event) => cache.update(event),
+            ServerEvent::MessageUnreact(event) => cache.update(event),
+            ServerEvent::MessageRemoveReaction(event) => cache.update(event),
+            ServerEvent::MessageDelete(event) => cache.update(event),
+            ServerEvent::BulkMessageDelete(event) => cache.update(event),
             _ => {}
         };
     }
@@ -131,5 +144,117 @@ impl CacheUpdate for ChannelUpdateEvent {
 impl CacheUpdate for ChannelDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
         cache.channels.remove(&self.id);
+    }
+}
+
+impl CacheUpdate for Message {
+    fn update(&self, cache: &InMemoryCache) {
+        cache.messages.insert(self.id.clone(), self.clone());
+    }
+}
+
+impl CacheUpdate for MessageUpdateEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let message = match cache.message(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+        let new_message = message.patch(&self.data);
+
+        cache.messages.insert(new_message.id.clone(), new_message);
+    }
+}
+
+impl CacheUpdate for MessageAppendEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let message = match cache.message(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+
+        // it should work like this, right? it's 3 AM im kinda eepy
+        let new_embeds = match message.embeds {
+            Some(embeds) => match &self.append.embeds {
+                Some(append_embeds) => {
+                    let mut emb = embeds;
+                    emb.extend(append_embeds.clone());
+                    Some(emb)
+                }
+                None => Some(embeds),
+            },
+            None => self.append.embeds.clone(),
+        };
+
+        let new_message = Message {
+            embeds: new_embeds,
+            ..message
+        };
+
+        cache.messages.insert(new_message.id.clone(), new_message);
+    }
+}
+
+impl CacheUpdate for MessageReactEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let message = match cache.message(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+
+        let mut new_message = message.clone();
+        new_message
+            .reactions
+            .entry(self.emoji_id.clone())
+            .or_default()
+            .insert(self.user_id.clone());
+
+        cache.messages.insert(new_message.id.clone(), new_message);
+    }
+}
+
+impl CacheUpdate for MessageUnreactEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let message = match cache.message(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+
+        let mut new_message = message.clone();
+        if let Entry::Occupied(mut entry) = new_message.reactions.entry(self.emoji_id.clone()) {
+            entry.get_mut().remove(&self.user_id);
+            if entry.get().is_empty() {
+                entry.remove_entry();
+            }
+        };
+
+        cache.messages.insert(new_message.id.clone(), new_message);
+    }
+}
+
+impl CacheUpdate for MessageRemoveReactionEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let message = match cache.message(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+
+        let mut new_message = message.clone();
+        new_message.reactions.remove(&self.emoji_id);
+
+        cache.messages.insert(new_message.id.clone(), new_message);
+    }
+}
+
+impl CacheUpdate for MessageDeleteEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        cache.messages.remove(&self.id);
+    }
+}
+
+impl CacheUpdate for BulkMessageDeleteEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        for id in &self.ids {
+            cache.messages.remove(id);
+        }
     }
 }
