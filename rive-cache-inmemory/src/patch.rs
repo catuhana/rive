@@ -1,4 +1,5 @@
 use rive_models::{
+    channel::{Channel, PartialChannel},
     server::{PartialServer, Server},
     user::{PartialUser, User},
 };
@@ -57,6 +58,86 @@ impl Patch<PartialServer> for Server {
             nsfw: unwrap(&partial.nsfw, self.nsfw),
             analytics: unwrap(&partial.analytics, self.analytics),
             discoverable: unwrap(&partial.discoverable, self.discoverable),
+        }
+    }
+}
+
+impl Patch<PartialChannel> for Channel {
+    fn patch(self, partial: &PartialChannel) -> Channel {
+        match self {
+            Channel::SavedMessages { id, user } => Channel::SavedMessages { id, user },
+            Channel::DirectMessage {
+                id,
+                active,
+                recipients,
+                last_message_id,
+            } => Channel::DirectMessage {
+                id,
+                active: unwrap(&partial.active, active),
+                recipients,
+                last_message_id: either(&partial.last_message_id, last_message_id),
+            },
+            Channel::Group {
+                id,
+                name,
+                owner,
+                description,
+                recipients,
+                icon,
+                last_message_id,
+                permissions,
+                nsfw,
+            } => Channel::Group {
+                id,
+                name: unwrap(&partial.name, name),
+                owner: unwrap(&partial.owner, owner),
+                description: either(&partial.description, description),
+                recipients,
+                icon: either(&partial.icon, icon),
+                last_message_id: either(&partial.last_message_id, last_message_id),
+                permissions: either(&partial.permissions, permissions),
+                nsfw: unwrap(&partial.nsfw, nsfw),
+            },
+            Channel::TextChannel {
+                id,
+                server,
+                name,
+                description,
+                icon,
+                last_message_id,
+                default_permissions,
+                role_permissions,
+                nsfw,
+            } => Channel::TextChannel {
+                id,
+                server,
+                name: unwrap(&partial.name, name),
+                description: either(&partial.description, description),
+                icon: either(&partial.icon, icon),
+                last_message_id: either(&partial.last_message_id, last_message_id),
+                default_permissions: either(&partial.default_permissions, default_permissions),
+                role_permissions: unwrap(&partial.role_permissions, role_permissions),
+                nsfw: unwrap(&partial.nsfw, nsfw),
+            },
+            Channel::VoiceChannel {
+                id,
+                server,
+                name,
+                description,
+                icon,
+                default_permissions,
+                role_permissions,
+                nsfw,
+            } => Channel::VoiceChannel {
+                id,
+                server,
+                name: unwrap(&partial.name, name),
+                description: either(&partial.description, description),
+                icon: either(&partial.icon, icon),
+                default_permissions: either(&partial.default_permissions, default_permissions),
+                role_permissions: unwrap(&partial.role_permissions, role_permissions),
+                nsfw: unwrap(&partial.nsfw, nsfw),
+            },
         }
     }
 }

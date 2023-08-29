@@ -1,22 +1,24 @@
-pub mod iter;
-pub mod patch;
+mod iter;
+mod patch;
 mod reference;
-pub mod remove;
+mod remove;
 mod stats;
-pub mod update;
+mod update;
+mod util;
 
 pub use iter::InMemoryCacheIter;
 pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
 
 use dashmap::DashMap;
-use rive_models::{server::Server, user::User};
+use rive_models::{channel::Channel, server::Server, user::User};
 use update::CacheUpdate;
 
 #[derive(Debug, Clone, Default)]
 pub struct InMemoryCache {
     users: DashMap<String, User>,
     servers: DashMap<String, Server>,
+    channels: DashMap<String, Channel>,
 }
 
 impl InMemoryCache {
@@ -26,6 +28,8 @@ impl InMemoryCache {
 
     pub fn clear(&self) {
         self.users.clear();
+        self.servers.clear();
+        self.channels.clear();
     }
 
     pub const fn stats(&self) -> InMemoryCacheStats {
@@ -44,7 +48,11 @@ impl InMemoryCache {
         self.servers.get(&id.into()).map(Reference::new)
     }
 
+    pub fn channel(&self, id: impl Into<String>) -> Option<Reference<String, Channel>> {
+        self.channels.get(&id.into()).map(Reference::new)
+    }
+
     pub fn update(&self, event: &impl CacheUpdate) {
-        event.update(&self);
+        event.update(self);
     }
 }

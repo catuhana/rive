@@ -1,4 +1,4 @@
-use dashmap::mapref::one::Ref;
+use dashmap::mapref::{multiple::RefMulti, one::Ref};
 use std::{
     fmt::{Debug, Formatter, Result as FmtResult},
     hash::Hash,
@@ -39,6 +39,37 @@ impl<K: Eq + Hash, V: Debug> Debug for Reference<'_, K, V> {
 }
 
 impl<'a, K: Eq + Hash, V> Deref for Reference<'a, K, V> {
+    type Target = V;
+
+    fn deref(&self) -> &Self::Target {
+        self.value()
+    }
+}
+
+pub struct IterReference<'a, K, V> {
+    inner: RefMulti<'a, K, V>,
+}
+
+impl<'a, K, V> IterReference<'a, K, V> {
+    /// Create a new iterator element reference.
+    pub(crate) const fn new(inner: RefMulti<'a, K, V>) -> Self {
+        Self { inner }
+    }
+}
+
+impl<K: Eq + Hash, V> IterReference<'_, K, V> {
+    /// Immutable reference to the resource's key.
+    pub fn key(&self) -> &K {
+        self.inner.key()
+    }
+
+    /// Immutable reference to the resource's value.
+    pub fn value(&self) -> &V {
+        self.inner.value()
+    }
+}
+
+impl<K: Eq + Hash, V> Deref for IterReference<'_, K, V> {
     type Target = V;
 
     fn deref(&self) -> &Self::Target {

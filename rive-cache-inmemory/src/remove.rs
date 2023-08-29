@@ -1,4 +1,5 @@
 use rive_models::{
+    channel::{Channel, FieldsChannel},
     server::{FieldsServer, Server},
     user::{FieldsUser, User, UserProfile, UserStatus},
 };
@@ -65,6 +66,99 @@ impl Remove<FieldsServer> for Server {
                 banner: None,
                 ..self
             },
+        }
+    }
+}
+
+impl Remove<FieldsChannel> for Channel {
+    fn remove(self, field: &FieldsChannel) -> Self {
+        match self {
+            Channel::Group {
+                id,
+                name,
+                owner,
+                description,
+                recipients,
+                icon,
+                last_message_id,
+                permissions,
+                nsfw,
+            } => Channel::Group {
+                id,
+                name,
+                owner,
+                description: match field {
+                    FieldsChannel::Description => None,
+                    _ => description,
+                },
+                recipients,
+                icon: match field {
+                    FieldsChannel::Icon => None,
+                    _ => icon,
+                },
+                last_message_id,
+                permissions,
+                nsfw,
+            },
+            Channel::TextChannel {
+                id,
+                server,
+                name,
+                description,
+                icon,
+                last_message_id,
+                default_permissions,
+                role_permissions,
+                nsfw,
+            } => Channel::TextChannel {
+                id,
+                server,
+                name,
+                description: match field {
+                    FieldsChannel::Description => None,
+                    _ => description,
+                },
+                icon: match field {
+                    FieldsChannel::Icon => None,
+                    _ => icon,
+                },
+                last_message_id,
+                default_permissions: match field {
+                    FieldsChannel::DefaultPermissions => None,
+                    _ => default_permissions,
+                },
+                role_permissions,
+                nsfw,
+            },
+            Channel::VoiceChannel {
+                id,
+                server,
+                name,
+                description,
+                icon,
+                default_permissions,
+                role_permissions,
+                nsfw,
+            } => Channel::VoiceChannel {
+                id,
+                server,
+                name,
+                description: match field {
+                    FieldsChannel::Description => None,
+                    _ => description,
+                },
+                icon: match field {
+                    FieldsChannel::Icon => None,
+                    _ => icon,
+                },
+                default_permissions: match field {
+                    FieldsChannel::DefaultPermissions => None,
+                    _ => default_permissions,
+                },
+                role_permissions,
+                nsfw,
+            },
+            _ => self,
         }
     }
 }

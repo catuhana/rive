@@ -8,11 +8,15 @@ impl<'a> InMemoryCacheStats<'a> {
         Self(cache)
     }
 
-    pub fn users(&self) -> usize {
+    pub fn users(&'a self) -> usize {
         self.0.users.len()
     }
 
-    pub fn serevrs(&self) -> usize {
+    pub fn serevrs(&'a self) -> usize {
         self.0.servers.len()
+    }
+
+    pub fn channels(&'a self) -> usize {
+        self.0.channels.len()
     }
 }
