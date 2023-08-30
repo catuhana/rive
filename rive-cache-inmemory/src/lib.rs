@@ -53,24 +53,24 @@ impl InMemoryCache {
         InMemoryCacheIter::new(self)
     }
 
-    pub fn user(&self, id: impl Into<String>) -> Option<Reference<String, User>> {
-        self.users.get(&id.into()).map(Reference::new)
+    pub fn user(&self, id: &str) -> Option<Reference<String, User>> {
+        self.users.get(id).map(Reference::new)
     }
 
-    pub fn server(&self, id: impl Into<String>) -> Option<Reference<String, Server>> {
-        self.servers.get(&id.into()).map(Reference::new)
+    pub fn server(&self, id: &str) -> Option<Reference<String, Server>> {
+        self.servers.get(id).map(Reference::new)
     }
 
-    pub fn channel(&self, id: impl Into<String>) -> Option<Reference<String, Channel>> {
-        self.channels.get(&id.into()).map(Reference::new)
+    pub fn channel(&self, id: &str) -> Option<Reference<String, Channel>> {
+        self.channels.get(id).map(Reference::new)
     }
 
-    pub fn message(&self, id: impl Into<String>) -> Option<Reference<String, Message>> {
-        self.messages.get(&id.into()).map(Reference::new)
+    pub fn message(&self, id: &str) -> Option<Reference<String, Message>> {
+        self.messages.get(id).map(Reference::new)
     }
 
-    pub fn emoji(&self, id: impl Into<String>) -> Option<Reference<String, Emoji>> {
-        self.emojis.get(&id.into()).map(Reference::new)
+    pub fn emoji(&self, id: &str) -> Option<Reference<String, Emoji>> {
+        self.emojis.get(id).map(Reference::new)
     }
 
     pub fn member(&self, id: &MemberCompositeKey) -> Option<Reference<MemberCompositeKey, Member>> {
