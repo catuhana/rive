@@ -31,7 +31,7 @@ pub enum Error {
     HttpRequest(#[from] reqwest::Error),
 
     /// An error returned from Revolt API
-    #[error("Error returned from API")]
+    #[error("Error returned from API: {0:#?}")]
     Api(ApiError),
 }
 
