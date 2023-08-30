@@ -1,5 +1,5 @@
 use dashmap::iter::Iter;
-use rive_models::{channel::Channel, message::Message, server::Server, user::User};
+use rive_models::{channel::Channel, emoji::Emoji, message::Message, server::Server, user::User};
 use std::hash::Hash;
 
 use crate::{reference::IterReference, InMemoryCache};
@@ -44,5 +44,9 @@ impl<'a> InMemoryCacheIter<'a> {
 
     pub fn messages(&'a self) -> ResourceIter<String, Message> {
         ResourceIter::new(self.0.messages.iter())
+    }
+
+    pub fn emojis(&'a self) -> ResourceIter<String, Emoji> {
+        ResourceIter::new(self.0.emojis.iter())
     }
 }

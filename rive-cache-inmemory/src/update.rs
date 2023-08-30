@@ -2,11 +2,12 @@ use std::collections::hash_map::Entry;
 
 use rive_models::{
     channel::Channel,
+    emoji::Emoji,
     event::{
         BulkEvent, BulkMessageDeleteEvent, ChannelDeleteEvent, ChannelUpdateEvent,
-        MessageAppendEvent, MessageDeleteEvent, MessageReactEvent, MessageRemoveReactionEvent,
-        MessageUnreactEvent, MessageUpdateEvent, ReadyEvent, ServerCreateEvent, ServerDeleteEvent,
-        ServerEvent, ServerUpdateEvent, UserUpdateEvent,
+        EmojiDeleteEvent, MessageAppendEvent, MessageDeleteEvent, MessageReactEvent,
+        MessageRemoveReactionEvent, MessageUnreactEvent, MessageUpdateEvent, ReadyEvent,
+        ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerUpdateEvent, UserUpdateEvent,
     },
     message::Message,
 };
@@ -47,6 +48,8 @@ impl CacheUpdate for ServerEvent {
             ServerEvent::MessageRemoveReaction(event) => cache.update(event),
             ServerEvent::MessageDelete(event) => cache.update(event),
             ServerEvent::BulkMessageDelete(event) => cache.update(event),
+            ServerEvent::EmojiCreate(event) => cache.update(event),
+            ServerEvent::EmojiDelete(event) => cache.update(event),
             _ => {}
         };
     }
@@ -74,6 +77,12 @@ impl CacheUpdate for ReadyEvent {
             cache
                 .channels
                 .insert(channel_id(channel).clone(), channel.clone());
+        }
+
+        if let Some(emojis) = &self.emojis {
+            for emoji in emojis {
+                cache.emojis.insert(emoji.id.clone(), emoji.clone());
+            }
         }
     }
 }
@@ -256,5 +265,17 @@ impl CacheUpdate for BulkMessageDeleteEvent {
         for id in &self.ids {
             cache.messages.remove(id);
         }
+    }
+}
+
+impl CacheUpdate for Emoji {
+    fn update(&self, cache: &InMemoryCache) {
+        cache.emojis.insert(self.id.clone(), self.clone());
+    }
+}
+
+impl CacheUpdate for EmojiDeleteEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        cache.emojis.remove(&self.id);
     }
 }
