@@ -11,7 +11,14 @@ pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
 
 use dashmap::DashMap;
-use rive_models::{channel::Channel, emoji::Emoji, message::Message, server::Server, user::User};
+use rive_models::{
+    channel::Channel,
+    emoji::Emoji,
+    member::{Member, MemberCompositeKey},
+    message::Message,
+    server::Server,
+    user::User,
+};
 use update::CacheUpdate;
 
 #[derive(Debug, Clone, Default)]
@@ -21,6 +28,7 @@ pub struct InMemoryCache {
     channels: DashMap<String, Channel>,
     messages: DashMap<String, Message>,
     emojis: DashMap<String, Emoji>,
+    members: DashMap<MemberCompositeKey, Member>,
 }
 
 impl InMemoryCache {
@@ -33,6 +41,8 @@ impl InMemoryCache {
         self.servers.clear();
         self.channels.clear();
         self.messages.clear();
+        self.emojis.clear();
+        self.members.clear();
     }
 
     pub const fn stats(&self) -> InMemoryCacheStats {
@@ -61,6 +71,10 @@ impl InMemoryCache {
 
     pub fn emoji(&self, id: impl Into<String>) -> Option<Reference<String, Emoji>> {
         self.emojis.get(&id.into()).map(Reference::new)
+    }
+
+    pub fn member(&self, id: &MemberCompositeKey) -> Option<Reference<MemberCompositeKey, Member>> {
+        self.members.get(id).map(Reference::new)
     }
 
     pub fn update(&self, event: &impl CacheUpdate) {

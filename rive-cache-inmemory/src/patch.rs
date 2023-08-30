@@ -1,5 +1,6 @@
 use rive_models::{
     channel::{Channel, PartialChannel},
+    member::{Member, PartialMember},
     message::{Message, PartialMessage},
     server::{PartialServer, Server},
     user::{PartialUser, User},
@@ -160,6 +161,19 @@ impl Patch<PartialMessage> for Message {
             reactions: unwrap(&partial.reactions, self.reactions),
             interactions: unwrap(&partial.interactions, self.interactions),
             masquerade: either(&partial.masquerade, self.masquerade),
+        }
+    }
+}
+
+impl Patch<PartialMember> for Member {
+    fn patch(self, partial: &PartialMember) -> Self {
+        Member {
+            id: unwrap(&partial.id, self.id),
+            joined_at: unwrap(&partial.joined_at, self.joined_at),
+            nickname: either(&partial.nickname, self.nickname),
+            avatar: either(&partial.avatar, self.avatar),
+            roles: unwrap(&partial.roles, self.roles),
+            timeout: either(&partial.timeout, self.timeout),
         }
     }
 }

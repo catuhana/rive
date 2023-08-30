@@ -27,4 +27,8 @@ impl<'a> InMemoryCacheStats<'a> {
     pub fn emojis(&'a self) -> usize {
         self.0.emojis.len()
     }
+
+    pub fn members(&'a self) -> usize {
+        self.0.members.len()
+    }
 }

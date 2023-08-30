@@ -1,4 +1,4 @@
-use std::collections::hash_map::Entry;
+use std::{collections::hash_map::Entry, time::SystemTime};
 
 use rive_models::{
     channel::Channel,
@@ -7,8 +7,10 @@ use rive_models::{
         BulkEvent, BulkMessageDeleteEvent, ChannelDeleteEvent, ChannelUpdateEvent,
         EmojiDeleteEvent, MessageAppendEvent, MessageDeleteEvent, MessageReactEvent,
         MessageRemoveReactionEvent, MessageUnreactEvent, MessageUpdateEvent, ReadyEvent,
-        ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerUpdateEvent, UserUpdateEvent,
+        ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerMemberJoinEvent,
+        ServerMemberLeaveEvent, ServerMemberUpdateEvent, ServerUpdateEvent, UserUpdateEvent,
     },
+    member::{Member, MemberCompositeKey},
     message::Message,
 };
 
@@ -50,6 +52,9 @@ impl CacheUpdate for ServerEvent {
             ServerEvent::BulkMessageDelete(event) => cache.update(event),
             ServerEvent::EmojiCreate(event) => cache.update(event),
             ServerEvent::EmojiDelete(event) => cache.update(event),
+            ServerEvent::ServerMemberJoin(event) => cache.update(event),
+            ServerEvent::ServerMemberUpdate(event) => cache.update(event),
+            ServerEvent::ServerMemberLeave(event) => cache.update(event),
             _ => {}
         };
     }
@@ -83,6 +88,10 @@ impl CacheUpdate for ReadyEvent {
             for emoji in emojis {
                 cache.emojis.insert(emoji.id.clone(), emoji.clone());
             }
+        }
+
+        for member in &self.members {
+            cache.members.insert(member.id.clone(), member.clone());
         }
     }
 }
@@ -277,5 +286,46 @@ impl CacheUpdate for Emoji {
 impl CacheUpdate for EmojiDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
         cache.emojis.remove(&self.id);
+    }
+}
+
+impl CacheUpdate for ServerMemberJoinEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let id = MemberCompositeKey {
+            server: self.id.clone(),
+            user: self.user.clone(),
+        };
+        let member = Member {
+            id: id.clone(),
+            // TODO: should it be like that?
+            joined_at: SystemTime::now().into(),
+            nickname: Default::default(),
+            avatar: Default::default(),
+            roles: Default::default(),
+            timeout: Default::default(),
+        };
+
+        cache.members.insert(id, member);
+    }
+}
+
+impl CacheUpdate for ServerMemberUpdateEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let member = match cache.member(&self.id) {
+            Some(channel) => channel.clone(),
+            None => return,
+        };
+        let new_member = update_fields(member, &self.data, &self.clear);
+
+        cache.members.insert(new_member.id.clone(), new_member);
+    }
+}
+
+impl CacheUpdate for ServerMemberLeaveEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        cache.members.remove(&MemberCompositeKey {
+            server: self.id.clone(),
+            user: self.user.clone(),
+        });
     }
 }

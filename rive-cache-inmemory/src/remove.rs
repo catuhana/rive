@@ -1,5 +1,6 @@
 use rive_models::{
     channel::{Channel, FieldsChannel},
+    member::{FieldsMember, Member},
     server::{FieldsServer, Server},
     user::{FieldsUser, User, UserProfile, UserStatus},
 };
@@ -159,6 +160,29 @@ impl Remove<FieldsChannel> for Channel {
                 nsfw,
             },
             _ => self,
+        }
+    }
+}
+
+impl Remove<FieldsMember> for Member {
+    fn remove(self, field: &FieldsMember) -> Self {
+        match field {
+            FieldsMember::Nickname => Member {
+                nickname: None,
+                ..self
+            },
+            FieldsMember::Avatar => Member {
+                avatar: None,
+                ..self
+            },
+            FieldsMember::Roles => Member {
+                roles: vec![],
+                ..self
+            },
+            FieldsMember::Timeout => Member {
+                timeout: None,
+                ..self
+            },
         }
     }
 }
