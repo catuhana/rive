@@ -11,8 +11,14 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-rive-models = { path = "../rive-models", version = "1" }
-rive-gateway = { path = "../rive-gateway", version = "1" }
-rive-http = { path = "../rive-http", version = "1" }
-rive-autumn = { path = "../rive-autumn", version = "1" }
-futures = "0.3"
+futures = { version = "0.3", default-features = false, features = ["std"] }
+rive-models = { path = "../rive-models", version = "1", default-features = false }
+rive-gateway = { path = "../rive-gateway", version = "1", default-features = false }
+rive-http = { path = "../rive-http", version = "1", default-features = false }
+rive-autumn = { path = "../rive-autumn", version = "1", default-features = false }
+
+[features]
+default = ["native-tls"]
+native-tls = ["rive-http/native-tls", "rive-gateway/native-tls", "rive-autumn/native-tls"]
+rustls-tls-native-roots = ["rive-http/rustls-tls-native-roots", "rive-gateway/rustls-tls-native-roots", "rive-autumn/rustls-tls-native-roots"]
+rustls-tls-webpki-roots = ["rive-http/rustls-tls-webpki-roots", "rive-gateway/rustls-tls-webpki-roots", "rive-autumn/rustls-tls-webpki-roots"]

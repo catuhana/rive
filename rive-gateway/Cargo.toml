@@ -11,10 +11,16 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-tokio = { version = "1", features = ["macros", "rt", "time"] }
-tokio-tungstenite = { version = "0.17", features = ["rustls-tls-webpki-roots"] }
-rive-models = { path = "../rive-models", version = "1" }
-serde_json = "1"
-futures = "0.3"
-thiserror = "1"
-async-channel = "1.8"
+async-channel = { version = "1.8", default-features = false }
+futures = { version = "0.3", default-features = false, features = ["std"] }
+rive-models = { path = "../rive-models", version = "1", default-features = false }
+serde_json = { version = "1", default-features = false, features = ["std"] }
+thiserror = { version = "1", default-features = false }
+tokio = { version = "1", default-features = false, features = ["macros", "rt", "time"] }
+tokio-tungstenite = { version = "0.17", default-features = false, features = ["connect"] }
+
+[features]
+default = ["native-tls"]
+native-tls = ["tokio-tungstenite/native-tls"]
+rustls-tls-native-roots = ["tokio-tungstenite/rustls-tls-native-roots"]
+rustls-tls-webpki-roots = ["tokio-tungstenite/rustls-tls-webpki-roots"]
