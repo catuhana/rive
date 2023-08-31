@@ -9,10 +9,11 @@ use rive_models::{
         MessageRemoveReactionEvent, MessageUnreactEvent, MessageUpdateEvent, ReadyEvent,
         ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerMemberJoinEvent,
         ServerMemberLeaveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent,
-        ServerRoleUpdateEvent, ServerUpdateEvent, UserUpdateEvent,
+        ServerRoleUpdateEvent, ServerUpdateEvent, UserPlatformWipeEvent, UserUpdateEvent,
     },
     member::{Member, MemberCompositeKey},
     message::Message,
+    user::{User, UserFlags},
 };
 
 use crate::{patch::Patch, remove::Remove, util::channel_id, InMemoryCache};
@@ -58,6 +59,7 @@ impl CacheUpdate for ServerEvent {
             ServerEvent::ServerMemberLeave(event) => cache.update(event),
             ServerEvent::ServerRoleUpdate(event) => cache.update(event),
             ServerEvent::ServerRoleDelete(event) => cache.update(event),
+            ServerEvent::UserPlatformWipe(event) => cache.update(event),
             _ => {}
         };
     }
@@ -361,5 +363,33 @@ impl CacheUpdate for ServerRoleDeleteEvent {
         server.roles.remove(&self.role_id);
 
         cache.servers.insert(self.id.clone(), server);
+    }
+}
+
+impl CacheUpdate for UserPlatformWipeEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        // as documented, the following associated data should be removed:
+        // - messages
+        // - dm channels
+        // - relationships
+        // - server memberships
+        cache.messages.retain(|_, v| v.author != self.user_id);
+        cache.members.retain(|_, v| v.id.user != self.user_id);
+        cache.channels.retain(|_, v| match v {
+            Channel::DirectMessage { recipients, .. } => recipients.contains(&self.user_id),
+            _ => true,
+        });
+
+        let user = match cache.user(&self.user_id) {
+            Some(user) => user.clone(),
+            None => return,
+        };
+
+        let new_user = User {
+            flags: Some(UserFlags::from_bits_retain(self.flags.try_into().unwrap())),
+            ..user
+        };
+
+        cache.users.insert(self.user_id.clone(), new_user);
     }
 }
