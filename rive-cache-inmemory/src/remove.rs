@@ -1,7 +1,7 @@
 use rive_models::{
     channel::{Channel, FieldsChannel},
     member::{FieldsMember, Member},
-    server::{FieldsServer, Server},
+    server::{FieldsRole, FieldsServer, Role, Server},
     user::{FieldsUser, User, UserProfile, UserStatus},
 };
 
@@ -181,6 +181,17 @@ impl Remove<FieldsMember> for Member {
             },
             FieldsMember::Timeout => Member {
                 timeout: None,
+                ..self
+            },
+        }
+    }
+}
+
+impl Remove<FieldsRole> for Role {
+    fn remove(self, field: &FieldsRole) -> Self {
+        match field {
+            FieldsRole::Colour => Role {
+                colour: None,
                 ..self
             },
         }

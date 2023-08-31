@@ -8,7 +8,8 @@ use rive_models::{
         EmojiDeleteEvent, MessageAppendEvent, MessageDeleteEvent, MessageReactEvent,
         MessageRemoveReactionEvent, MessageUnreactEvent, MessageUpdateEvent, ReadyEvent,
         ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerMemberJoinEvent,
-        ServerMemberLeaveEvent, ServerMemberUpdateEvent, ServerUpdateEvent, UserUpdateEvent,
+        ServerMemberLeaveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent,
+        ServerRoleUpdateEvent, ServerUpdateEvent, UserUpdateEvent,
     },
     member::{Member, MemberCompositeKey},
     message::Message,
@@ -55,6 +56,8 @@ impl CacheUpdate for ServerEvent {
             ServerEvent::ServerMemberJoin(event) => cache.update(event),
             ServerEvent::ServerMemberUpdate(event) => cache.update(event),
             ServerEvent::ServerMemberLeave(event) => cache.update(event),
+            ServerEvent::ServerRoleUpdate(event) => cache.update(event),
+            ServerEvent::ServerRoleDelete(event) => cache.update(event),
             _ => {}
         };
     }
@@ -327,5 +330,36 @@ impl CacheUpdate for ServerMemberLeaveEvent {
             server: self.id.clone(),
             user: self.user.clone(),
         });
+    }
+}
+
+impl CacheUpdate for ServerRoleUpdateEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let mut server = match cache.server(&self.id) {
+            Some(server) => server.clone(),
+            None => return,
+        };
+        let role = match server.roles.get(&self.role_id) {
+            Some(role) => role.clone(),
+            None => return,
+        };
+
+        let new_role = update_fields(role, &self.data, &self.clear);
+        server.roles.insert(self.role_id.clone(), new_role);
+
+        cache.servers.insert(self.id.clone(), server);
+    }
+}
+
+impl CacheUpdate for ServerRoleDeleteEvent {
+    fn update(&self, cache: &InMemoryCache) {
+        let mut server = match cache.server(&self.id) {
+            Some(server) => server.clone(),
+            None => return,
+        };
+
+        server.roles.remove(&self.role_id);
+
+        cache.servers.insert(self.id.clone(), server);
     }
 }

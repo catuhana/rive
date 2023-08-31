@@ -2,7 +2,7 @@ use rive_models::{
     channel::{Channel, PartialChannel},
     member::{Member, PartialMember},
     message::{Message, PartialMessage},
-    server::{PartialServer, Server},
+    server::{PartialRole, PartialServer, Role, Server},
     user::{PartialUser, User},
 };
 
@@ -174,6 +174,18 @@ impl Patch<PartialMember> for Member {
             avatar: either(&partial.avatar, self.avatar),
             roles: unwrap(&partial.roles, self.roles),
             timeout: either(&partial.timeout, self.timeout),
+        }
+    }
+}
+
+impl Patch<PartialRole> for Role {
+    fn patch(self, partial: &PartialRole) -> Self {
+        Role {
+            name: unwrap(&partial.name, self.name),
+            permissions: unwrap(&partial.permissions, self.permissions),
+            colour: either(&partial.colour, self.colour),
+            hoist: unwrap(&partial.hoist, self.hoist),
+            rank: unwrap(&partial.rank, self.rank),
         }
     }
 }
