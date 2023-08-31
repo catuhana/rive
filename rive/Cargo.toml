@@ -11,11 +11,11 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-futures = { version = "0.3", default-features = false, features = ["std"] }
-rive-models = { path = "../rive-models", version = "1", default-features = false }
-rive-gateway = { path = "../rive-gateway", version = "1", default-features = false }
-rive-http = { path = "../rive-http", version = "1", default-features = false }
-rive-autumn = { path = "../rive-autumn", version = "1", default-features = false }
+futures = "0.3"
+rive-models = { path = "../rive-models", version = "1" }
+rive-gateway = { path = "../rive-gateway", version = "1" }
+rive-http = { path = "../rive-http", version = "1" }
+rive-autumn = { path = "../rive-autumn", version = "1" }
 
 [features]
 default = ["native-tls"]

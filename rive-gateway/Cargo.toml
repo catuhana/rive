@@ -11,13 +11,13 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-async-channel = { version = "1.8", default-features = false }
-futures = { version = "0.3", default-features = false, features = ["std"] }
+async-channel = "1.8"
+futures = "0.3"
 rive-models = { path = "../rive-models", version = "1", default-features = false }
-serde_json = { version = "1", default-features = false, features = ["std"] }
-thiserror = { version = "1", default-features = false }
-tokio = { version = "1", default-features = false, features = ["macros", "rt", "time"] }
-tokio-tungstenite = { version = "0.17", default-features = false, features = ["connect"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["macros", "rt", "time"] }
+tokio-tungstenite = "0.17"
 
 [features]
 default = ["native-tls"]
