@@ -75,34 +75,48 @@ impl CacheUpdate for BulkEvent {
 
 impl CacheUpdate for ReadyEvent {
     fn update(&self, cache: &InMemoryCache) {
-        for user in &self.users {
-            cache.users.insert(user.id.clone(), user.clone());
-        }
-
-        for server in &self.servers {
-            cache.servers.insert(server.id.clone(), server.clone());
-        }
-
-        for channel in &self.channels {
-            cache
-                .channels
-                .insert(channel_id(channel).clone(), channel.clone());
-        }
-
-        if let Some(emojis) = &self.emojis {
-            for emoji in emojis {
-                cache.emojis.insert(emoji.id.clone(), emoji.clone());
+        if cache.config.cache_users {
+            for user in &self.users {
+                cache.users.insert(user.id.clone(), user.clone());
             }
         }
 
-        for member in &self.members {
-            cache.members.insert(member.id.clone(), member.clone());
+        if cache.config.cache_servers {
+            for server in &self.servers {
+                cache.servers.insert(server.id.clone(), server.clone());
+            }
+        }
+
+        if cache.config.cache_channels {
+            for channel in &self.channels {
+                cache
+                    .channels
+                    .insert(channel_id(channel).clone(), channel.clone());
+            }
+        }
+
+        if cache.config.cache_emojis {
+            if let Some(emojis) = &self.emojis {
+                for emoji in emojis {
+                    cache.emojis.insert(emoji.id.clone(), emoji.clone());
+                }
+            }
+        }
+
+        if cache.config.cache_members {
+            for member in &self.members {
+                cache.members.insert(member.id.clone(), member.clone());
+            }
         }
     }
 }
 
 impl CacheUpdate for UserUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_users {
+            return;
+        }
+
         let user = match cache.user(&self.id) {
             Some(user) => user.clone(),
             None => return,
@@ -115,6 +129,10 @@ impl CacheUpdate for UserUpdateEvent {
 
 impl CacheUpdate for ServerCreateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_servers {
+            return;
+        }
+
         cache.servers.insert(self.id.clone(), self.server.clone());
         for channel in &self.channels {
             cache
@@ -126,6 +144,10 @@ impl CacheUpdate for ServerCreateEvent {
 
 impl CacheUpdate for ServerUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_servers {
+            return;
+        }
+
         let server = match cache.server(&self.id) {
             Some(server) => server.clone(),
             None => return,
@@ -138,20 +160,28 @@ impl CacheUpdate for ServerUpdateEvent {
 
 impl CacheUpdate for ServerDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
-        cache.servers.remove(&self.id);
+        if cache.config.cache_servers {
+            cache.servers.remove(&self.id);
+        }
     }
 }
 
 impl CacheUpdate for Channel {
     fn update(&self, cache: &InMemoryCache) {
-        cache
-            .channels
-            .insert(channel_id(self).clone(), self.clone());
+        if cache.config.cache_channels {
+            cache
+                .channels
+                .insert(channel_id(self).clone(), self.clone());
+        }
     }
 }
 
 impl CacheUpdate for ChannelUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_channels {
+            return;
+        }
+
         let channel = match cache.channel(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -166,18 +196,26 @@ impl CacheUpdate for ChannelUpdateEvent {
 
 impl CacheUpdate for ChannelDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
-        cache.channels.remove(&self.id);
+        if cache.config.cache_channels {
+            cache.channels.remove(&self.id);
+        }
     }
 }
 
 impl CacheUpdate for Message {
     fn update(&self, cache: &InMemoryCache) {
-        cache.messages.insert(self.id.clone(), self.clone());
+        if cache.config.cache_messages {
+            cache.messages.insert(self.id.clone(), self.clone());
+        }
     }
 }
 
 impl CacheUpdate for MessageUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_messages {
+            return;
+        }
+
         let message = match cache.message(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -190,6 +228,10 @@ impl CacheUpdate for MessageUpdateEvent {
 
 impl CacheUpdate for MessageAppendEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_messages {
+            return;
+        }
+
         let message = match cache.message(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -219,6 +261,10 @@ impl CacheUpdate for MessageAppendEvent {
 
 impl CacheUpdate for MessageReactEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_messages {
+            return;
+        }
+
         let message = match cache.message(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -237,6 +283,10 @@ impl CacheUpdate for MessageReactEvent {
 
 impl CacheUpdate for MessageUnreactEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_messages {
+            return;
+        }
+
         let message = match cache.message(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -256,6 +306,10 @@ impl CacheUpdate for MessageUnreactEvent {
 
 impl CacheUpdate for MessageRemoveReactionEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_messages {
+            return;
+        }
+
         let message = match cache.message(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -270,32 +324,44 @@ impl CacheUpdate for MessageRemoveReactionEvent {
 
 impl CacheUpdate for MessageDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
-        cache.messages.remove(&self.id);
+        if cache.config.cache_messages {
+            cache.messages.remove(&self.id);
+        }
     }
 }
 
 impl CacheUpdate for BulkMessageDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
-        for id in &self.ids {
-            cache.messages.remove(id);
+        if cache.config.cache_messages {
+            for id in &self.ids {
+                cache.messages.remove(id);
+            }
         }
     }
 }
 
 impl CacheUpdate for Emoji {
     fn update(&self, cache: &InMemoryCache) {
-        cache.emojis.insert(self.id.clone(), self.clone());
+        if cache.config.cache_emojis {
+            cache.emojis.insert(self.id.clone(), self.clone());
+        }
     }
 }
 
 impl CacheUpdate for EmojiDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
-        cache.emojis.remove(&self.id);
+        if cache.config.cache_emojis {
+            cache.emojis.remove(&self.id);
+        }
     }
 }
 
 impl CacheUpdate for ServerMemberJoinEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_members {
+            return;
+        }
+
         let id = MemberCompositeKey {
             server: self.id.clone(),
             user: self.user.clone(),
@@ -316,6 +382,10 @@ impl CacheUpdate for ServerMemberJoinEvent {
 
 impl CacheUpdate for ServerMemberUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_members {
+            return;
+        }
+
         let member = match cache.member(&self.id) {
             Some(channel) => channel.clone(),
             None => return,
@@ -328,15 +398,21 @@ impl CacheUpdate for ServerMemberUpdateEvent {
 
 impl CacheUpdate for ServerMemberLeaveEvent {
     fn update(&self, cache: &InMemoryCache) {
-        cache.members.remove(&MemberCompositeKey {
-            server: self.id.clone(),
-            user: self.user.clone(),
-        });
+        if !cache.config.cache_members {
+            cache.members.remove(&MemberCompositeKey {
+                server: self.id.clone(),
+                user: self.user.clone(),
+            });
+        }
     }
 }
 
 impl CacheUpdate for ServerRoleUpdateEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_servers {
+            return;
+        }
+
         let mut server = match cache.server(&self.id) {
             Some(server) => server.clone(),
             None => return,
@@ -355,6 +431,10 @@ impl CacheUpdate for ServerRoleUpdateEvent {
 
 impl CacheUpdate for ServerRoleDeleteEvent {
     fn update(&self, cache: &InMemoryCache) {
+        if !cache.config.cache_servers {
+            return;
+        }
+
         let mut server = match cache.server(&self.id) {
             Some(server) => server.clone(),
             None => return,
@@ -373,12 +453,22 @@ impl CacheUpdate for UserPlatformWipeEvent {
         // - dm channels
         // - relationships
         // - server memberships
-        cache.messages.retain(|_, v| v.author != self.user_id);
-        cache.members.retain(|_, v| v.id.user != self.user_id);
-        cache.channels.retain(|_, v| match v {
-            Channel::DirectMessage { recipients, .. } => recipients.contains(&self.user_id),
-            _ => true,
-        });
+        if cache.config.cache_messages {
+            cache.messages.retain(|_, v| v.author != self.user_id);
+        }
+        if cache.config.cache_members {
+            cache.members.retain(|_, v| v.id.user != self.user_id);
+        }
+        if cache.config.cache_channels {
+            cache.channels.retain(|_, v| match v {
+                Channel::DirectMessage { recipients, .. } => recipients.contains(&self.user_id),
+                _ => true,
+            });
+        }
+
+        if !cache.config.cache_users {
+            return;
+        }
 
         let user = match cache.user(&self.user_id) {
             Some(user) => user.clone(),

@@ -1,3 +1,4 @@
+mod config;
 mod iter;
 mod patch;
 mod reference;
@@ -6,6 +7,7 @@ mod stats;
 mod update;
 mod util;
 
+pub use config::Config;
 pub use iter::InMemoryCacheIter;
 pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
@@ -23,6 +25,7 @@ use update::CacheUpdate;
 
 #[derive(Debug, Clone, Default)]
 pub struct InMemoryCache {
+    config: Config,
     users: DashMap<String, User>,
     servers: DashMap<String, Server>,
     channels: DashMap<String, Channel>,
@@ -34,6 +37,13 @@ pub struct InMemoryCache {
 impl InMemoryCache {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn with_config(config: Config) -> Self {
+        Self {
+            config,
+            ..Default::default()
+        }
     }
 
     pub fn clear(&self) {
