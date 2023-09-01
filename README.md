@@ -10,6 +10,8 @@ The ecosystem includes [`rive-models`](https://crates.io/crates/rive-models), [`
 
 The main [`rive`](https://crates.io/crates/rive) crate just re-exports these crates. Using crates individually is recommended though.
 
+You can join the support server [here](https://rvlt.gg/QCscMDsY).
+
 ## MSRV
 
 The minimum supported Rust version is 1.64.
