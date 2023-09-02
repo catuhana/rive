@@ -76,3 +76,11 @@ impl<K: Eq + Hash, V> Deref for IterReference<'_, K, V> {
         self.value()
     }
 }
+
+impl<K: Eq + Hash, V: Debug> Debug for IterReference<'_, K, V> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.debug_struct("IterReference")
+            .field("inner", self.value())
+            .finish()
+    }
+}
