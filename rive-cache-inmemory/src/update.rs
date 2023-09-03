@@ -28,7 +28,7 @@ fn update_fields<T: Patch<P> + Remove<F>, P, F>(object: T, partial: &P, fields: 
     new_object
 }
 
-pub trait CacheUpdate {
+pub trait CacheUpdate: private::Sealed {
     fn update(&self, cache: &InMemoryCache);
 }
 
@@ -482,4 +482,49 @@ impl CacheUpdate for UserPlatformWipeEvent {
 
         cache.users.insert(self.user_id.clone(), new_user);
     }
+}
+
+mod private {
+    use rive_models::{
+        channel::Channel,
+        emoji::Emoji,
+        event::{
+            BulkEvent, BulkMessageDeleteEvent, ChannelDeleteEvent, ChannelUpdateEvent,
+            EmojiDeleteEvent, MessageAppendEvent, MessageDeleteEvent, MessageReactEvent,
+            MessageRemoveReactionEvent, MessageUnreactEvent, MessageUpdateEvent, ReadyEvent,
+            ServerCreateEvent, ServerDeleteEvent, ServerEvent, ServerMemberJoinEvent,
+            ServerMemberLeaveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent,
+            ServerRoleUpdateEvent, ServerUpdateEvent, UserPlatformWipeEvent, UserUpdateEvent,
+        },
+        message::Message,
+    };
+
+    pub trait Sealed {}
+
+    impl Sealed for BulkEvent {}
+    impl Sealed for BulkMessageDeleteEvent {}
+    impl Sealed for Channel {}
+    impl Sealed for ChannelDeleteEvent {}
+    impl Sealed for ChannelUpdateEvent {}
+    impl Sealed for Emoji {}
+    impl Sealed for EmojiDeleteEvent {}
+    impl Sealed for Message {}
+    impl Sealed for MessageAppendEvent {}
+    impl Sealed for MessageDeleteEvent {}
+    impl Sealed for MessageReactEvent {}
+    impl Sealed for MessageRemoveReactionEvent {}
+    impl Sealed for MessageUnreactEvent {}
+    impl Sealed for MessageUpdateEvent {}
+    impl Sealed for ReadyEvent {}
+    impl Sealed for ServerCreateEvent {}
+    impl Sealed for ServerDeleteEvent {}
+    impl Sealed for ServerEvent {}
+    impl Sealed for ServerMemberJoinEvent {}
+    impl Sealed for ServerMemberLeaveEvent {}
+    impl Sealed for ServerMemberUpdateEvent {}
+    impl Sealed for ServerRoleDeleteEvent {}
+    impl Sealed for ServerRoleUpdateEvent {}
+    impl Sealed for ServerUpdateEvent {}
+    impl Sealed for UserPlatformWipeEvent {}
+    impl Sealed for UserUpdateEvent {}
 }
