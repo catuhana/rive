@@ -23,7 +23,7 @@ use rive_models::{
 };
 use update::CacheUpdate;
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Default)]
 pub struct InMemoryCache {
     config: Config,
     users: DashMap<String, User>,
