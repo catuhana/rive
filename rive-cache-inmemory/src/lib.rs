@@ -1,3 +1,4 @@
+mod builder;
 mod config;
 mod iter;
 mod patch;
@@ -7,6 +8,7 @@ mod stats;
 mod update;
 mod util;
 
+pub use builder::InMemoryCacheBuilder;
 pub use config::Config;
 pub use iter::InMemoryCacheIter;
 pub use reference::Reference;
@@ -23,6 +25,10 @@ use rive_models::{
 };
 use update::CacheUpdate;
 
+/// An in-memory cache of Revolt data.
+///
+/// To use a cache instance in multiple tasks, consider wrapping it in an
+/// [`std::sync::Arc`] or [`std::rc::Rc`].
 #[derive(Debug, Default)]
 pub struct InMemoryCache {
     config: Config,
@@ -35,17 +41,31 @@ pub struct InMemoryCache {
 }
 
 impl InMemoryCache {
+    /// Create new [`InMemoryCache`] instance with default [`Config`].
+    ///
+    /// [`InMemoryCache`]: crate::InMemoryCache
+    /// [`Config`]: crate::Config
     pub fn new() -> Self {
         Self::default()
     }
 
-    pub fn with_config(config: Config) -> Self {
+    /// Create new [`InMemoryCache`] instance with provided [`Config`].
+    ///
+    /// [`InMemoryCache`]: crate::InMemoryCache
+    /// [`Config`]: crate::Config
+    pub fn new_with_config(config: Config) -> Self {
         Self {
             config,
             ..Default::default()
         }
     }
 
+    /// Create a new builder to configure and construct an in-memory cache.
+    pub const fn builder() -> InMemoryCacheBuilder {
+        InMemoryCacheBuilder::new()
+    }
+
+    /// Clear the cache.
     pub fn clear(&self) {
         self.users.clear();
         self.servers.clear();
@@ -55,38 +75,75 @@ impl InMemoryCache {
         self.members.clear();
     }
 
+    /// Create an interface for retrieving cache statistics.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// use rive_cache_inmemory::InMemoryCache;
+    ///
+    /// let cache = InMemoryCache::new();
+    ///
+    /// // later in the code...
+    /// let messages = cache.stats().messages();
+    /// println!("messages count: {messages}");
+    /// ```
     pub const fn stats(&self) -> InMemoryCacheStats {
         InMemoryCacheStats::new(self)
     }
 
+    /// Create an interface for iterating over the various resources in the
+    /// cache.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// use rive_cache_inmemory::InMemoryCache;
+    ///
+    /// let cache = InMemoryCache::new();
+    ///
+    /// // later in the code...
+    /// for user in cache.iter().users() {
+    ///     println!("{}: {}#{}", user.id, user.username, user.discriminator);
+    /// }
+    /// ```
     pub const fn iter(&self) -> InMemoryCacheIter {
         InMemoryCacheIter::new(self)
     }
 
+    /// Get a user by ID.
     pub fn user(&self, id: &str) -> Option<Reference<String, User>> {
         self.users.get(id).map(Reference::new)
     }
 
+    /// Get a server by ID.
     pub fn server(&self, id: &str) -> Option<Reference<String, Server>> {
         self.servers.get(id).map(Reference::new)
     }
 
+    /// Get a channel by ID.
     pub fn channel(&self, id: &str) -> Option<Reference<String, Channel>> {
         self.channels.get(id).map(Reference::new)
     }
 
+    /// Get a message by ID.
     pub fn message(&self, id: &str) -> Option<Reference<String, Message>> {
         self.messages.get(id).map(Reference::new)
     }
 
+    /// Get an emoji by ID.
     pub fn emoji(&self, id: &str) -> Option<Reference<String, Emoji>> {
         self.emojis.get(id).map(Reference::new)
     }
 
+    /// Get a member by [`MemberCompositeKey`].
+    ///
+    /// [`MemberCompositeKey`]: rive_models::member::MemberCompositeKey
     pub fn member(&self, id: &MemberCompositeKey) -> Option<Reference<MemberCompositeKey, Member>> {
         self.members.get(id).map(Reference::new)
     }
 
+    /// Update the cache with an incoming event.
     pub fn update(&self, event: &impl CacheUpdate) {
         event.update(self);
     }

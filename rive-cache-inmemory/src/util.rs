@@ -1,5 +1,8 @@
 use rive_models::channel::Channel;
 
+/// Get an ID of a given [`Channel`].
+///
+/// [`Channel`]: rive_models::channel::Channel
 // TODO: move it to rive_models
 pub(crate) fn channel_id(channel: &Channel) -> &String {
     match channel {

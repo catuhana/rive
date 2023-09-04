@@ -5,8 +5,10 @@ use rive_models::{
     user::{FieldsUser, User, UserProfile, UserStatus},
 };
 
+/// A trait for removing resource fields.
 // TODO: maybe move this to rive_models?
 pub trait Remove<T> {
+    /// Return a resource with a removed field.
     fn remove(self, field: &T) -> Self;
 }
 

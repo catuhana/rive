@@ -6,16 +6,19 @@ use rive_models::{
     user::{PartialUser, User},
 };
 
+/// Unwrap and clone [a] or return [b]
 #[inline(always)]
 fn unwrap<T: Clone>(a: &Option<T>, b: T) -> T {
     a.as_ref().map(Clone::clone).unwrap_or(b)
 }
 
+/// Return either [a] or [b]
 #[inline(always)]
 fn either<T: Clone>(a: &Option<T>, b: Option<T>) -> Option<T> {
     a.as_ref().map(Clone::clone).or(b)
 }
 
+/// A trait for updating resource fields.
 // TODO: maybe move this to rive_models? or even make a rive_util crate with patch feature?
 pub trait Patch<T> {
     fn patch(self, partial: &T) -> Self;

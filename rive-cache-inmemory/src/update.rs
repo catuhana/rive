@@ -18,17 +18,20 @@ use rive_models::{
 
 use crate::{patch::Patch, remove::Remove, util::channel_id, InMemoryCache};
 
+/// A shorthand method to patch and remove fields of a given resource.
 #[inline(always)]
-fn update_fields<T: Patch<P> + Remove<F>, P, F>(object: T, partial: &P, fields: &Vec<F>) -> T {
-    let mut new_object = object.patch(partial);
+fn update_fields<T: Patch<P> + Remove<F>, P, F>(resource: T, partial: &P, fields: &Vec<F>) -> T {
+    let mut new_resource = resource.patch(partial);
     for field in fields {
-        new_object = new_object.remove(field);
+        new_resource = new_resource.remove(field);
     }
 
-    new_object
+    new_resource
 }
 
+/// Implemented and sealed trait for incoming events.
 pub trait CacheUpdate: private::Sealed {
+    /// Update the cache based on an event data.
     fn update(&self, cache: &InMemoryCache);
 }
 

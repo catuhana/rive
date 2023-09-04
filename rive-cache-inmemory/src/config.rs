@@ -1,14 +1,33 @@
+/// Configuration for an [`InMemoryCache`].
+///
+/// [`InMemoryCache`]: crate::InMemoryCache
 #[derive(Debug, Clone)]
 pub struct Config {
+    /// Whether to cache users
     pub cache_users: bool,
+
+    /// Whether to cache servers
     pub cache_servers: bool,
+
+    /// Whether to cache channels
     pub cache_channels: bool,
+
+    /// Whether to cache messages
     pub cache_messages: bool,
+
+    /// Whether to cache emojis
     pub cache_emojis: bool,
+
+    /// Whether to cache members
     pub cache_members: bool,
 }
 
 impl Config {
+    /// Create a new [`Config`].
+    ///
+    /// All resource caching are enabled by default.
+    ///
+    /// [`Config`]: crate::Config
     pub const fn new() -> Self {
         Self {
             cache_users: true,
@@ -18,36 +37,6 @@ impl Config {
             cache_emojis: true,
             cache_members: true,
         }
-    }
-
-    pub fn cache_users(mut self, value: bool) -> Self {
-        self.cache_users = value;
-        self
-    }
-
-    pub fn cache_servers(mut self, value: bool) -> Self {
-        self.cache_servers = value;
-        self
-    }
-
-    pub fn cache_channels(mut self, value: bool) -> Self {
-        self.cache_channels = value;
-        self
-    }
-
-    pub fn cache_messages(mut self, value: bool) -> Self {
-        self.cache_messages = value;
-        self
-    }
-
-    pub fn cache_emojis(mut self, value: bool) -> Self {
-        self.cache_emojis = value;
-        self
-    }
-
-    pub fn cache_members(mut self, value: bool) -> Self {
-        self.cache_members = value;
-        self
     }
 }
 

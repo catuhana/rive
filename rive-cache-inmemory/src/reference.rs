@@ -46,6 +46,7 @@ impl<'a, K: Eq + Hash, V> Deref for Reference<'a, K, V> {
     }
 }
 
+/// Reference to a resource value being iterated over in the cache.
 pub struct IterReference<'a, K, V> {
     inner: RefMulti<'a, K, V>,
 }
