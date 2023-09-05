@@ -9,4 +9,4 @@ steps:
       - cargo check --quiet
       - cargo fmt --check --quiet
       - cargo clippy --no-deps --quiet -- -Dwarnings
-      - cargo doc --no-deps --quiet
+      - cargo doc --no-deps --verbose
