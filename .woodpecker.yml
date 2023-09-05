@@ -1,7 +1,7 @@
 steps:
   check:
     image: rust
-    environment: [CARGO_TERM_COLOR=always, RUSTDOCFLAGS="-Dwarnings"]
+    environment: [CARGO_TERM_COLOR=always, RUSTDOCFLAGS=-Dwarnings]
     commands:
       - rustup component add rustfmt
       - rustup component add clippy
@@ -9,4 +9,4 @@ steps:
       - cargo check --quiet
       - cargo fmt --check --quiet
       - cargo clippy --no-deps --quiet -- -Dwarnings
-      - cargo doc --no-deps --verbose
+      - cargo doc --no-deps --quiet
