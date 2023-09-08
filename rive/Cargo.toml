@@ -16,6 +16,7 @@ rive-models = { path = "../rive-models", version = "1" }
 rive-gateway = { path = "../rive-gateway", version = "1" }
 rive-http = { path = "../rive-http", version = "1" }
 rive-autumn = { path = "../rive-autumn", version = "1" }
+rive-cache-inmemory= { path = "../rive-cache-inmemory", version = "1" }
 
 [features]
 default = ["native-tls"]

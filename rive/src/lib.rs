@@ -1,7 +1,10 @@
 #![doc = include_str!("../README.md")]
 
+use std::sync::Arc;
+
+use rive_cache_inmemory::InMemoryCache;
 use rive_gateway::Gateway;
-use rive_models::authentication::Authentication;
+use rive_models::{authentication::Authentication, event::ServerEvent};
 
 /// Revolt entities
 ///
@@ -31,6 +34,13 @@ pub mod autumn {
     pub use rive_autumn::*;
 }
 
+/// In-memory cache.
+///
+/// A re-export of [rive_cache_inmemory]
+pub mod cache_inmemory {
+    pub use rive_cache_inmemory::*;
+}
+
 /// Re-export of everything
 pub mod prelude {
     pub use rive_models::{
@@ -40,6 +50,10 @@ pub mod prelude {
         strike::*, user::*, voice::*, webhook::*, *,
     };
 
+    pub use rive_cache_inmemory::{
+        Config as InMemoryCacheConfig, InMemoryCache, InMemoryCacheBuilder, InMemoryCacheIter,
+        InMemoryCacheStats, IterReference, Reference, ResourceIter,
+    };
     pub use rive_gateway::{Error as GatewayError, Gateway, GatewayConfig};
     pub use rive_http::{Client, Error as HttpError};
 
@@ -52,6 +66,7 @@ pub struct Rive {
     pub http: rive_http::Client,
     pub gateway: Gateway,
     pub autumn: rive_autumn::Client,
+    pub cache: Arc<InMemoryCache>,
 }
 
 impl Rive {
@@ -62,11 +77,18 @@ impl Rive {
         let http = rive_http::Client::new(auth.clone());
         let gateway = Gateway::connect(auth).await?;
         let autumn = rive_autumn::Client::new();
+        let cache = Arc::new(InMemoryCache::new());
 
         Ok(Self {
             http,
             gateway,
             autumn,
+            cache,
         })
+    }
+
+    /// Handle an incoming event.
+    pub fn update(&self, event: &ServerEvent) {
+        self.cache.update(event);
     }
 }
