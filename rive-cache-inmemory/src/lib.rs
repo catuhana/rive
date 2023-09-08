@@ -12,7 +12,8 @@ mod util;
 
 pub use builder::InMemoryCacheBuilder;
 pub use config::Config;
-pub use iter::InMemoryCacheIter;
+pub use iter::{InMemoryCacheIter, ResourceIter};
+pub use reference::IterReference;
 pub use reference::Reference;
 pub use stats::InMemoryCacheStats;
 
