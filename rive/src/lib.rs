@@ -40,10 +40,16 @@ pub mod prelude {
         strike::*, user::*, voice::*, webhook::*, *,
     };
 
-    pub use rive_gateway::{Error as GatewayError, Gateway, GatewayConfig};
-    pub use rive_http::{Client, Error as HttpError};
+    pub use rive_autumn::{
+        Client as AutumnClient, Error as AutumnError, BASE_URL as AUTUMN_BASE_URL,
+    };
+    pub use rive_gateway::{
+        Error as GatewayError, Gateway, GatewayConfig, BASE_URL as GATEWAY_BASE_URL,
+    };
+    pub use rive_http::{Client, Error as HttpError, BASE_URL as HTTP_BASE_URL};
 
     pub use crate::Rive;
+
     pub use futures::StreamExt;
 }
 
