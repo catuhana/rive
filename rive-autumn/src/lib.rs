@@ -63,6 +63,7 @@ impl Client {
         }
     }
 
+    /// Fetch the configuration of Autumn instance.
     pub async fn fetch_config(&self) -> Result<Config> {
         let response = self
             .client
