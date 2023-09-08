@@ -114,11 +114,16 @@ pub struct SetRolePermissionData {
 #[serde(untagged)]
 pub enum SetDefaultPermissionData {
     Value {
-        /// Permission values to set for members in a [Channel::Group]
+        /// Permission values to set for members in a [`Channel::Group`]
+        ///
+        /// [`Channel::Group`]: crate::channel::Channel::Group
         permissions: Permission,
     },
     Field {
-        /// Allow / deny values to set for members in this [Channels::TextChannel] or [Channels::VoiceChannel]
+        /// Allow / deny values to set for members in this [`Channel::TextChannel`] or [`Channel::VoiceChannel`]
+        ///
+        /// [`Channel::TextChannel`]: crate::channel::Channel::TextChannel
+        /// [`Channel::VoiceChannel`]: crate::channel::Channel::VoiceChannel
         permissions: Override,
     },
 }

@@ -19,6 +19,9 @@ pub(crate) mod prelude {
     pub(crate) use crate::{ep, Client, RequestBuilderExt, ResponseExt, Result};
 }
 
+/// Base URL of the official Revolt instance API
+pub const BASE_URL: &str = "https://api.revolt.chat";
+
 /// Client error
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -93,7 +96,7 @@ pub struct Client {
 impl Client {
     /// Create a client instance with the API base URL of Revolt official instance.
     pub fn new(authentication: Authentication) -> Self {
-        Client::new_base_url(authentication, "https://api.revolt.chat")
+        Client::new_base_url(authentication, BASE_URL)
     }
 
     /// Create a client instance with given base URL.

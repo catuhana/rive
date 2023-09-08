@@ -1,7 +1,7 @@
-pipeline:
+steps:
   check:
     image: rust
-    environment: [CARGO_TERM_COLOR=always]
+    environment: [CARGO_TERM_COLOR=always, RUSTDOCFLAGS=-Dwarnings]
     commands:
       - rustup component add rustfmt
       - rustup component add clippy
@@ -9,3 +9,4 @@ pipeline:
       - cargo check --quiet
       - cargo fmt --check --quiet
       - cargo clippy --no-deps --quiet -- -Dwarnings
+      - cargo doc --no-deps --quiet

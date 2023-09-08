@@ -28,7 +28,9 @@ impl Client {
 
     /// Remove your own, someone else's or all of a given reaction.
     ///
-    /// Requires [Permission::ManageMessages] if changing others' reactions.
+    /// Requires [`Permission::ManageMessages`] if changing others' reactions.
+    ///
+    /// [`Permission::ManageMessages`]: rive_models::permission::Permission::ManageMessages
     pub async fn remove_reaction_to_message(
         &self,
         channel_id: impl Into<String>,
@@ -55,7 +57,9 @@ impl Client {
 
     /// Remove your own, someone else's or all of a given reaction.
     ///
-    /// Requires [Permission::ManageMessages].
+    /// Requires [`Permission::ManageMessages`].
+    ///
+    /// [`Permission::ManageMessages`]: rive_models::permission::Permission::ManageMessages
     pub async fn remove_all_reactions_from_message(
         &self,
         channel_id: impl Into<String>,
