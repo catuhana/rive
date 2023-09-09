@@ -10,3 +10,4 @@
 ### Documentation
 
 - Added missing link references
+- Documented crate features
