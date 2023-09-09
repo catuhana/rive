@@ -1,7 +1,7 @@
 [package]
 name = "rive-cache-inmemory"
 description = "In-memory cache for Rive."
-categories = ["data-structures"]
+categories = ["caching"]
 version = "1.0.0"
 authors.workspace = true
 edition.workspace = true

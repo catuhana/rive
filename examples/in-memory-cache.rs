@@ -1,3 +1,5 @@
+//! This is an example of basic use of an in-memory cache.
+
 use futures::StreamExt;
 use std::{env, error::Error};
 
