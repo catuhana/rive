@@ -20,35 +20,35 @@ The minimum supported Rust version is 1.64.
 
 These are crates that most users will use together for a full development experience. You may not need all of these, but they are often used together to accomplish most of what you need.
 
-- [`rive`](https://crates.io/crates/rive)
+### [`rive`](https://crates.io/crates/rive)
 
-    An all-in-one crate that re-exports all other crates. It also provides an object which includes all the stuff to interact with Revolt. This is useful for quick prototyping. However, it is recommended to use each crate separately for more flexibility.
+An all-in-one crate that re-exports all other crates. It also provides an object which includes all the stuff to interact with Revolt. This is useful for quick prototyping. However, it is recommended to use each crate separately for more flexibility.
 
-- [`rive-models`](https://crates.io/crates/rive-models)
+### [`rive-models`](https://crates.io/crates/rive-models)
 
-    Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from WebSocket or `data` for containing fields used in API requests.
+Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from WebSocket or `data` for containing fields used in API requests.
 
-    Models can be serialized or deserialized using [`Serde`](https://serde.rs).
+Models can be serialized or deserialized using [`Serde`](https://serde.rs).
 
-- [`rive-http`](https://crates.io/crates/rive-http)
+### [`rive-http`](https://crates.io/crates/rive-http)
 
-    HTTP client supporting all of the Revolt REST API. It is based on [`reqwest`](https://docs.rs/reqwest).
+HTTP client supporting all of the Revolt REST API. It is based on [`reqwest`](https://docs.rs/reqwest).
 
-- [`rive-gateway`](https://crates.io/crates/rive-gateway)
+### [`rive-gateway`](https://crates.io/crates/rive-gateway)
 
-    Implementation of Revolt's WebSocket API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
+Implementation of Revolt's WebSocket API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
 
-    It also includes a basic automatic heartbeat mechanism (server pinging to keep the connection alive). If you want more advanced features such as server latency measurement, you'll need to implement it yourself.
+It also includes a basic automatic heartbeat mechanism (server pinging to keep the connection alive). If you want more advanced features such as server latency measurement, you'll need to implement it yourself.
 
-- [`rive-autumn`](https://crates.io/crates/rive-autumn)
+### [`rive-autumn`](https://crates.io/crates/rive-autumn)
 
-    An HTTP client for the Autumn, a microservice responsible for storing files and attachment on Revolt. Based on [`reqwest`](https://docs.rs/reqwest) and Tokio's async I/O.
+An HTTP client for the Autumn, a microservice responsible for storing files and attachment on Revolt. Based on [`reqwest`](https://docs.rs/reqwest) and Tokio's async I/O.
 
-- [`rive-cache-inmemory`](https://crates.io/crates/rive-cache-inmemory)
+### [`rive-cache-inmemory`](https://crates.io/crates/rive-cache-inmemory)
 
-    An implementation of in-memory cache.
+An implementation of in-memory cache.
 
-    It processes incoming events, and adds/modifies/removes resources depending on the event type and data.
+It processes incoming events, and adds/modifies/removes resources depending on the event type and data.
 
 ## Credits
 
