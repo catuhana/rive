@@ -8,7 +8,10 @@ edition = "2021"
 rive = { path = "../rive" }
 rive-autumn = { path = "../rive-autumn" }
 rive-http = { path = "../rive-http" }
+rive-gateway = { path = "../rive-gateway" }
 rive-models = { path = "../rive-models" }
+rive-cache-inmemory = { path = "../rive-cache-inmemory" }
+futures = "0.3"
 
 [[example]]
 name = "ping-pong"
@@ -21,6 +24,10 @@ path = "file-download.rs"
 [[example]]
 name = "file-upload"
 path = "file-upload.rs"
+
+[[example]]
+name = "in-memory-cache"
+path = "in-memory-cache.rs"
 
 [dependencies]
 futures = "0.3"

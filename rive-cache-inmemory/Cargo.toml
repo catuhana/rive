@@ -1,0 +1,15 @@
+[package]
+name = "rive-cache-inmemory"
+description = "In-memory cache for Rive."
+categories = ["caching"]
+version = "1.0.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+keywords.workspace = true
+
+[dependencies]
+rive-models = { path = "../rive-models", version = "1" }
+dashmap = "5"

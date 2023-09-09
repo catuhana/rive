@@ -44,6 +44,12 @@ These are crates that most users will use together for a full development experi
 
     An HTTP client for the Autumn, a microservice responsible for storing files and attachment on Revolt. Based on [`reqwest`](https://docs.rs/reqwest) and Tokio's async I/O.
 
+- [`rive-cache-inmemory`](https://crates.io/crates/rive-cache-inmemory)
+
+    An implementation of in-memory cache.
+
+    It processes incoming events, and adds/modifies/removes resources depending on the event type and data.
+
 ## Credits
 
 - Models were taken directly from the Revolt's [backend](https://github.com/revoltchat/backend).

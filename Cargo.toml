@@ -5,7 +5,8 @@ members = [
     "rive-models",
     "rive-http",
     "rive-gateway",
-    "rive-autumn"
+    "rive-autumn",
+    "rive-cache-inmemory"
 ]
 
 [workspace.package]
