@@ -43,6 +43,7 @@ pub mod cache_inmemory {
 
 /// Re-export of everything
 pub mod prelude {
+    // TODO: remove re-export of "*" (breaking change!)
     pub use rive_models::{
         account::*, attachment::*, authentication::*, bot::*, channel::*, core::*, data::*,
         embed::*, emoji::*, error::*, event::*, invite::*, member::*, message::*, mfa::*,

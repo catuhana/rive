@@ -35,6 +35,7 @@ pub enum Error {
 }
 
 /// Gateway configuration
+// TODO: rename to `Config`
 #[derive(Debug, Clone)]
 pub struct GatewayConfig {
     /// Auth token. If it is not [`Authentication::None`] then the event will be sent automatically.
@@ -67,6 +68,7 @@ impl GatewayConfig {
 }
 
 /// A wrapper for Revolt WebSocket API
+// TODO: config builder
 #[derive(Debug, Clone)]
 pub struct Gateway {
     client_sender: Sender<ClientEvent>,
