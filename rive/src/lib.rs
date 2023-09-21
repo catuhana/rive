@@ -8,35 +8,35 @@ use rive_models::{authentication::Authentication, event::ServerEvent};
 
 /// Revolt entities
 ///
-/// A re-export of [rive_models].
+/// A re-export of [`rive_models`].
 pub mod models {
     pub use rive_models::*;
 }
 
 /// HTTP client for the Revolt REST API
 ///
-/// A re-export of [rive_http].
+/// A re-export of [`rive_http`].
 pub mod http {
     pub use rive_http::*;
 }
 
 /// Client for the Revolt WebSocket API
 ///
-/// A re-export of [rive_gateway].
+/// A re-export of [`rive_gateway`].
 pub mod gateway {
     pub use rive_gateway::*;
 }
 
 /// Client for the Autumn (Revolt file storage) API.
 ///
-/// A re-export of [rive_autumn].
+/// A re-export of [`rive_autumn`].
 pub mod autumn {
     pub use rive_autumn::*;
 }
 
 /// In-memory cache.
 ///
-/// A re-export of [rive_cache_inmemory]
+/// A re-export of [`rive_cache_inmemory`].
 pub mod cache_inmemory {
     pub use rive_cache_inmemory::*;
 }
