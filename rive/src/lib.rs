@@ -42,6 +42,28 @@ pub mod cache_inmemory {
 }
 
 /// Re-export of everything
+///
+/// Some fields and constants are renamed as they have the same name:
+///
+/// | Original field name             | Renamed field name      |
+/// |---------------------------------|-------------------------|
+/// | [`rive_autumn::BASE_URL`]       | [`AUTUMN_BASE_URL`]     |
+/// | [`rive_autumn::Client`]         | [`AutumnClient`]        |
+/// | [`rive_autumn::Error`]          | [`AutumnError`]         |
+/// | [`rive_cache_inmemory::Config`] | [`InMemoryCacheConfig`] |
+/// | [`rive_gateway::BASE_URL`]      | [`GATEWAY_BASE_URL`]    |
+/// | [`rive_gateway::Error`]         | [`GatewayError`]        |
+/// | [`rive_http::BASE_URL`]         | [`HTTP_BASE_URL`]       |
+/// | [`rive_http::Error`]            | [`HttpError`]           |
+///
+/// [`AUTUMN_BASE_URL`]: crate::prelude::AUTUMN_BASE_URL
+/// [`AutumnClient`]: crate::prelude::AutumnClient
+/// [`AutumnError`]: crate::prelude::AutumnError
+/// [`InMemoryCacheConfig`]: crate::prelude::InMemoryCacheConfig
+/// [`GATEWAY_BASE_URL`]: crate::prelude::GATEWAY_BASE_URL
+/// [`GatewayError`]: crate::prelude::GatewayError
+/// [`HTTP_BASE_URL`]: crate::prelude::HTTP_BASE_URL
+/// [`HttpError`]: crate::prelude::HttpError
 pub mod prelude {
     // TODO: remove re-export of "*" (breaking change!)
     pub use rive_models::{
