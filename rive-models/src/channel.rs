@@ -4,6 +4,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     attachment::Attachment,
+    id::{
+        marker::{
+            ChannelMarker, InviteMarker, MessageMarker, RoleMarker, ServerMarker, UserMarker,
+        },
+        Id,
+    },
     permission::{OverrideField, Permission},
 };
 
@@ -15,44 +21,44 @@ pub enum Channel {
     SavedMessages {
         /// Unique Id
         #[serde(rename = "_id")]
-        id: String,
+        id: Id<ChannelMarker>,
         /// Id of the user this channel belongs to
-        user: String,
+        user: Id<UserMarker>,
     },
 
     /// Direct message channel between two users
     DirectMessage {
         /// Unique Id
         #[serde(rename = "_id")]
-        id: String,
+        id: Id<ChannelMarker>,
 
         /// Whether this direct message channel is currently open on both sides
         active: bool,
         /// 2-tuple of user ids participating in direct message
-        recipients: Vec<String>,
+        recipients: Vec<Id<UserMarker>>,
         /// Id of the last message sent in this channel
-        last_message_id: Option<String>,
+        last_message_id: Option<Id<MessageMarker>>,
     },
 
     /// Group channel between 1 or more participants
     Group {
         /// Unique Id
         #[serde(rename = "_id")]
-        id: String,
+        id: Id<ChannelMarker>,
 
         /// Display name of the channel
         name: String,
         /// User id of the owner of the group
-        owner: String,
+        owner: Id<UserMarker>,
         /// Channel description
         description: Option<String>,
         /// Array of user ids participating in channel
-        recipients: Vec<String>,
+        recipients: Vec<Id<UserMarker>>,
 
         /// Custom icon attachment
         icon: Option<Attachment>,
         /// Id of the last message sent in this channel
-        last_message_id: Option<String>,
+        last_message_id: Option<Id<MessageMarker>>,
 
         /// Permissions assigned to members of this group
         /// (does not apply to the owner of the group)
@@ -67,7 +73,7 @@ pub enum Channel {
     TextChannel {
         /// Unique Id
         #[serde(rename = "_id")]
-        id: String,
+        id: Id<ChannelMarker>,
         /// Id of the server this channel belongs to
         server: String,
 
@@ -79,13 +85,13 @@ pub enum Channel {
         /// Custom icon attachment
         icon: Option<Attachment>,
         /// Id of the last message sent in this channel
-        last_message_id: Option<String>,
+        last_message_id: Option<Id<MessageMarker>>,
 
         /// Default permissions assigned to users in this channel
         default_permissions: Option<OverrideField>,
         /// Permissions assigned based on role to this channel
-        #[serde(default = "HashMap::<String, OverrideField>::new")]
-        role_permissions: HashMap<String, OverrideField>,
+        #[serde(default = "HashMap::<Id<RoleMarker>, OverrideField>::new")]
+        role_permissions: HashMap<Id<RoleMarker>, OverrideField>,
 
         /// Whether this channel is marked as not safe for work
         #[serde(default)]
@@ -96,9 +102,9 @@ pub enum Channel {
     VoiceChannel {
         /// Unique Id
         #[serde(rename = "_id")]
-        id: String,
+        id: Id<ChannelMarker>,
         /// Id of the server this channel belongs to
-        server: String,
+        server: Id<ServerMarker>,
 
         /// Display name of the channel
         name: String,
@@ -110,8 +116,8 @@ pub enum Channel {
         /// Default permissions assigned to users in this channel
         default_permissions: Option<OverrideField>,
         /// Permissions assigned based on role to this channel
-        #[serde(default = "HashMap::<String, OverrideField>::new")]
-        role_permissions: HashMap<String, OverrideField>,
+        #[serde(default = "HashMap::<Id<RoleMarker>, OverrideField>::new")]
+        role_permissions: HashMap<Id<RoleMarker>, OverrideField>,
 
         /// Whether this channel is marked as not safe for work
         #[serde(default)]
@@ -125,7 +131,7 @@ pub struct PartialChannel {
     /// Display name of the channel
     pub name: Option<String>,
     /// User id of the owner of the group
-    pub owner: Option<String>,
+    pub owner: Option<Id<UserMarker>>,
     /// Channel description
     pub description: Option<String>,
     /// Custom icon attachment
@@ -137,11 +143,11 @@ pub struct PartialChannel {
     /// Permissions assigned to members of this channel
     pub permissions: Option<Permission>,
     /// Permissions assigned based on role to this channel
-    pub role_permissions: Option<HashMap<String, OverrideField>>,
+    pub role_permissions: Option<HashMap<Id<RoleMarker>, OverrideField>>,
     /// Default permissions assigned to users in this channel
     pub default_permissions: Option<OverrideField>,
     /// Id of the last message sent in this channel
-    pub last_message_id: Option<String>,
+    pub last_message_id: Option<Id<MessageMarker>>,
 }
 
 /// Channel type
@@ -168,23 +174,23 @@ pub enum PartialInvite {
     Server {
         /// Invite code
         #[serde(rename = "_id")]
-        code: String,
+        code: Id<InviteMarker>,
         /// Id of the server this invite points to
-        server: String,
+        server: Id<ServerMarker>,
         /// Id of user who created this invite
-        creator: String,
+        creator: Id<UserMarker>,
         /// Id of the server channel this invite points to
-        channel: String,
+        channel: Id<ChannelMarker>,
     },
     /// Invite to a group channel
     Group {
         /// Invite code
         #[serde(rename = "_id")]
-        code: String,
+        code: Id<InviteMarker>,
         /// Id of user who created this invite
-        creator: String,
+        creator: Id<UserMarker>,
         /// Id of the group channel this invite points to
-        channel: String,
+        channel: Id<ChannelMarker>,
     },
 }
 
@@ -192,9 +198,9 @@ pub enum PartialInvite {
 #[derive(Deserialize, Debug, PartialEq, Clone)]
 pub struct ChannelCompositeKey {
     /// Channel ID
-    pub channel: String,
+    pub channel: Id<ChannelMarker>,
     /// User ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Representation of the state of a channel from the perspective of a user
@@ -205,7 +211,7 @@ pub struct ChannelUnread {
     pub id: ChannelCompositeKey,
 
     /// ID of the last message read in this channel by a user
-    pub last_id: Option<String>,
+    pub last_id: Option<Id<MessageMarker>>,
     /// Array of message ids that mention the user
-    pub mentions: Option<Vec<String>>,
+    pub mentions: Option<Vec<Id<MessageMarker>>>,
 }

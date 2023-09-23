@@ -6,6 +6,12 @@ use crate::{
     channel::{ChannelType, FieldsChannel},
     embed::SendableEmbed,
     emoji::EmojiParent,
+    id::{
+        marker::{
+            AttachmentMarker, ChannelMarker, MessageMarker, RoleMarker, ServerMarker, UserMarker,
+        },
+        Id,
+    },
     member::FieldsMember,
     message::{Interactions, Masquerade, MessageSort, Reply},
     mfa::MFAData,
@@ -27,7 +33,7 @@ pub struct SendMessageData {
     pub content: Option<String>,
     /// Attachments to include in message
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub attachments: Option<Vec<String>>,
+    pub attachments: Option<Vec<Id<AttachmentMarker>>>,
     /// Messages to reply to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub replies: Option<Vec<Reply>>,
@@ -57,7 +63,7 @@ pub struct EditUserData {
     pub profile: Option<PartialUserProfile>,
     /// Attachment ID for avatar
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub avatar: Option<String>,
+    pub avatar: Option<Id<AttachmentMarker>>,
     /// Fields to remove from user object
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remove: Option<Vec<FieldsUser>>,
@@ -90,10 +96,10 @@ pub struct EditChannelData {
     pub description: Option<String>,
     /// Group owner
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub owner: Option<String>,
+    pub owner: Option<Id<UserMarker>>,
     /// Icon attachment ID
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub icon: Option<String>,
+    pub icon: Option<Id<AttachmentMarker>>,
     /// Whether this channel is age-restricted
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nsfw: Option<bool>,
@@ -138,10 +144,10 @@ pub struct FetchMessagesData {
     pub limit: Option<i64>,
     /// Message id before which messages should be fetched
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub before: Option<String>,
+    pub before: Option<Id<MessageMarker>>,
     /// Message id after which messages should be fetched
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub after: Option<String>,
+    pub after: Option<Id<MessageMarker>>,
     /// Message sort direction
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sort: Option<MessageSort>,
@@ -151,7 +157,7 @@ pub struct FetchMessagesData {
     /// It will also take half of limit rounded as the limits to each side.
     /// It also fetches the message ID specified.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub nearby: Option<String>,
+    pub nearby: Option<Id<MessageMarker>>,
     /// Whether to include user (and member, if server channel) objects
     #[serde(skip_serializing_if = "Option::is_none")]
     pub include_users: Option<bool>,
@@ -170,10 +176,10 @@ pub struct SearchForMessagesData {
     pub limit: Option<i64>,
     /// Message id before which messages should be fetched
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub before: Option<String>,
+    pub before: Option<Id<MessageMarker>>,
     /// Message id after which messages should be fetched
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub after: Option<String>,
+    pub after: Option<Id<MessageMarker>>,
     /// Message sort direction
     ///
     /// By default, it will be sorted by relevance.
@@ -199,7 +205,7 @@ pub struct EditMessageData {
 #[derive(Serialize, Debug, Clone)]
 pub struct BulkDeleteMessagesData {
     /// Message IDs
-    pub ids: Vec<String>,
+    pub ids: Vec<Id<MessageMarker>>,
 }
 
 /// Reactions remove options
@@ -207,7 +213,7 @@ pub struct BulkDeleteMessagesData {
 pub struct RemoveReactionToMessageData {
     /// Remove a specific user's reaction
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_id: Option<String>,
+    pub user_id: Option<Id<UserMarker>>,
     /// Remove all reactions
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remove_all: Option<bool>,
@@ -223,7 +229,7 @@ pub struct CreateGroupData {
     /// Array of user IDs to add to the group
     ///
     /// Must be friends with these users.
-    users: Vec<String>,
+    users: Vec<Id<UserMarker>>,
     /// Whether this group is age-restricted
     #[serde(skip_serializing_if = "Option::is_none")]
     nsfw: Option<bool>,
@@ -243,12 +249,12 @@ pub enum InviteBotData {
     /// Invite to a server
     Server {
         /// Server Id
-        server: String,
+        server: Id<ServerMarker>,
     },
     /// Invite to a group
     Group {
         /// Group Id
-        group: String,
+        group: Id<ChannelMarker>,
     },
 }
 
@@ -295,9 +301,9 @@ pub struct EditServerData {
     pub description: Option<String>,
 
     /// Attachment Id for icon
-    pub icon: Option<String>,
+    pub icon: Option<Id<AttachmentMarker>>,
     /// Attachment Id for banner
-    pub banner: Option<String>,
+    pub banner: Option<Id<AttachmentMarker>>,
 
     /// Category structure for server
     pub categories: Option<Vec<Category>>,
@@ -422,10 +428,10 @@ pub struct EditMemberData {
     pub nickname: Option<String>,
     /// Attachment Id to set for avatar
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub avatar: Option<String>,
+    pub avatar: Option<Id<AttachmentMarker>>,
     /// Array of role ids
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub roles: Option<Vec<String>>,
+    pub roles: Option<Vec<Id<RoleMarker>>>,
     /// Timestamp this member is timed out until
     #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout: Option<Timestamp>,
@@ -546,7 +552,7 @@ pub struct ReportContentData {
 #[derive(Serialize, Debug, Clone)]
 pub struct CreateStrikeData {
     /// ID of reported user
-    pub user_id: String,
+    pub user_id: Id<UserMarker>,
 
     /// Attached reason
     pub reason: String,
@@ -615,5 +621,5 @@ pub struct CreateWebhookData {
     pub name: String,
     /// Avatar's attachment ID
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub avatar: Option<String>,
+    pub avatar: Option<Id<AttachmentMarker>>,
 }

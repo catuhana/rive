@@ -1,5 +1,10 @@
 use serde::Deserialize;
 
+use crate::id::{
+    marker::{AnyMarker, AttachmentMarker, MessageMarker, ServerMarker, UserMarker},
+    Id,
+};
+
 /// Metadata associated with attachment
 #[derive(Deserialize, Debug, Clone, Default)]
 #[serde(tag = "type")]
@@ -26,7 +31,7 @@ pub enum AttachmentMetadata {
 pub struct Attachment {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<AttachmentMarker>,
 
     /// Tag/bucket this attachment was uploaded to
     pub tag: String,
@@ -50,10 +55,10 @@ pub struct Attachment {
     pub reported: Option<bool>,
 
     // NOTE: Theese 3 fields will be deprecated in the next update
-    pub message_id: Option<String>,
-    pub user_id: Option<String>,
-    pub server_id: Option<String>,
+    pub message_id: Option<Id<MessageMarker>>,
+    pub user_id: Option<Id<UserMarker>>,
+    pub server_id: Option<Id<ServerMarker>>,
 
     /// ID of the object this attachment is associated with
-    pub object_id: Option<String>,
+    pub object_id: Option<Id<AnyMarker>>,
 }

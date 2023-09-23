@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{attachment::Attachment, user::User};
+use crate::{
+    attachment::Attachment,
+    id::{marker::UserMarker, Id},
+    user::User,
+};
 
 bitflags::bitflags! {
     /// User badge bitfield
@@ -17,7 +21,7 @@ crate::impl_serde_bitflags!(BotFlags);
 pub struct PublicBot {
     /// Bot Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<UserMarker>,
     /// Bot Username
     pub username: String,
     /// Profile Avatar
@@ -33,9 +37,9 @@ pub struct Bot {
     ///
     /// This equals the associated bot user's id.
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<UserMarker>,
     /// User Id of the bot owner
-    pub owner: String,
+    pub owner: Id<UserMarker>,
     /// Token used to authenticate requests for this bot
     pub token: String,
     /// Whether the bot is public
@@ -66,9 +70,9 @@ pub struct PartialBot {
     ///
     /// This equals the associated bot user's id.
     #[serde(rename = "_id")]
-    pub id: Option<String>,
+    pub id: Option<Id<UserMarker>>,
     /// User Id of the bot owner
-    pub owner: Option<String>,
+    pub owner: Option<Id<UserMarker>>,
     /// Token used to authenticate requests for this bot
     pub token: Option<String>,
     /// Whether the bot is public

@@ -3,6 +3,13 @@ use serde::{Deserialize, Serialize};
 use crate::{
     channel::{Channel, FieldsChannel, PartialChannel},
     emoji::Emoji,
+    id::{
+        marker::{
+            ChannelMarker, EmojiMarker, MessageMarker, RoleMarker, ServerMarker, SessionMarker,
+            UserMarker, WebhookMarker,
+        },
+        Id,
+    },
     member::{FieldsMember, Member, MemberCompositeKey, PartialMember},
     message::{AppendMessage, Message, PartialMessage},
     report::Report,
@@ -173,8 +180,8 @@ pub enum ServerEvent {
 pub enum ClientEvent {
     Authenticate { token: String },
     Ping { data: i32 },
-    BeginTyping { channel: String },
-    EndTyping { channel: String },
+    BeginTyping { channel: Id<ChannelMarker> },
+    EndTyping { channel: Id<ChannelMarker> },
 }
 
 /// Authentication related events
@@ -182,12 +189,12 @@ pub enum ClientEvent {
 #[serde(tag = "event_type")]
 pub enum AuthifierEvent {
     DeleteSession {
-        user_id: String,
-        session_id: String,
+        user_id: Id<UserMarker>,
+        session_id: Id<SessionMarker>,
     },
     DeleteAllSessions {
-        user_id: String,
-        exclude_session_id: Option<String>,
+        user_id: Id<UserMarker>,
+        exclude_session_id: Option<Id<SessionMarker>>,
     },
 }
 
@@ -231,9 +238,9 @@ pub struct PongEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageUpdateEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel: String,
+    pub channel: Id<ChannelMarker>,
     /// Changed message data
     pub data: PartialMessage,
 }
@@ -242,9 +249,9 @@ pub struct MessageUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageAppendEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel: String,
+    pub channel: Id<ChannelMarker>,
     /// Appended message information
     pub append: AppendMessage,
 }
@@ -253,61 +260,61 @@ pub struct MessageAppendEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageDeleteEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel: String,
+    pub channel: Id<ChannelMarker>,
 }
 
 /// Message react event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageReactEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel_id: String,
+    pub channel_id: Id<ChannelMarker>,
     /// Reaction author ID
-    pub user_id: String,
+    pub user_id: Id<UserMarker>,
     /// Emoji ID
-    pub emoji_id: String,
+    pub emoji_id: Id<EmojiMarker>,
 }
 
 /// Message reaction remove event
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageUnreactEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel_id: String,
+    pub channel_id: Id<ChannelMarker>,
     /// Reaction author ID
-    pub user_id: String,
+    pub user_id: Id<UserMarker>,
     /// Emoji ID
-    pub emoji_id: String,
+    pub emoji_id: Id<EmojiMarker>,
 }
 
 /// Message remove reaction event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct MessageRemoveReactionEvent {
     /// Message ID
-    pub id: String,
+    pub id: Id<MessageMarker>,
     /// Channel ID
-    pub channel_id: String,
+    pub channel_id: Id<ChannelMarker>,
     /// Emoji ID
-    pub emoji_id: String,
+    pub emoji_id: Id<EmojiMarker>,
 }
 
 /// Bulk message delete event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct BulkMessageDeleteEvent {
     /// Channel ID
-    pub channel: String,
+    pub channel: Id<ChannelMarker>,
     /// List of messages IDs
-    pub ids: Vec<String>,
+    pub ids: Vec<Id<MessageMarker>>,
 }
 
 /// Channel update event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelUpdateEvent {
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     pub data: PartialChannel,
     pub clear: Vec<FieldsChannel>,
 }
@@ -316,61 +323,61 @@ pub struct ChannelUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelDeleteEvent {
     /// Deleted channel ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
 }
 
 /// Group join event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelGroupJoinEvent {
     /// Group ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     /// User ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Group leave event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelGroupLeaveEvent {
     /// Group ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     /// User ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Channel start typing event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelStartTypingEvent {
     /// Channel ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     /// Typing user ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Channel stop typing event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelStopTypingEvent {
     /// Channel ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     /// Typing user ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Channel acknowledge event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ChannelAckEvent {
     /// Channel ID
-    pub id: String,
+    pub id: Id<ChannelMarker>,
     /// User ID
-    pub user: String,
+    pub user: Id<UserMarker>,
     /// Message ID
-    pub message_id: String,
+    pub message_id: Id<MessageMarker>,
 }
 
 /// New server data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerCreateEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// Server information
     pub server: Server,
     /// List of server channels
@@ -381,7 +388,7 @@ pub struct ServerCreateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerUpdateEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// Server changed data
     pub data: PartialServer,
     /// List of removed optional server fields
@@ -392,7 +399,7 @@ pub struct ServerUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerDeleteEvent {
     /// Deleted server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
 }
 
 /// Server member update event data
@@ -410,27 +417,27 @@ pub struct ServerMemberUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerMemberJoinEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// User ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Server member leave event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerMemberLeaveEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// Leaved user ID
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Server role update event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerRoleUpdateEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// Role  ID
-    pub role_id: String,
+    pub role_id: Id<RoleMarker>,
     /// Changed role data
     pub data: PartialRole,
     /// Removed role optional fields
@@ -441,16 +448,16 @@ pub struct ServerRoleUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ServerRoleDeleteEvent {
     /// Server ID
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// Role ID
-    pub role_id: String,
+    pub role_id: Id<RoleMarker>,
 }
 
 /// User update event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserUpdateEvent {
     /// User ID
-    pub id: String,
+    pub id: Id<UserMarker>,
     /// Changed user data
     pub data: PartialUser,
     /// Removed user fields
@@ -460,7 +467,7 @@ pub struct UserUpdateEvent {
 /// User relationship update event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserRelationshipEvent {
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// User with whom relationship changed
     pub user: User,
     /// New relationship status
@@ -479,7 +486,7 @@ pub struct UserSettingsUpdateEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserPlatformWipeEvent {
     /// Deleted user ID
-    pub user_id: String,
+    pub user_id: Id<UserMarker>,
     /// User flags
     pub flags: i32,
 }
@@ -488,14 +495,14 @@ pub struct UserPlatformWipeEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct EmojiDeleteEvent {
     /// Deleted emoji ID
-    pub id: String,
+    pub id: Id<EmojiMarker>,
 }
 
 /// Webhook update event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct WebhookUpdateEvent {
     /// Webhook ID
-    pub id: String,
+    pub id: Id<WebhookMarker>,
     /// Updated webhook data
     pub data: PartialWebhook,
     /// Fields removed from webhook
@@ -505,5 +512,5 @@ pub struct WebhookUpdateEvent {
 /// Webhook delete event data
 #[derive(Deserialize, Debug, Clone)]
 pub struct WebhookDeleteEvent {
-    pub id: String,
+    pub id: Id<WebhookMarker>,
 }

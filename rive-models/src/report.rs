@@ -1,5 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+use crate::id::{
+    marker::{MessageMarker, ReportMarker, ServerMarker, UserMarker},
+    Id,
+};
+
 /// Reason for reporting content (message or server)
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum ContentReportReason {
@@ -51,21 +56,21 @@ pub enum ReportedContent {
     /// Report a message
     Message {
         /// ID of the message
-        id: String,
+        id: Id<MessageMarker>,
         /// Reason for reporting message
         report_reason: ContentReportReason,
     },
     /// Report a server
     Server {
         /// ID of the server
-        id: String,
+        id: Id<ServerMarker>,
         /// Reason for reporting server
         report_reason: ContentReportReason,
     },
     /// Report a user
     User {
         /// ID of the user
-        id: String,
+        id: Id<UserMarker>,
         /// Reason for reporting a user
         report_reason: UserReportReason,
     },
@@ -90,9 +95,9 @@ pub enum ReportStatus {
 pub struct Report {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<ReportMarker>,
     /// Id of the user creating this report
-    pub author_id: String,
+    pub author_id: Id<UserMarker>,
     /// Reported content
     pub content: ReportedContent,
     /// Additional report context

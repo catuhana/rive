@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
+use crate::id::{marker::AttachmentMarker, Id};
+
 fn default_as_true() -> bool {
     true
 }
@@ -10,7 +12,7 @@ fn default_as_true() -> bool {
 #[derive(Deserialize, Debug, Clone)]
 pub struct UploadData {
     /// Attachment ID
-    pub id: String,
+    pub id: Id<AttachmentMarker>,
 }
 
 /// Restricted content type

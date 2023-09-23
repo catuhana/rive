@@ -1,5 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+use crate::id::{
+    marker::{AccountMarker, MFATicketMarker},
+    Id,
+};
+
 /// MFA request/response data
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
@@ -42,10 +47,10 @@ pub struct TOTPSecret {
 pub struct MFATicket {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<MFATicketMarker>,
 
     /// Account Id
-    pub account_id: String,
+    pub account_id: Id<AccountMarker>,
 
     /// Unique Token
     pub token: String,

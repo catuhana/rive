@@ -2,7 +2,13 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::attachment::Attachment;
+use crate::{
+    attachment::Attachment,
+    id::{
+        marker::{AttachmentMarker, ServerMarker, UserMarker},
+        Id,
+    },
+};
 
 /// User's relationship with another user (or themselves)
 #[derive(Deserialize, Debug, Clone, PartialEq)]
@@ -20,7 +26,7 @@ pub enum RelationshipStatus {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Relationship {
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<UserMarker>,
     pub status: RelationshipStatus,
 }
 
@@ -28,9 +34,9 @@ pub struct Relationship {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Mutuals {
     /// Array of mutual user IDs that both users are friends with
-    pub users: Vec<String>,
+    pub users: Vec<Id<UserMarker>>,
     /// Array of mutual server IDs that both users are in
-    pub servers: Vec<String>,
+    pub servers: Vec<Id<ServerMarker>>,
 }
 
 /// Presence status
@@ -78,7 +84,7 @@ pub struct PartialUserProfile {
     content: Option<String>,
     /// Attachment Id for background
     #[serde(skip_serializing_if = "Option::is_none")]
-    background: Option<String>,
+    background: Option<Id<AttachmentMarker>>,
 }
 
 bitflags::bitflags! {
@@ -131,7 +137,7 @@ crate::impl_serde_bitflags!(UserFlags);
 #[derive(Deserialize, Debug, Clone)]
 pub struct BotInformation {
     /// Id of the owner of this bot
-    pub owner: String,
+    pub owner: Id<UserMarker>,
 }
 
 /// Representiation of a User on Revolt.
@@ -139,7 +145,7 @@ pub struct BotInformation {
 pub struct User {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<UserMarker>,
     /// Username
     pub username: String,
     /// User discriminator (four numbers after the username)
@@ -177,7 +183,7 @@ pub struct User {
 pub struct PartialUser {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: Option<String>,
+    pub id: Option<Id<UserMarker>>,
     /// Username
     pub username: Option<String>,
     /// User discriminator

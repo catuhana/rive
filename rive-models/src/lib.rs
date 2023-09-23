@@ -12,6 +12,7 @@ pub mod embed;
 pub mod emoji;
 pub mod error;
 pub mod event;
+pub mod id;
 pub mod invite;
 pub mod member;
 pub mod message;

@@ -1,4 +1,10 @@
-use crate::mfa::MFAMethod;
+use crate::{
+    id::{
+        marker::{SessionMarker, UserMarker},
+        Id,
+    },
+    mfa::MFAMethod,
+};
 use serde::Deserialize;
 
 /// Web Push subscription
@@ -15,9 +21,9 @@ pub struct WebPushSubscription {
 pub struct Session {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<SessionMarker>,
     /// User Id
-    pub user_id: String,
+    pub user_id: Id<UserMarker>,
     /// Session token
     pub token: String,
     /// Display name
@@ -30,7 +36,7 @@ pub struct Session {
 #[derive(Deserialize, Debug, Clone)]
 pub struct SessionInfo {
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<SessionMarker>,
     pub name: String,
 }
 
@@ -44,6 +50,6 @@ pub enum LoginResponse {
         allowed_methods: Vec<MFAMethod>,
     },
     Disabled {
-        user_id: String,
+        user_id: Id<UserMarker>,
     },
 }

@@ -1,4 +1,12 @@
-use crate::{attachment::Attachment, channel::Channel, server::Server};
+use crate::{
+    attachment::Attachment,
+    channel::Channel,
+    id::{
+        marker::{ChannelMarker, InviteMarker, ServerMarker},
+        Id,
+    },
+    server::Server,
+};
 use serde::Deserialize;
 
 /// Invite
@@ -9,9 +17,9 @@ pub enum Invite {
     /// Server channel invite
     Server {
         /// Invite code
-        code: String,
+        code: Id<InviteMarker>,
         /// Id of the server
-        server_id: String,
+        server_id: Id<ServerMarker>,
         /// Name of the server
         server_name: String,
         /// Attachment for server icon
@@ -21,7 +29,7 @@ pub enum Invite {
         /// Enum of server flags
         server_flags: Option<i32>,
         /// Id of server channel
-        channel_id: String,
+        channel_id: Id<ChannelMarker>,
         /// Name of server channel
         channel_name: String,
         /// Description of server channel
@@ -36,9 +44,9 @@ pub enum Invite {
     /// Group channel invite
     Group {
         /// Invite code
-        code: String,
+        code: Id<InviteMarker>,
         /// Id of group channel
-        channel_id: String,
+        channel_id: Id<ChannelMarker>,
         /// Name of group channel
         channel_name: String,
         /// Description of group channel

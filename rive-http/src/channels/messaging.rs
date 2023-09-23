@@ -4,6 +4,7 @@ use rive_models::{
         BulkDeleteMessagesData, EditMessageData, FetchMessagesData, SearchForMessagesData,
         SendMessageData,
     },
+    id::{marker::ChannelMarker, Id},
     message::{BulkMessageResponse, Message},
 };
 
@@ -51,12 +52,12 @@ impl Client {
     /// Send a message to a given channel.
     pub async fn send_message(
         &self,
-        channel_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
         data: SendMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
-            .post(ep!(self, "/channels/{}/messages", channel_id.into()))
+            .post(ep!(self, "/channels/{}/messages", channel_id.value_ref()))
             .auth(&self.authentication)
             .json(&data)
             .send()

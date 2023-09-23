@@ -1,15 +1,22 @@
 use iso8601_timestamp::Timestamp;
 use serde::{Deserialize, Serialize};
 
-use crate::{attachment::Attachment, user::User};
+use crate::{
+    attachment::Attachment,
+    id::{
+        marker::{RoleMarker, ServerMarker, UserMarker},
+        Id,
+    },
+    user::User,
+};
 
 /// Composite primary key consisting of server and user id
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Hash)]
 pub struct MemberCompositeKey {
     /// Server Id
-    pub server: String,
+    pub server: Id<ServerMarker>,
     /// User Id
-    pub user: String,
+    pub user: Id<UserMarker>,
 }
 
 /// Representation of a member of a server on Revolt
@@ -29,7 +36,7 @@ pub struct Member {
 
     /// Member's roles
     #[serde(default)]
-    pub roles: Vec<String>,
+    pub roles: Vec<Id<RoleMarker>>,
     /// Timestamp this member is timed out until
     pub timeout: Option<Timestamp>,
 }
@@ -50,7 +57,7 @@ pub struct PartialMember {
     pub avatar: Option<Attachment>,
 
     /// Member's roles
-    pub roles: Option<Vec<String>>,
+    pub roles: Option<Vec<Id<RoleMarker>>>,
     /// Timestamp this member is timed out until
     pub timeout: Option<Timestamp>,
 }
