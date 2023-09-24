@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     content: Some("Pong!".to_owned()),
                     ..Default::default()
                 };
-                rive.http.send_message(message.channel, data).await?;
+                rive.http.send_message(&message.channel, data).await?;
             };
         }
     }
