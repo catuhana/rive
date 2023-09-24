@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use rive_models::{
     data::{DeleteAllSessionsData, EditSessionData, LoginData},
+    id::{marker::SessionMarker, Id},
     session::{LoginResponse, SessionInfo},
 };
 
@@ -59,9 +60,9 @@ impl Client {
     }
 
     /// Delete a specific active session.
-    pub async fn revoke_session(&self, id: impl Into<String>) -> Result<()> {
+    pub async fn revoke_session(&self, id: &Id<SessionMarker>) -> Result<()> {
         self.client
-            .delete(ep!(self, "/auth/session/{}", id.into()))
+            .delete(ep!(self, "/auth/session/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -73,12 +74,12 @@ impl Client {
     /// Edit specific session information.
     pub async fn edit_session(
         &self,
-        id: impl Into<String>,
+        id: &Id<SessionMarker>,
         data: EditSessionData,
     ) -> Result<SessionInfo> {
         Ok(self
             .client
-            .patch(ep!(self, "/auth/session/{}", id.into()))
+            .patch(ep!(self, "/auth/session/{}", id.value_ref()))
             .json(&data)
             .auth(&self.authentication)
             .send()

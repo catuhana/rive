@@ -1,6 +1,10 @@
 use crate::prelude::*;
 use rive_models::{
     data::{CreateStrikeData, EditAccountStrikeData, EditReportData, ReportContentData},
+    id::{
+        marker::{ReportMarker, StrikeMarker, UserMarker},
+        Id,
+    },
     report::Report,
     snapshot::Snapshot,
     strike::AccountStrike,
@@ -10,12 +14,12 @@ impl Client {
     /// Edit a report.
     pub async fn edit_report(
         &self,
-        report: impl Into<String>,
+        report: &Id<ReportMarker>,
         data: EditReportData,
     ) -> Result<Report> {
         Ok(self
             .client
-            .patch(ep!(self, "/safety/reports/{}", report.into()))
+            .patch(ep!(self, "/safety/reports/{}", report.value_ref()))
             .auth(&self.authentication)
             .json(&data)
             .send()
@@ -27,10 +31,10 @@ impl Client {
     }
 
     /// Fetch a report by its ID.
-    pub async fn fetch_report(&self, id: impl Into<String>) -> Result<Report> {
+    pub async fn fetch_report(&self, id: &Id<ReportMarker>) -> Result<Report> {
         Ok(self
             .client
-            .get(ep!(self, "/safety/report/{}", id.into()))
+            .get(ep!(self, "/safety/report/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -68,10 +72,10 @@ impl Client {
     }
 
     /// Fetch a snapshot for a given report.
-    pub async fn fetch_snapshot(&self, report_id: impl Into<String>) -> Result<Snapshot> {
+    pub async fn fetch_snapshot(&self, report_id: &Id<ReportMarker>) -> Result<Snapshot> {
         Ok(self
             .client
-            .get(ep!(self, "/safety/snapshot/{}", report_id.into()))
+            .get(ep!(self, "/safety/snapshot/{}", report_id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -95,10 +99,10 @@ impl Client {
     }
 
     /// Fetch strikes for a user by their ID.
-    pub async fn fetch_strikes(&self, user_id: impl Into<String>) -> Result<AccountStrike> {
+    pub async fn fetch_strikes(&self, user_id: &Id<UserMarker>) -> Result<AccountStrike> {
         Ok(self
             .client
-            .get(ep!(self, "/safety/strikes/{}", user_id.into()))
+            .get(ep!(self, "/safety/strikes/{}", user_id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -109,11 +113,11 @@ impl Client {
     /// Edit a strike by its ID.
     pub async fn edit_strike(
         &self,
-        strike_id: impl Into<String>,
+        strike_id: &Id<StrikeMarker>,
         data: EditAccountStrikeData,
     ) -> Result<()> {
         self.client
-            .patch(ep!(self, "/safety/strikes/{}", strike_id.into()))
+            .patch(ep!(self, "/safety/strikes/{}", strike_id.value_ref()))
             .auth(&self.authentication)
             .json(&data)
             .send()
@@ -124,9 +128,9 @@ impl Client {
     }
 
     /// Edit a strike by its ID.
-    pub async fn delete_strike(&self, strike_id: impl Into<String>) -> Result<()> {
+    pub async fn delete_strike(&self, strike_id: &Id<StrikeMarker>) -> Result<()> {
         self.client
-            .delete(ep!(self, "/safety/strikes/{}", strike_id.into()))
+            .delete(ep!(self, "/safety/strikes/{}", strike_id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?

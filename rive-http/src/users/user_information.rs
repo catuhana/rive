@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use rive_models::{
     data::{ChangeUsernameData, EditUserData},
+    id::{marker::UserMarker, Id},
     user::{User, UserProfile},
 };
 
@@ -35,10 +36,10 @@ impl Client {
     }
 
     /// Fetch a user's information.
-    pub async fn fetch_user(&self, id: impl Into<String>) -> Result<User> {
+    pub async fn fetch_user(&self, id: &Id<UserMarker>) -> Result<User> {
         Ok(self
             .client
-            .get(ep!(self, "/users/{}", id.into()))
+            .get(ep!(self, "/users/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -64,10 +65,10 @@ impl Client {
     }
 
     /// This returns a default avatar based on the given id.
-    pub async fn fetch_default_avatar(&self, id: impl Into<String>) -> Result<Vec<u8>> {
+    pub async fn fetch_default_avatar(&self, id: &Id<UserMarker>) -> Result<Vec<u8>> {
         Ok(self
             .client
-            .get(ep!(self, "/users/{}/default_avatar", id.into()))
+            .get(ep!(self, "/users/{}/default_avatar", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -81,10 +82,10 @@ impl Client {
     /// Retrieve a user's profile data.
     ///
     ///Will fail if you do not have permission to access the other user's profile.
-    pub async fn fetch_user_profile(&self, id: impl Into<String>) -> Result<UserProfile> {
+    pub async fn fetch_user_profile(&self, id: &Id<UserMarker>) -> Result<UserProfile> {
         Ok(self
             .client
-            .get(ep!(self, "/users/{}/profile", id.into()))
+            .get(ep!(self, "/users/{}/profile", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?

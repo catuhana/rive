@@ -11,6 +11,7 @@ mod revolt;
 mod servers;
 mod users;
 
+use async_trait::async_trait;
 use rive_models::{authentication::Authentication, ApiError};
 
 type Result<T> = std::result::Result<T, Error>;
@@ -63,14 +64,14 @@ impl RequestBuilderExt for reqwest::RequestBuilder {
     }
 }
 
-#[async_trait::async_trait]
+#[async_trait]
 trait ResponseExt {
     async fn process_error(self) -> Result<Self>
     where
         Self: Sized;
 }
 
-#[async_trait::async_trait]
+#[async_trait]
 impl ResponseExt for reqwest::Response {
     async fn process_error(self) -> Result<Self>
     where

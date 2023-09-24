@@ -1,15 +1,16 @@
 use crate::prelude::*;
 use rive_models::{
     data::SendFriendRequestData,
+    id::{marker::UserMarker, Id},
     user::{Mutuals, User},
 };
 
 impl Client {
     /// This fetches your direct messages, including any DM and group DM conversations.
-    pub async fn fetch_mutual_friends_and_servers(&self, id: impl Into<String>) -> Result<Mutuals> {
+    pub async fn fetch_mutual_friends_and_servers(&self, id: &Id<UserMarker>) -> Result<Mutuals> {
         Ok(self
             .client
-            .get(ep!(self, "/users/{}/mutual", id.into()))
+            .get(ep!(self, "/users/{}/mutual", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -20,10 +21,10 @@ impl Client {
     }
 
     /// Accept another user's friend request
-    pub async fn accept_friend_request(&self, id: impl Into<String>) -> Result<User> {
+    pub async fn accept_friend_request(&self, id: &Id<UserMarker>) -> Result<User> {
         Ok(self
             .client
-            .put(ep!(self, "/users/{}/friend", id.into()))
+            .put(ep!(self, "/users/{}/friend", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -34,10 +35,10 @@ impl Client {
     }
 
     /// Denies another user's friend request or removes an existing friend.
-    pub async fn remove_or_deny_friend(&self, id: impl Into<String>) -> Result<User> {
+    pub async fn remove_or_deny_friend(&self, id: &Id<UserMarker>) -> Result<User> {
         Ok(self
             .client
-            .delete(ep!(self, "/users/{}/friend", id.into()))
+            .delete(ep!(self, "/users/{}/friend", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -48,10 +49,10 @@ impl Client {
     }
 
     /// Block another user by their id.
-    pub async fn block_user(&self, id: impl Into<String>) -> Result<User> {
+    pub async fn block_user(&self, id: &Id<UserMarker>) -> Result<User> {
         Ok(self
             .client
-            .put(ep!(self, "/users/{}/block", id.into()))
+            .put(ep!(self, "/users/{}/block", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -62,10 +63,10 @@ impl Client {
     }
 
     /// Unblock another user by their id.
-    pub async fn unblock_user(&self, id: impl Into<String>) -> Result<User> {
+    pub async fn unblock_user(&self, id: &Id<UserMarker>) -> Result<User> {
         Ok(self
             .client
-            .delete(ep!(self, "/users/{}/block", id.into()))
+            .delete(ep!(self, "/users/{}/block", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
