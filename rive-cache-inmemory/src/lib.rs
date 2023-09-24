@@ -21,6 +21,10 @@ use dashmap::DashMap;
 use rive_models::{
     channel::Channel,
     emoji::Emoji,
+    id::{
+        marker::{ChannelMarker, EmojiMarker, MessageMarker, ServerMarker, UserMarker},
+        Id,
+    },
     member::{Member, MemberCompositeKey},
     message::Message,
     server::Server,
@@ -35,11 +39,11 @@ use update::CacheUpdate;
 #[derive(Debug, Default)]
 pub struct InMemoryCache {
     config: Config,
-    users: DashMap<String, User>,
-    servers: DashMap<String, Server>,
-    channels: DashMap<String, Channel>,
-    messages: DashMap<String, Message>,
-    emojis: DashMap<String, Emoji>,
+    users: DashMap<Id<UserMarker>, User>,
+    servers: DashMap<Id<ServerMarker>, Server>,
+    channels: DashMap<Id<ChannelMarker>, Channel>,
+    messages: DashMap<Id<MessageMarker>, Message>,
+    emojis: DashMap<Id<EmojiMarker>, Emoji>,
     members: DashMap<MemberCompositeKey, Member>,
 }
 
@@ -115,27 +119,27 @@ impl InMemoryCache {
     }
 
     /// Get a user by ID.
-    pub fn user(&self, id: &str) -> Option<Reference<String, User>> {
+    pub fn user(&self, id: &Id<UserMarker>) -> Option<Reference<Id<UserMarker>, User>> {
         self.users.get(id).map(Reference::new)
     }
 
     /// Get a server by ID.
-    pub fn server(&self, id: &str) -> Option<Reference<String, Server>> {
+    pub fn server(&self, id: &Id<ServerMarker>) -> Option<Reference<Id<ServerMarker>, Server>> {
         self.servers.get(id).map(Reference::new)
     }
 
     /// Get a channel by ID.
-    pub fn channel(&self, id: &str) -> Option<Reference<String, Channel>> {
+    pub fn channel(&self, id: &Id<ChannelMarker>) -> Option<Reference<Id<ChannelMarker>, Channel>> {
         self.channels.get(id).map(Reference::new)
     }
 
     /// Get a message by ID.
-    pub fn message(&self, id: &str) -> Option<Reference<String, Message>> {
+    pub fn message(&self, id: &Id<MessageMarker>) -> Option<Reference<Id<MessageMarker>, Message>> {
         self.messages.get(id).map(Reference::new)
     }
 
     /// Get an emoji by ID.
-    pub fn emoji(&self, id: &str) -> Option<Reference<String, Emoji>> {
+    pub fn emoji(&self, id: &Id<EmojiMarker>) -> Option<Reference<Id<EmojiMarker>, Emoji>> {
         self.emojis.get(id).map(Reference::new)
     }
 
