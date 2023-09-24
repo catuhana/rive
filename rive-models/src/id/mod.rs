@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub mod marker;
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[serde(transparent)]
 pub struct Id<T> {
     value: String,
 
