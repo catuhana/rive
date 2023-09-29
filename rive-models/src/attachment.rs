@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 use crate::id::{
-    marker::{AnyMarker, AttachmentMarker, MessageMarker, ServerMarker, UserMarker},
+    marker::{AttachmentMarker, MessageMarker, ObjectMarker, ServerMarker, UserMarker},
     Id,
 };
 
@@ -60,5 +60,5 @@ pub struct Attachment {
     pub server_id: Option<Id<ServerMarker>>,
 
     /// ID of the object this attachment is associated with
-    pub object_id: Option<Id<AnyMarker>>,
+    pub object_id: Option<Id<ObjectMarker>>,
 }

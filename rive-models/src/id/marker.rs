@@ -1,50 +1,51 @@
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct MessageMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct ChannelMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct ServerMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct UserMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct EmojiMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct AccountMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct AttachmentMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub struct AnyMarker;
+#[derive(Debug)]
+pub struct ObjectMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct RoleMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct InviteMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct SessionMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct WebhookMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct MFATicketMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct ReportMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct CategoryMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct SnapshotMarker;
 
-#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct StrikeMarker;
