@@ -189,6 +189,6 @@ impl<'de, T> Deserialize<'de> for Id<T> {
             }
         }
 
-        deserializer.deserialize_newtype_struct(&"Id", IdVisitor::new())
+        deserializer.deserialize_newtype_struct("Id", IdVisitor::new())
     }
 }
