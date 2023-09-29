@@ -43,6 +43,10 @@ use serde::{
 
 pub mod marker;
 
+/// ID of a resource, such as the ID of a message or user.
+///
+// Markers themselves do not perform any logical action and are only used to
+// ensure that identifiers of the wrong types are not used.
 pub struct Id<T> {
     value: String,
     phantom: PhantomData<fn() -> T>,
