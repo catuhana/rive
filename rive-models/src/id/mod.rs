@@ -227,12 +227,41 @@ impl<'de, T> Deserialize<'de> for Id<T> {
 
 #[cfg(test)]
 mod tests {
+    use serde::{Deserialize, Serialize};
     use serde_test::{assert_tokens, Token};
+    use static_assertions::assert_impl_all;
 
-    use super::{marker::UserMarker, Id};
+    use super::{
+        marker::{ChannelMarker, UserMarker},
+        Id,
+    };
 
+    use std::{
+        collections::hash_map::DefaultHasher,
+        fmt::{Debug, Display},
+        hash::{Hash, Hasher},
+    };
+
+    assert_impl_all!(Id<()>: Clone, Debug, Deserialize<'static>, Display, Eq, From<String>,
+           Hash, Into<String>, Ord, PartialEq, PartialEq, PartialOrd, Send, Serialize, Sync,
+    );
+
+    /// Test that various methods of initializing IDs are correct.
     #[test]
-    fn id_ser_de() {
+    fn initializers() {
+        assert_eq!(
+            "01FFD06NDVZ14W5T1WKKB4KKZX",
+            Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string()).value()
+        );
+        assert_eq!(
+            "01FFD06NDVZ14W5T1WKKB4KKZX",
+            Id::<UserMarker>::from("01FFD06NDVZ14W5T1WKKB4KKZX".to_string()).value()
+        );
+    }
+
+    /// Test that ID serializes and deserializes correctly.
+    #[test]
+    fn serde() {
         let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
 
         assert_tokens(
@@ -242,5 +271,65 @@ mod tests {
                 Token::String("01FFD06NDVZ14W5T1WKKB4KKZX"),
             ],
         );
+
+        assert_tokens(
+            &id,
+            &[
+                Token::NewtypeStruct { name: "Id" },
+                Token::Str("01FFD06NDVZ14W5T1WKKB4KKZX"),
+            ],
+        );
+    }
+
+    /// Test that debugging IDs formats the generic and value as a newtype.
+    #[test]
+    fn debug() {
+        let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+        assert_eq!(
+            format!("{id:?}"),
+            r#"Id<UserMarker>("01FFD06NDVZ14W5T1WKKB4KKZX")"#
+        );
+    }
+
+    /// Test that display formatting an ID formats the value.
+    #[test]
+    fn display() {
+        let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+        assert_eq!(format!("{id}"), "01FFD06NDVZ14W5T1WKKB4KKZX");
+    }
+
+    /// Test that ID casting maintains the value.
+    #[test]
+    fn cast() {
+        let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+        let casted_id = id.clone().cast::<ChannelMarker>();
+
+        assert_eq!(id.value(), casted_id.value());
+    }
+
+    /// Test that hashing an ID is equivalent to hashing only its inner value.
+    #[test]
+    fn hash() {
+        let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+
+        let mut id_hasher = DefaultHasher::new();
+        id.hash(&mut id_hasher);
+
+        let mut value_hasher = DefaultHasher::new();
+        "01FFD06NDVZ14W5T1WKKB4KKZX".hash(&mut value_hasher);
+
+        assert_eq!(id_hasher.finish(), value_hasher.finish());
+    }
+
+    /// Test that IDs are ordered exactly like their inner values.
+    #[test]
+    fn ord() {
+        let lesser = Id::<UserMarker>::new("01EX2NCWQ0CHS3QJF0FEQS1GR4".to_string());
+        let center = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+        let greater = Id::<UserMarker>::new("01FSRTTGJC1XJ6ZEQJMSX8Q96C".to_string());
+
+        assert!(center.cmp(&greater).is_lt());
+        assert!(center.cmp(&center).is_eq());
+        assert!(center.cmp(&lesser).is_gt());
     }
 }
