@@ -30,8 +30,9 @@
 //! ```
 
 use std::{
+    any,
     cmp::Ordering,
-    fmt::{self, Debug, Formatter},
+    fmt::{self, Debug, Display, Formatter},
     hash::{Hash, Hasher},
     marker::PhantomData,
 };
@@ -102,7 +103,28 @@ impl<T> Id<T> {
 
 impl<T> Debug for Id<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.value.fmt(f)
+        f.write_str("Id")?;
+        let type_name = any::type_name::<T>();
+
+        // `any::type_name` will usually provide a fully qualified name,
+        // so let's cut it out!
+        if let Some(position) = type_name.rfind("::") {
+            if let Some(slice) = type_name.get(position + 2..) {
+                f.write_str("<")?;
+                f.write_str(slice)?;
+                f.write_str(">")?;
+            }
+        }
+
+        f.write_str("(")?;
+        Debug::fmt(&self.value, f)?;
+        f.write_str(")")
+    }
+}
+
+impl<T> Display for Id<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Display::fmt(&self.value, f)
     }
 }
 
