@@ -184,6 +184,10 @@ impl<'de, T> Deserialize<'de> for Id<T> {
                 Ok(Id::new(v.to_string()))
             }
 
+            fn visit_string<E: de::Error>(self, v: String) -> Result<Self::Value, E> {
+                Ok(Id::new(v))
+            }
+
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
                 formatter.write_str("a string")
             }
