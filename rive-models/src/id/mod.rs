@@ -196,3 +196,23 @@ impl<'de, T> Deserialize<'de> for Id<T> {
         deserializer.deserialize_newtype_struct("Id", IdVisitor::new())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_test::{assert_tokens, Token};
+
+    use super::{marker::UserMarker, Id};
+
+    #[test]
+    fn id_ser_de() {
+        let id = Id::<UserMarker>::new("01FFD06NDVZ14W5T1WKKB4KKZX".to_string());
+
+        assert_tokens(
+            &id,
+            &[
+                Token::NewtypeStruct { name: "Id" },
+                Token::String("01FFD06NDVZ14W5T1WKKB4KKZX"),
+            ],
+        );
+    }
+}
