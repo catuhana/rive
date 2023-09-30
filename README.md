@@ -1,6 +1,7 @@
 # Rive
 
-![Rive banner](https://codeberg.org/rive/rive/raw/branch/main/assets/rive_banner.png)
+[//]: <> (DO NOT FORGET TO CHANGE THE BRANCH NAME TO main BEFORE MERGING PLEAAAASE)
+![Rive banner](https://codeberg.org/rive/rive/raw/branch/v2/assets/rive_banner.png)
 
 Rive is a simple yet powerful and flexible ecosystem of Rust crates for the [Revolt](https://revolt.chat) API. It implements the entire Revolt API and is suitable for creating custom clients or bots.
 
