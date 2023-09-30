@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     attachment::Attachment,
+    id::{
+        marker::{CategoryMarker, ChannelMarker, RoleMarker, ServerMarker, UserMarker},
+        Id,
+    },
     member::MemberCompositeKey,
     permission::{OverrideField, Permission},
 };
@@ -31,7 +35,7 @@ pub struct Role {
 #[derive(Deserialize, Debug, Clone)]
 pub struct NewRole {
     /// ID of the role
-    pub id: String,
+    pub id: Id<RoleMarker>,
     /// New role
     pub role: Role,
 }
@@ -57,24 +61,24 @@ pub struct PartialRole {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Category {
     /// Unique ID for this category
-    pub id: String,
+    pub id: Id<CategoryMarker>,
     /// Title for this category
     pub title: String,
     /// Channels in this category
-    pub channels: Vec<String>,
+    pub channels: Vec<Id<ChannelMarker>>,
 }
 
 /// System message channel assignments
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct SystemMessageChannels {
     /// ID of channel to send user join messages in
-    pub user_joined: Option<String>,
+    pub user_joined: Option<Id<ChannelMarker>>,
     /// ID of channel to send user left messages in
-    pub user_left: Option<String>,
+    pub user_left: Option<Id<ChannelMarker>>,
     /// ID of channel to send user kicked messages in
-    pub user_kicked: Option<String>,
+    pub user_kicked: Option<Id<ChannelMarker>>,
     /// ID of channel to send user banned messages in
-    pub user_banned: Option<String>,
+    pub user_banned: Option<Id<ChannelMarker>>,
 }
 
 bitflags::bitflags! {
@@ -92,9 +96,9 @@ crate::impl_serde_bitflags!(ServerFlags);
 pub struct Server {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<ServerMarker>,
     /// User id of the owner
-    pub owner: String,
+    pub owner: Id<UserMarker>,
 
     /// Name of the server
     pub name: String,
@@ -103,15 +107,15 @@ pub struct Server {
 
     /// Channels within this server
     // ! FIXME: this may be redundant
-    pub channels: Vec<String>,
+    pub channels: Vec<Id<ChannelMarker>>,
     /// Categories for this server
     pub categories: Option<Vec<Category>>,
     /// Configuration for sending system event messages
     pub system_messages: Option<SystemMessageChannels>,
 
     /// Roles for this server
-    #[serde(default = "HashMap::<String, Role>::new")]
-    pub roles: HashMap<String, Role>,
+    #[serde(default = "HashMap::<Id<RoleMarker>, Role>::new")]
+    pub roles: HashMap<Id<RoleMarker>, Role>,
     /// Default set of server and channel permissions
     pub default_permissions: Permission,
 
@@ -138,7 +142,7 @@ pub struct Server {
 #[derive(Deserialize, Debug, Clone)]
 pub struct PartialServer {
     /// User id of the owner
-    pub owner: Option<String>,
+    pub owner: Option<Id<UserMarker>>,
 
     /// Name of the server
     pub name: Option<String>,
@@ -147,14 +151,14 @@ pub struct PartialServer {
 
     /// Channels within this server
     // ! FIXME: this may be redundant
-    pub channels: Option<Vec<String>>,
+    pub channels: Option<Vec<Id<ChannelMarker>>>,
     /// Categories for this server
     pub categories: Option<Vec<Category>>,
     /// Configuration for sending system event messages
     pub system_messages: Option<SystemMessageChannels>,
 
     /// Roles for this server
-    pub roles: Option<HashMap<String, Role>>,
+    pub roles: Option<HashMap<Id<RoleMarker>, Role>>,
     /// Default set of server and channel permissions
     pub default_permissions: Option<Permission>,
 
@@ -191,7 +195,7 @@ pub struct ServerBan {
 pub struct BannedUser {
     /// Id of the banned user
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<UserMarker>,
     /// Username of the banned user
     pub username: String,
     /// Avatar of the banned user

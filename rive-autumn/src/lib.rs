@@ -8,6 +8,7 @@ use reqwest::{
 use rive_models::{
     autumn::{Config, UploadData},
     error::AutumnError,
+    id::{marker::AttachmentMarker, Id},
 };
 use tokio::io::AsyncRead;
 use tokio_util::{
@@ -81,11 +82,16 @@ impl Client {
     pub async fn download(
         &self,
         tag: impl Into<String>,
-        id: impl Into<String>,
+        id: &Id<AttachmentMarker>,
     ) -> Result<impl AsyncRead> {
         let response = self
             .client
-            .get(format!("{}/{}/{}", self.base_url, tag.into(), id.into()))
+            .get(format!(
+                "{}/{}/{}",
+                self.base_url,
+                tag.into(),
+                id.value_ref()
+            ))
             .send()
             .await?;
 

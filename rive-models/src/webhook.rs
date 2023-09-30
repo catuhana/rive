@@ -1,12 +1,18 @@
 use serde::{Deserialize, Serialize};
 
-use crate::attachment::Attachment;
+use crate::{
+    attachment::Attachment,
+    id::{
+        marker::{ChannelMarker, WebhookMarker},
+        Id,
+    },
+};
 
 /// Webhook information
 #[derive(Deserialize, Debug, Clone)]
 pub struct Webhook {
     /// Webhook ID
-    pub id: String,
+    pub id: Id<WebhookMarker>,
 
     /// The name of the webhook
     pub name: String,
@@ -15,7 +21,7 @@ pub struct Webhook {
     pub avatar: Option<Attachment>,
 
     /// The channel this webhook belongs to
-    pub channel_id: String,
+    pub channel_id: Id<ChannelMarker>,
 
     /// The private token for the webhook
     pub token: Option<String>,
@@ -31,7 +37,7 @@ pub struct PartialWebhook {
     pub avatar: Option<Attachment>,
 
     /// The channel this webhook belongs to
-    pub channel_id: Option<String>,
+    pub channel_id: Option<Id<ChannelMarker>>,
 
     /// The private token for the webhook
     pub token: Option<String>,

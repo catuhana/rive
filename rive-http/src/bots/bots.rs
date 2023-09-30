@@ -2,6 +2,7 @@ use crate::prelude::*;
 use rive_models::{
     bot::{Bot, OwnedBot, OwnedBots, PublicBot},
     data::{CreateBotData, EditBotData, InviteBotData},
+    id::{marker::UserMarker, Id},
 };
 
 impl Client {
@@ -21,10 +22,10 @@ impl Client {
     }
 
     /// Fetch details of a public (or owned) bot by its id.
-    pub async fn fetch_public_bot(&self, id: impl Into<String>) -> Result<PublicBot> {
+    pub async fn fetch_public_bot(&self, id: Id<UserMarker>) -> Result<PublicBot> {
         Ok(self
             .client
-            .get(ep!(self, "/bots/{}/invite", id.into()))
+            .get(ep!(self, "/bots/{}/invite", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -35,9 +36,9 @@ impl Client {
     }
 
     /// Invite a bot to a server or group by its id.
-    pub async fn invite_bot(&self, bot_id: impl Into<String>, data: InviteBotData) -> Result<()> {
+    pub async fn invite_bot(&self, bot_id: Id<UserMarker>, data: InviteBotData) -> Result<()> {
         self.client
-            .post(ep!(self, "/bots/{}/invite", bot_id.into()))
+            .post(ep!(self, "/bots/{}/invite", bot_id.value_ref()))
             .json(&data)
             .auth(&self.authentication)
             .send()
@@ -48,10 +49,10 @@ impl Client {
     }
 
     /// Fetch details of a bot you own by its id.
-    pub async fn fetch_bot(&self, id: impl Into<String>) -> Result<OwnedBot> {
+    pub async fn fetch_bot(&self, id: &Id<UserMarker>) -> Result<OwnedBot> {
         Ok(self
             .client
-            .get(ep!(self, "/bots/{}/invite", id.into()))
+            .get(ep!(self, "/bots/{}/invite", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -62,9 +63,9 @@ impl Client {
     }
 
     /// Delete a bot by its id.
-    pub async fn delete_bot(&self, id: impl Into<String>) -> Result<()> {
+    pub async fn delete_bot(&self, id: &Id<UserMarker>) -> Result<()> {
         self.client
-            .delete(ep!(self, "/bots/{}", id.into()))
+            .delete(ep!(self, "/bots/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -74,10 +75,10 @@ impl Client {
     }
 
     /// Edit bot details by its id.
-    pub async fn edit_bot(&self, id: impl Into<String>, data: EditBotData) -> Result<Bot> {
+    pub async fn edit_bot(&self, id: &Id<UserMarker>, data: EditBotData) -> Result<Bot> {
         Ok(self
             .client
-            .patch(ep!(self, "/bots/{}", id.into()))
+            .patch(ep!(self, "/bots/{}", id.value_ref()))
             .json(&data)
             .auth(&self.authentication)
             .send()

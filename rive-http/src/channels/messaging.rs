@@ -4,6 +4,10 @@ use rive_models::{
         BulkDeleteMessagesData, EditMessageData, FetchMessagesData, SearchForMessagesData,
         SendMessageData,
     },
+    id::{
+        marker::{ChannelMarker, MessageMarker},
+        Id,
+    },
     message::{BulkMessageResponse, Message},
 };
 
@@ -11,15 +15,15 @@ impl Client {
     /// Lets the server and all other clients know that we've seen this message id in this channel.
     pub async fn acknowledge_message(
         &self,
-        channel_id: impl Into<String>,
-        message_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
+        message_id: &Id<MessageMarker>,
     ) -> Result<()> {
         self.client
             .put(ep!(
                 self,
                 "/channels/{}/ack/{}",
-                channel_id.into(),
-                message_id.into()
+                channel_id.value_ref(),
+                message_id.value_ref()
             ))
             .auth(&self.authentication)
             .send()
@@ -32,12 +36,12 @@ impl Client {
     /// Fetch multiple messages.
     pub async fn fetch_messages(
         &self,
-        channel_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
         data: FetchMessagesData,
     ) -> Result<BulkMessageResponse> {
         Ok(self
             .client
-            .get(ep!(self, "/channels/{}/messages", channel_id.into()))
+            .get(ep!(self, "/channels/{}/messages", channel_id.value_ref()))
             .auth(&self.authentication)
             .query(&data)
             .send()
@@ -51,12 +55,12 @@ impl Client {
     /// Send a message to a given channel.
     pub async fn send_message(
         &self,
-        channel_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
         data: SendMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
-            .post(ep!(self, "/channels/{}/messages", channel_id.into()))
+            .post(ep!(self, "/channels/{}/messages", channel_id.value_ref()))
             .auth(&self.authentication)
             .json(&data)
             .send()
@@ -70,12 +74,16 @@ impl Client {
     /// Search for messages within the given parameters.
     pub async fn search_for_messages(
         &self,
-        channel_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
         data: SearchForMessagesData,
     ) -> Result<Message> {
         Ok(self
             .client
-            .post(ep!(self, "/channels/{}/messages/search", channel_id.into()))
+            .post(ep!(
+                self,
+                "/channels/{}/messages/search",
+                channel_id.value_ref()
+            ))
             .auth(&self.authentication)
             .json(&data)
             .send()
@@ -89,16 +97,16 @@ impl Client {
     /// Retrieves a message by its ID.
     pub async fn fetch_message(
         &self,
-        channel_id: impl Into<String>,
-        message_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
+        message_id: &Id<ChannelMarker>,
     ) -> Result<Message> {
         Ok(self
             .client
             .get(ep!(
                 self,
                 "/channels/{}/messages/{}",
-                channel_id.into(),
-                message_id.into()
+                channel_id.value_ref(),
+                message_id.value_ref()
             ))
             .auth(&self.authentication)
             .send()
@@ -112,15 +120,15 @@ impl Client {
     /// Delete a message you've sent or one you have permission to delete.
     pub async fn delete_message(
         &self,
-        channel_id: impl Into<String>,
-        message_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
+        message_id: &Id<ChannelMarker>,
     ) -> Result<()> {
         self.client
             .delete(ep!(
                 self,
                 "/channels/{}/messages/{}",
-                channel_id.into(),
-                message_id.into()
+                channel_id.value_ref(),
+                message_id.value_ref()
             ))
             .auth(&self.authentication)
             .send()
@@ -132,8 +140,8 @@ impl Client {
 
     pub async fn edit_message(
         &self,
-        channel_id: impl Into<String>,
-        message_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
+        message_id: &Id<ChannelMarker>,
         data: EditMessageData,
     ) -> Result<Message> {
         Ok(self
@@ -141,8 +149,8 @@ impl Client {
             .patch(ep!(
                 self,
                 "/channels/{}/messages/{}",
-                channel_id.into(),
-                message_id.into()
+                channel_id.value_ref(),
+                message_id.value_ref()
             ))
             .auth(&self.authentication)
             .json(&data)
@@ -161,11 +169,15 @@ impl Client {
     /// Messages must have been sent within the past 1 week.
     pub async fn bulk_delete_messages(
         &self,
-        channel_id: impl Into<String>,
+        channel_id: &Id<ChannelMarker>,
         data: BulkDeleteMessagesData,
     ) -> Result<()> {
         self.client
-            .delete(ep!(self, "/channels/{}/messages/bulk", channel_id.into(),))
+            .delete(ep!(
+                self,
+                "/channels/{}/messages/bulk",
+                channel_id.value_ref(),
+            ))
             .auth(&self.authentication)
             .json(&data)
             .send()

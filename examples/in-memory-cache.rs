@@ -37,14 +37,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     content: Some(format!("Cached messages: {count}")),
                     ..Default::default()
                 };
-                http.send_message(message.channel, data).await?;
+                http.send_message(&message.channel, data).await?;
             }
             // A command that sends cached user info
             else if content.starts_with("!user") {
                 let args = content.split_whitespace().collect::<Vec<&str>>();
 
                 let response = match args.get(1) {
-                    Some(id) => match cache.user(id) {
+                    Some(id) => match cache.user(&id.to_string().into()) {
                         Some(user) => format!("```rust\n{:#?}\n```", user.value()),
                         None => "User not found!".to_string(),
                     },
@@ -55,7 +55,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     content: Some(response),
                     ..Default::default()
                 };
-                http.send_message(message.channel, data).await?;
+                http.send_message(&message.channel, data).await?;
             }
         }
     }

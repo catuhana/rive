@@ -2,6 +2,10 @@ use dashmap::iter::Iter;
 use rive_models::{
     channel::Channel,
     emoji::Emoji,
+    id::{
+        marker::{ChannelMarker, EmojiMarker, MessageMarker, ServerMarker, UserMarker},
+        Id,
+    },
     member::{Member, MemberCompositeKey},
     message::Message,
     server::Server,
@@ -62,27 +66,27 @@ impl<'a> InMemoryCacheIter<'a> {
     }
 
     /// Create an iterator over the users in the cache.
-    pub fn users(&'a self) -> ResourceIter<String, User> {
+    pub fn users(&'a self) -> ResourceIter<Id<UserMarker>, User> {
         ResourceIter::new(self.0.users.iter())
     }
 
     /// Create an iterator over the servers in the cache.
-    pub fn serevrs(&'a self) -> ResourceIter<String, Server> {
+    pub fn serevrs(&'a self) -> ResourceIter<Id<ServerMarker>, Server> {
         ResourceIter::new(self.0.servers.iter())
     }
 
     /// Create an iterator over the channels in the cache.
-    pub fn channels(&'a self) -> ResourceIter<String, Channel> {
+    pub fn channels(&'a self) -> ResourceIter<Id<ChannelMarker>, Channel> {
         ResourceIter::new(self.0.channels.iter())
     }
 
     /// Create an iterator over the messages in the cache.
-    pub fn messages(&'a self) -> ResourceIter<String, Message> {
+    pub fn messages(&'a self) -> ResourceIter<Id<MessageMarker>, Message> {
         ResourceIter::new(self.0.messages.iter())
     }
 
     /// Create an iterator over the emojis in the cache.
-    pub fn emojis(&'a self) -> ResourceIter<String, Emoji> {
+    pub fn emojis(&'a self) -> ResourceIter<Id<EmojiMarker>, Emoji> {
         ResourceIter::new(self.0.emojis.iter())
     }
 

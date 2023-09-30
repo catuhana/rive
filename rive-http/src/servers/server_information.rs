@@ -2,6 +2,7 @@ use crate::prelude::*;
 use rive_models::{
     channel::Channel,
     data::{CreateChannelData, CreateServerData, EditServerData},
+    id::{marker::ServerMarker, Id},
     server::Server,
 };
 
@@ -22,10 +23,10 @@ impl Client {
     }
 
     /// Deletes a server if owner otherwise leaves.
-    pub async fn fetch_server(&self, id: impl Into<String>) -> Result<Server> {
+    pub async fn fetch_server(&self, id: &Id<ServerMarker>) -> Result<Server> {
         Ok(self
             .client
-            .get(ep!(self, "/servers/{}", id.into()))
+            .get(ep!(self, "/servers/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -36,9 +37,9 @@ impl Client {
     }
 
     /// Deletes a server if owner otherwise leaves.
-    pub async fn delete_or_leave_server(&self, id: impl Into<String>) -> Result<()> {
+    pub async fn delete_or_leave_server(&self, id: &Id<ServerMarker>) -> Result<()> {
         self.client
-            .delete(ep!(self, "/servers/{}", id.into()))
+            .delete(ep!(self, "/servers/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -50,10 +51,10 @@ impl Client {
     }
 
     /// Edit a server by its id.
-    pub async fn edit_server(&self, id: impl Into<String>, data: EditServerData) -> Result<Server> {
+    pub async fn edit_server(&self, id: &Id<ServerMarker>, data: EditServerData) -> Result<Server> {
         Ok(self
             .client
-            .patch(ep!(self, "/servers/{}", id.into()))
+            .patch(ep!(self, "/servers/{}", id.value_ref()))
             .json(&data)
             .auth(&self.authentication)
             .send()
@@ -65,9 +66,9 @@ impl Client {
     }
 
     /// Mark all channels in a server as read.
-    pub async fn mark_server_as_read(&self, id: impl Into<String>) -> Result<()> {
+    pub async fn mark_server_as_read(&self, id: &Id<ServerMarker>) -> Result<()> {
         self.client
-            .put(ep!(self, "/servers/{}/ack", id.into()))
+            .put(ep!(self, "/servers/{}/ack", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -81,12 +82,12 @@ impl Client {
     /// Create a new Text or Voice channel
     pub async fn create_channel(
         &self,
-        server_id: impl Into<String>,
+        server_id: &Id<ServerMarker>,
         data: CreateChannelData,
     ) -> Result<Channel> {
         Ok(self
             .client
-            .post(ep!(self, "/servers/{}/channels", server_id.into()))
+            .post(ep!(self, "/servers/{}/channels", server_id.value_ref()))
             .json(&data)
             .auth(&self.authentication)
             .send()

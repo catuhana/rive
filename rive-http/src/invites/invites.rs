@@ -1,12 +1,15 @@
 use crate::prelude::*;
-use rive_models::invite::{Invite, InviteJoin};
+use rive_models::{
+    id::{marker::InviteMarker, Id},
+    invite::{Invite, InviteJoin},
+};
 
 impl Client {
     /// Fetch an invite by its ID.
-    pub async fn fetch_invite(&self, id: impl Into<String>) -> Result<Invite> {
+    pub async fn fetch_invite(&self, id: &Id<InviteMarker>) -> Result<Invite> {
         Ok(self
             .client
-            .get(ep!(self, "/invites/{}", id.into()))
+            .get(ep!(self, "/invites/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -17,10 +20,10 @@ impl Client {
     }
 
     /// Join an invite by its ID.
-    pub async fn join_invite(&self, id: impl Into<String>) -> Result<InviteJoin> {
+    pub async fn join_invite(&self, id: &Id<InviteMarker>) -> Result<InviteJoin> {
         Ok(self
             .client
-            .post(ep!(self, "/invites/{}", id.into()))
+            .post(ep!(self, "/invites/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?
@@ -31,9 +34,9 @@ impl Client {
     }
 
     /// Delete an invite by its ID.
-    pub async fn delete_invite(&self, id: impl Into<String>) -> Result<()> {
+    pub async fn delete_invite(&self, id: &Id<InviteMarker>) -> Result<()> {
         self.client
-            .delete(ep!(self, "/invites/{}", id.into()))
+            .delete(ep!(self, "/invites/{}", id.value_ref()))
             .auth(&self.authentication)
             .send()
             .await?

@@ -1,6 +1,15 @@
 use serde::Deserialize;
 
-use crate::{channel::Channel, message::Message, server::Server, user::User};
+use crate::{
+    channel::Channel,
+    id::{
+        marker::{ReportMarker, SnapshotMarker},
+        Id,
+    },
+    message::Message,
+    server::Server,
+    user::User,
+};
 
 /// Enum to map into different models
 /// that can be saved in a snapshot
@@ -29,9 +38,9 @@ pub enum SnapshotContent {
 pub struct Snapshot {
     /// Unique Id
     #[serde(rename = "_id")]
-    pub id: String,
+    pub id: Id<SnapshotMarker>,
     /// Report parent Id
-    pub report_id: String,
+    pub report_id: Id<ReportMarker>,
     /// Snapshot of content
     pub content: SnapshotContent,
 }
