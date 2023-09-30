@@ -160,6 +160,12 @@ impl<T> Clone for Id<T> {
     }
 }
 
+impl<T> From<Id<T>> for String {
+    fn from(value: Id<T>) -> Self {
+        value.value
+    }
+}
+
 impl<T> From<String> for Id<T> {
     fn from(value: String) -> Self {
         Id::new(value)
