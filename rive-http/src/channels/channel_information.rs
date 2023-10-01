@@ -36,7 +36,7 @@ impl Client {
     pub async fn edit_channel(
         &self,
         id: &Id<ChannelMarker>,
-        data: EditChannelData,
+        data: &EditChannelData,
     ) -> Result<Channel> {
         Ok(self
             .client

@@ -5,7 +5,7 @@ impl Client {
     /// Create a new Web Push subscription.
     ///
     /// If an existing subscription exists on this session, it will be removed.
-    pub async fn push_subscribe(&self, data: PushSubscribeData) -> Result<()> {
+    pub async fn push_subscribe(&self, data: &PushSubscribeData) -> Result<()> {
         self.client
             .post(ep!(self, "/push/subscribe"))
             .json(&data)

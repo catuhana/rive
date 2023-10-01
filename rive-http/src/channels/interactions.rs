@@ -42,7 +42,7 @@ impl Client {
         channel_id: &Id<ChannelMarker>,
         message_id: &Id<MessageMarker>,
         emoji: &Id<EmojiMarker>,
-        data: RemoveReactionToMessageData,
+        data: &RemoveReactionToMessageData,
     ) -> Result<()> {
         self.client
             .delete(ep!(

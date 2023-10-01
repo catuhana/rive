@@ -17,7 +17,7 @@ impl Client {
     /// This is a privileged route to globally fetch messages.
     pub async fn globally_fetch_messages(
         &self,
-        data: FetchMessagesData,
+        data: &FetchMessagesData,
     ) -> Result<BulkMessageResponse> {
         Ok(self
             .client

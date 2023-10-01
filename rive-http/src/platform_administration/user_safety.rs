@@ -15,7 +15,7 @@ impl Client {
     pub async fn edit_report(
         &self,
         report: &Id<ReportMarker>,
-        data: EditReportData,
+        data: &EditReportData,
     ) -> Result<Report> {
         Ok(self
             .client
@@ -59,7 +59,7 @@ impl Client {
     }
 
     /// Report a piece of content to the moderation team.
-    pub async fn report_content(&self, data: ReportContentData) -> Result<()> {
+    pub async fn report_content(&self, data: &ReportContentData) -> Result<()> {
         self.client
             .post(ep!(self, "/safety/report"))
             .json(&data)
@@ -86,7 +86,7 @@ impl Client {
     }
 
     /// Create a new account strike.
-    pub async fn create_strike(&self, data: CreateStrikeData) -> Result<AccountStrike> {
+    pub async fn create_strike(&self, data: &CreateStrikeData) -> Result<AccountStrike> {
         Ok(self
             .client
             .post(ep!(self, "/safety/strikes"))
@@ -114,7 +114,7 @@ impl Client {
     pub async fn edit_strike(
         &self,
         strike_id: &Id<StrikeMarker>,
-        data: EditAccountStrikeData,
+        data: &EditAccountStrikeData,
     ) -> Result<()> {
         self.client
             .patch(ep!(self, "/safety/strikes/{}", strike_id.value_ref()))

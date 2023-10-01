@@ -25,7 +25,7 @@ impl Client {
     }
 
     /// Create a new group channel.
-    pub async fn create_group(&self, data: CreateGroupData) -> Result<Channel> {
+    pub async fn create_group(&self, data: &CreateGroupData) -> Result<Channel> {
         Ok(self
             .client
             .post(ep!(self, "/channels/create"))

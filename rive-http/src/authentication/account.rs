@@ -9,7 +9,7 @@ use rive_models::{
 
 impl Client {
     /// Create a new account.
-    pub async fn create_account(&self, data: CreateAccountData) -> Result<()> {
+    pub async fn create_account(&self, data: &CreateAccountData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/create"))
             .json(&data)
@@ -21,7 +21,7 @@ impl Client {
     }
 
     /// Resend account creation verification email.
-    pub async fn resend_verification(&self, data: ResendVerificationData) -> Result<()> {
+    pub async fn resend_verification(&self, data: &ResendVerificationData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/reverify"))
             .json(&data)
@@ -33,7 +33,7 @@ impl Client {
     }
 
     /// Schedule an account for deletion by confirming the received token.
-    pub async fn confirm_account_deletion(&self, data: ConfirmAccountDeletionData) -> Result<()> {
+    pub async fn confirm_account_deletion(&self, data: &ConfirmAccountDeletionData) -> Result<()> {
         self.client
             .put(ep!(self, "/auth/account/delete"))
             .json(&data)
@@ -83,7 +83,7 @@ impl Client {
     }
 
     /// Change the current account password.
-    pub async fn change_password(&self, data: ChangePasswordData) -> Result<()> {
+    pub async fn change_password(&self, data: &ChangePasswordData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/change/password"))
             .json(&data)
@@ -96,7 +96,7 @@ impl Client {
     }
 
     /// Change the associated account email.
-    pub async fn change_email(&self, data: ChangeEmailData) -> Result<()> {
+    pub async fn change_email(&self, data: &ChangeEmailData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/change/email"))
             .json(&data)
@@ -122,7 +122,7 @@ impl Client {
     }
 
     /// Send an email to reset account password.
-    pub async fn send_password_reset(&self, data: SendPasswordResetData) -> Result<()> {
+    pub async fn send_password_reset(&self, data: &SendPasswordResetData) -> Result<()> {
         self.client
             .post(ep!(self, "/auth/account/reset_password"))
             .json(&data)
@@ -134,7 +134,7 @@ impl Client {
     }
 
     /// Confirm password reset and change the password.
-    pub async fn password_reset(&self, data: PasswordResetData) -> Result<()> {
+    pub async fn password_reset(&self, data: &PasswordResetData) -> Result<()> {
         self.client
             .patch(ep!(self, "/auth/account/reset_password"))
             .json(&data)

@@ -15,7 +15,7 @@ impl Client {
     pub async fn create_role(
         &self,
         server_id: &Id<ServerMarker>,
-        data: CreateRoleData,
+        data: &CreateRoleData,
     ) -> Result<NewRole> {
         Ok(self
             .client
@@ -56,7 +56,7 @@ impl Client {
         &self,
         server_id: &Id<ServerMarker>,
         role_id: &Id<RoleMarker>,
-        data: EditRoleData,
+        data: &EditRoleData,
     ) -> Result<Role> {
         Ok(self
             .client
@@ -81,7 +81,7 @@ impl Client {
         &self,
         server_id: &Id<ServerMarker>,
         role_id: &Id<RoleMarker>,
-        data: SetServerRolePermissionData,
+        data: &SetServerRolePermissionData,
     ) -> Result<Server> {
         Ok(self
             .client
@@ -105,7 +105,7 @@ impl Client {
     pub async fn set_default_permission(
         &self,
         server_id: &Id<ServerMarker>,
-        data: SetDefaultRolePermissionData,
+        data: &SetDefaultRolePermissionData,
     ) -> Result<Server> {
         Ok(self
             .client

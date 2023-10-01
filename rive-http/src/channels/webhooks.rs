@@ -11,7 +11,7 @@ impl Client {
     pub async fn create_webhook(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: CreateWebhookData,
+        data: &CreateWebhookData,
     ) -> Result<Webhook> {
         Ok(self
             .client

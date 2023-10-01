@@ -37,7 +37,7 @@ impl Client {
     pub async fn fetch_messages(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: FetchMessagesData,
+        data: &FetchMessagesData,
     ) -> Result<BulkMessageResponse> {
         Ok(self
             .client
@@ -56,7 +56,7 @@ impl Client {
     pub async fn send_message(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: SendMessageData,
+        data: &SendMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
@@ -75,7 +75,7 @@ impl Client {
     pub async fn search_for_messages(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: SearchForMessagesData,
+        data: &SearchForMessagesData,
     ) -> Result<Message> {
         Ok(self
             .client
@@ -142,7 +142,7 @@ impl Client {
         &self,
         channel_id: &Id<ChannelMarker>,
         message_id: &Id<ChannelMarker>,
-        data: EditMessageData,
+        data: &EditMessageData,
     ) -> Result<Message> {
         Ok(self
             .client
@@ -170,7 +170,7 @@ impl Client {
     pub async fn bulk_delete_messages(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: BulkDeleteMessagesData,
+        data: &BulkDeleteMessagesData,
     ) -> Result<()> {
         self.client
             .delete(ep!(

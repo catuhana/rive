@@ -7,7 +7,7 @@ use rive_models::{
 
 impl Client {
     /// Create a new Revolt bot.
-    pub async fn create_bot(&self, data: CreateBotData) -> Result<Bot> {
+    pub async fn create_bot(&self, data: &CreateBotData) -> Result<Bot> {
         Ok(self
             .client
             .post(ep!(self, "/bots/create"))
@@ -36,7 +36,7 @@ impl Client {
     }
 
     /// Invite a bot to a server or group by its id.
-    pub async fn invite_bot(&self, bot_id: Id<UserMarker>, data: InviteBotData) -> Result<()> {
+    pub async fn invite_bot(&self, bot_id: Id<UserMarker>, data: &InviteBotData) -> Result<()> {
         self.client
             .post(ep!(self, "/bots/{}/invite", bot_id.value_ref()))
             .json(&data)
@@ -75,7 +75,7 @@ impl Client {
     }
 
     /// Edit bot details by its id.
-    pub async fn edit_bot(&self, id: &Id<UserMarker>, data: EditBotData) -> Result<Bot> {
+    pub async fn edit_bot(&self, id: &Id<UserMarker>, data: &EditBotData) -> Result<Bot> {
         Ok(self
             .client
             .patch(ep!(self, "/bots/{}", id.value_ref()))

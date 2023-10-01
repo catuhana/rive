@@ -16,7 +16,7 @@ impl Client {
         &self,
         channel_id: &Id<ChannelMarker>,
         role_id: &Id<RoleMarker>,
-        data: SetRolePermissionData,
+        data: &SetRolePermissionData,
     ) -> Result<Channel> {
         Ok(self
             .client
@@ -42,7 +42,7 @@ impl Client {
     pub async fn set_default_channel_permissions(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: SetDefaultPermissionData,
+        data: &SetDefaultPermissionData,
     ) -> Result<Channel> {
         Ok(self
             .client

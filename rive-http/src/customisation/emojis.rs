@@ -28,7 +28,7 @@ impl Client {
     pub async fn create_new_emoji(
         &self,
         id: &Id<AttachmentMarker>,
-        data: CreateEmojiData,
+        data: &CreateEmojiData,
     ) -> Result<Emoji> {
         Ok(self
             .client

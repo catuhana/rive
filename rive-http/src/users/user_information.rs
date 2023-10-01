@@ -21,7 +21,7 @@ impl Client {
     }
 
     /// Edit currently authenticated user.
-    pub async fn edit_user(&self, data: EditUserData) -> Result<User> {
+    pub async fn edit_user(&self, data: &EditUserData) -> Result<User> {
         Ok(self
             .client
             .patch(ep!(self, "/users/@me"))
@@ -50,7 +50,7 @@ impl Client {
     }
 
     /// Change your username.
-    pub async fn change_username(&self, data: ChangeUsernameData) -> Result<User> {
+    pub async fn change_username(&self, data: &ChangeUsernameData) -> Result<User> {
         Ok(self
             .client
             .patch(ep!(self, "/users/@me/username"))

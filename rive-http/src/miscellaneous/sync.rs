@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 impl Client {
     /// Fetch settings from server filtered by keys.
-    pub async fn fetch_settings(&self, data: FetchMessagesData) -> Result<UserSettings> {
+    pub async fn fetch_settings(&self, data: &FetchMessagesData) -> Result<UserSettings> {
         Ok(self
             .client
             .post(ep!(self, "/sync/settings/fetch"))
@@ -19,7 +19,7 @@ impl Client {
     }
 
     /// Upload data to save to settings.
-    pub async fn set_settings(&self, data: HashMap<String, String>) -> Result<()> {
+    pub async fn set_settings(&self, data: &HashMap<String, String>) -> Result<()> {
         self.client
             .post(ep!(self, "/sync/settings/set"))
             .json(&data)
