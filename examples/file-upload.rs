@@ -24,7 +24,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         attachments: Some(vec![upload_data.id]),
         ..Default::default()
     };
-    http.send_message(&channel_id, data).await?;
+    http.send_message(&channel_id, &data).await?;
 
     Ok(())
 }

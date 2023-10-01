@@ -8,7 +8,7 @@ use rive_models::{
 
 impl Client {
     /// Create a new server.
-    pub async fn create_server(&self, data: CreateServerData) -> Result<Server> {
+    pub async fn create_server(&self, data: &CreateServerData) -> Result<Server> {
         Ok(self
             .client
             .post(ep!(self, "/servers/create"))
@@ -51,7 +51,11 @@ impl Client {
     }
 
     /// Edit a server by its id.
-    pub async fn edit_server(&self, id: &Id<ServerMarker>, data: EditServerData) -> Result<Server> {
+    pub async fn edit_server(
+        &self,
+        id: &Id<ServerMarker>,
+        data: &EditServerData,
+    ) -> Result<Server> {
         Ok(self
             .client
             .patch(ep!(self, "/servers/{}", id.value_ref()))
@@ -83,7 +87,7 @@ impl Client {
     pub async fn create_channel(
         &self,
         server_id: &Id<ServerMarker>,
-        data: CreateChannelData,
+        data: &CreateChannelData,
     ) -> Result<Channel> {
         Ok(self
             .client

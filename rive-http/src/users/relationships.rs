@@ -77,7 +77,7 @@ impl Client {
     }
 
     /// Send a friend request to another user.
-    pub async fn send_friend_request(&self, data: SendFriendRequestData) -> Result<User> {
+    pub async fn send_friend_request(&self, data: &SendFriendRequestData) -> Result<User> {
         Ok(self
             .client
             .post(ep!(self, "/users/friend"))

@@ -7,7 +7,7 @@ use crate::prelude::*;
 
 impl Client {
     /// Create a new MFA ticket or validate an existing one.
-    pub async fn create_mfa_ticket(&self, data: CreateMFATicketData) -> Result<MFATicket> {
+    pub async fn create_mfa_ticket(&self, data: &CreateMFATicketData) -> Result<MFATicket> {
         Ok(self
             .client
             .put(ep!(self, "/auth/mfa/ticket"))
@@ -78,7 +78,7 @@ impl Client {
     }
 
     /// Enable TOTP 2FA for an account.
-    pub async fn enable_totp_2fa(&self, data: EnableTOTP2FAData) -> Result<()> {
+    pub async fn enable_totp_2fa(&self, data: &EnableTOTP2FAData) -> Result<()> {
         self.client
             .put(ep!(self, "/auth/mfa/totp"))
             .json(&data)

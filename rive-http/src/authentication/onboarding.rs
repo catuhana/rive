@@ -20,7 +20,7 @@ impl Client {
     }
 
     /// This sets a new username, completes onboarding and allows a user to start using Revolt.
-    pub async fn complete_onboarding(&self, data: CompleteOnboardingData) -> Result<()> {
+    pub async fn complete_onboarding(&self, data: &CompleteOnboardingData) -> Result<()> {
         self.client
             .post(ep!(self, "/onboarding/complete"))
             .json(&data)

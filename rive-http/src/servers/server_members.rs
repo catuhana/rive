@@ -15,7 +15,7 @@ impl Client {
     pub async fn fetch_members(
         &self,
         server_id: &Id<ServerMarker>,
-        data: FetchMembersData,
+        data: &FetchMembersData,
     ) -> Result<MemberList> {
         Ok(self
             .client
@@ -79,7 +79,7 @@ impl Client {
         &self,
         server_id: &Id<ServerMarker>,
         member_id: &Id<UserMarker>,
-        data: EditMemberData,
+        data: &EditMemberData,
     ) -> Result<Member> {
         Ok(self
             .client
@@ -104,7 +104,7 @@ impl Client {
         &self,
         server_id: &Id<ServerMarker>,
         user_id: &Id<UserMarker>,
-        data: BanUserData,
+        data: &BanUserData,
     ) -> Result<ServerBan> {
         Ok(self
             .client
