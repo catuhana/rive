@@ -12,7 +12,7 @@ mod servers;
 mod users;
 
 use async_trait::async_trait;
-use rive_models::{authentication::Authentication, ApiError};
+use rive_models::{authentication::Authentication, error::ApiError};
 
 type Result<T> = std::result::Result<T, Error>;
 

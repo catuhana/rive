@@ -29,9 +29,6 @@ pub mod user;
 pub mod voice;
 pub mod webhook;
 
-#[deprecated = "Please import `rive_models::error::ApiError` instead"]
-pub use error::ApiError;
-
 macro_rules! impl_serde_bitflags(
     ($type:ident) => {
         impl serde::Serialize for $type {

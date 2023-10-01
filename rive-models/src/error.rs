@@ -3,10 +3,6 @@ use serde::Deserialize;
 use crate::permission::{Permission, UserPermission};
 
 /// A representation of an API error.
-///
-/// Please consider importing this type as `rive_models::error::ApiError`
-/// instead of `rive_models::ApiError` as this export is deprecated and
-/// will be removed in next major release.
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[serde(tag = "type")]
 pub enum ApiError {
