@@ -65,12 +65,11 @@ pub mod cache_inmemory {
 /// [`HTTP_BASE_URL`]: crate::prelude::HTTP_BASE_URL
 /// [`HttpError`]: crate::prelude::HttpError
 pub mod prelude {
-    // TODO: remove re-export of "*" (breaking change!)
     pub use rive_models::{
         account::*, attachment::*, authentication::*, bot::*, channel::*, core::*, data::*,
         embed::*, emoji::*, error::*, event::*, invite::*, member::*, message::*, mfa::*,
         onboarding::*, permission::*, report::*, server::*, session::*, snapshot::*, stats::*,
-        strike::*, user::*, voice::*, webhook::*, *,
+        strike::*, user::*, voice::*, webhook::*,
     };
 
     pub use rive_autumn::{
