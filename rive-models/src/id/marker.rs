@@ -13,6 +13,8 @@
 ///
 /// [`Message`]: crate::message::Message
 #[derive(Debug)]
+// NOTE: #[non_exhaustive] here is a hack that prevents the creation of a struct
+#[non_exhaustive]
 pub struct MessageMarker;
 
 /// Marker for channel IDs.
@@ -21,6 +23,7 @@ pub struct MessageMarker;
 ///
 /// [`Channel`]: crate::channel::Channel
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct ChannelMarker;
 
 /// Marker for server IDs.
@@ -29,6 +32,7 @@ pub struct ChannelMarker;
 ///
 /// [`Server`]: crate::server::Server
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct ServerMarker;
 
 /// Marker for user IDs.
@@ -37,6 +41,7 @@ pub struct ServerMarker;
 ///
 /// [`User`]: crate::user::User
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct UserMarker;
 
 /// Marker for emoji IDs.
@@ -45,6 +50,7 @@ pub struct UserMarker;
 ///
 /// [`Emoji`]: crate::emoji::Emoji
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct EmojiMarker;
 
 /// Marker for account IDs.
@@ -53,6 +59,7 @@ pub struct EmojiMarker;
 ///
 /// [`AccountInfo`]: crate::account::AccountInfo
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct AccountMarker;
 
 /// Marker for attachment IDs.
@@ -61,6 +68,7 @@ pub struct AccountMarker;
 ///
 /// [`Attachment`]: crate::attachment::Attachment
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct AttachmentMarker;
 
 /// Marker for attachment-associated object IDs.
@@ -69,6 +77,7 @@ pub struct AttachmentMarker;
 ///
 /// [`Attachment`]: crate::attachment::Attachment
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct ObjectMarker;
 
 /// Marker for server role IDs.
@@ -77,6 +86,7 @@ pub struct ObjectMarker;
 ///
 /// [`Role`]: crate::server::Role
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct RoleMarker;
 
 /// Marker for invite IDs.
@@ -85,6 +95,7 @@ pub struct RoleMarker;
 ///
 /// [`Invite`]: crate::invite::Invite
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct InviteMarker;
 
 /// Marker for session IDs.
@@ -93,6 +104,7 @@ pub struct InviteMarker;
 ///
 /// [`Session`]: crate::session::Session
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct SessionMarker;
 
 /// Marker for webhook IDs.
@@ -101,6 +113,7 @@ pub struct SessionMarker;
 ///
 /// [`Webhook`]: crate::webhook::Webhook
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct WebhookMarker;
 
 /// Marker for multi-factor auth ticket IDs.
@@ -109,6 +122,7 @@ pub struct WebhookMarker;
 ///
 /// [`MFATicket`]: crate::mfa::MFATicket
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct MFATicketMarker;
 
 /// Marker for report IDs.
@@ -117,6 +131,7 @@ pub struct MFATicketMarker;
 ///
 /// [`Report`]: crate::report::Report
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct ReportMarker;
 
 /// Marker for category IDs.
@@ -125,6 +140,7 @@ pub struct ReportMarker;
 ///
 /// [`Category`]: crate::server::Category
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct CategoryMarker;
 
 /// Marker for snapshot IDs.
@@ -133,6 +149,7 @@ pub struct CategoryMarker;
 ///
 /// [`Snapshot`]: crate::snapshot::Snapshot
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct SnapshotMarker;
 
 /// Marker for account strike IDs.
@@ -141,4 +158,5 @@ pub struct SnapshotMarker;
 ///
 /// [`AccountStrike`]: crate::strike::AccountStrike
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct StrikeMarker;
