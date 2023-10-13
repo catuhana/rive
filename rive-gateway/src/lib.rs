@@ -54,6 +54,11 @@ impl Config {
     }
 }
 
+#[derive(Debug)]
+enum NextAction {
+    Authenticate,
+}
+
 /// A wrapper for Revolt WebSocket API
 // TODO: config builder
 #[derive(Debug)]
@@ -61,6 +66,7 @@ pub struct Gateway {
     socket: Option<Socket>,
     config: Config,
     heartbeat_interval: time::Interval,
+    next_action: Option<NextAction>,
 }
 
 impl Gateway {
@@ -77,12 +83,14 @@ impl Gateway {
             socket: None,
             config,
             heartbeat_interval: time::interval(Duration::from_secs(15)),
+            next_action: None,
         }
     }
 
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
         enum Action {
             Connect,
+            Authenticate,
             Heartbeat,
             Message(Option<Result<WsMessage, WsError>>),
         }
@@ -92,6 +100,12 @@ impl Gateway {
             let next_action = |cx: &mut Context<'_>| {
                 if self.socket.is_none() {
                     return Poll::Ready(Action::Connect);
+                }
+
+                if let Some(action) = self.next_action.take() {
+                    match action {
+                        NextAction::Authenticate => return Poll::Ready(Action::Authenticate),
+                    }
                 }
 
                 if self.heartbeat_interval.poll_tick(cx).is_ready() {
@@ -111,6 +125,14 @@ impl Gateway {
                 Action::Connect => {
                     println!("connecting");
                     self.connect().await?;
+                }
+                Action::Authenticate => {
+                    println!("sending authenticate");
+                    self.send(&ClientEvent::Authenticate {
+                        token: self.config.auth.value(),
+                    })
+                    .await
+                    .map_err(|source| ReceiveError::from_send(source))?;
                 }
                 Action::Heartbeat => {
                     println!("sending heartbeat");
@@ -157,16 +179,9 @@ impl Gateway {
         .connect()
         .await
         .map_err(|source| ReceiveError::new(ReceiveErrorKind::Reconnect, Some(Box::new(source))))?;
-        println!("connected");
 
         self.socket = Some(socket);
-
-        self.send(&ClientEvent::Authenticate {
-            token: self.config.auth.value(),
-        })
-        .await
-        .map_err(|source| ReceiveError::from_send(source))?;
-        println!("sent auth");
+        self.next_action = Some(NextAction::Authenticate);
 
         Ok(())
     }
