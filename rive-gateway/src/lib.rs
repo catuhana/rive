@@ -9,7 +9,7 @@ use std::{
 };
 
 use error::{ReceiveError, ReceiveErrorKind, SendError, SendErrorKind};
-use futures::{future::poll_fn, SinkExt, Stream, StreamExt};
+use futures::{future::poll_fn, SinkExt, Stream};
 use rive_models::{
     authentication::Authentication,
     event::{ClientEvent, ServerEvent},
@@ -82,21 +82,18 @@ impl Gateway {
 
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
         enum Action {
+            Connect,
             Heartbeat,
             Message(Option<Result<WsMessage, WsError>>),
         }
 
         // todo: use tracing instead of println
-        match self.socket {
-            Some(_) => {}
-            None => {
-                println!("connection is none, connecting...");
-                self.connect().await?;
-            }
-        };
-
         loop {
             let next_action = |cx: &mut Context<'_>| {
+                if self.socket.is_none() {
+                    return Poll::Ready(Action::Connect);
+                }
+
                 if self.heartbeat_interval.poll_tick(cx).is_ready() {
                     return Poll::Ready(Action::Heartbeat);
                 }
@@ -111,6 +108,10 @@ impl Gateway {
             };
 
             match poll_fn(next_action).await {
+                Action::Connect => {
+                    println!("connecting");
+                    self.connect().await?;
+                }
                 Action::Heartbeat => {
                     println!("sending heartbeat");
                     self.send(&ClientEvent::Ping { data: 0 })
@@ -118,8 +119,6 @@ impl Gateway {
                         .map_err(|err| {
                             ReceiveError::new(ReceiveErrorKind::SendMessage, Some(Box::new(err)))
                         })?;
-
-                    continue;
                 }
                 Action::Message(Some(Ok(msg))) => {
                     println!("got message");
