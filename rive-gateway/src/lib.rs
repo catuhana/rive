@@ -16,6 +16,7 @@ use rive_models::{
 };
 use tokio::{net::TcpStream, time};
 use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebsocketStream};
+use tracing::{debug, instrument};
 
 type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 
@@ -87,6 +88,7 @@ impl Gateway {
         }
     }
 
+    #[instrument(skip(self))]
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
         enum Action {
             Connect,
@@ -95,7 +97,6 @@ impl Gateway {
             Message(Option<Result<WsMessage, WsError>>),
         }
 
-        // todo: use tracing instead of println
         loop {
             let next_action = |cx: &mut Context<'_>| {
                 if self.socket.is_none() {
@@ -123,11 +124,11 @@ impl Gateway {
 
             match poll_fn(next_action).await {
                 Action::Connect => {
-                    println!("connecting");
+                    debug!("connecting to the API");
                     self.connect().await?;
                 }
                 Action::Authenticate => {
-                    println!("sending authenticate");
+                    debug!("sending authenticate event");
                     self.send(&ClientEvent::Authenticate {
                         token: self.config.auth.value(),
                     })
@@ -135,7 +136,7 @@ impl Gateway {
                     .map_err(|source| ReceiveError::from_send(source))?;
                 }
                 Action::Heartbeat => {
-                    println!("sending heartbeat");
+                    debug!("sending heartbeat event");
                     self.send(&ClientEvent::Ping { data: 0 })
                         .await
                         .map_err(|err| {
@@ -143,18 +144,18 @@ impl Gateway {
                         })?;
                 }
                 Action::Message(Some(Ok(msg))) => {
-                    println!("got message");
+                    debug!("received a message");
                     return Self::decode_server_event(msg).map_err(|err| {
                         ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
                     });
                 }
                 Action::Message(None) => {
-                    println!("received none, disconnecting");
+                    debug!("API connection closed");
                     self.reset();
                     return Err(ReceiveError::new(ReceiveErrorKind::Io, None));
                 }
                 Action::Message(Some(Err(err))) => {
-                    println!("got error");
+                    debug!("received an error");
                     return Err(ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err))));
                 }
             }
@@ -167,9 +168,7 @@ impl Gateway {
             .ok_or(SendError::new(SendErrorKind::Send, None))?
             .send(Self::encode_client_event(event)?)
             .await
-            .map_err(|source| SendError::new(SendErrorKind::Send, Some(Box::new(source))))?;
-
-        Ok(())
+            .map_err(|source| SendError::new(SendErrorKind::Send, Some(Box::new(source))))
     }
 
     async fn connect(&mut self) -> Result<(), ReceiveError> {
