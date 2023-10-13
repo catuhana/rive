@@ -2,14 +2,20 @@
 
 pub mod error;
 
+use std::{
+    pin::Pin,
+    task::{Context, Poll},
+    time::Duration,
+};
+
 use error::{ReceiveError, ReceiveErrorKind, SendError, SendErrorKind};
-use futures::{SinkExt, StreamExt};
+use futures::{future::poll_fn, SinkExt, Stream, StreamExt};
 use rive_models::{
     authentication::Authentication,
     event::{ClientEvent, ServerEvent},
 };
-use tokio::net::TcpStream;
-use tokio_websockets::{MaybeTlsStream, Message as WsMessage, WebsocketStream};
+use tokio::{net::TcpStream, time};
+use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebsocketStream};
 
 type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 
@@ -17,7 +23,6 @@ type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 pub const BASE_URL: &str = "wss://ws.revolt.chat";
 
 /// Gateway configuration
-// TODO: rename to `Config`
 #[derive(Debug, Clone)]
 pub struct Config {
     /// Auth token. If it is not [`Authentication::None`] then the event will be sent automatically.
@@ -55,6 +60,7 @@ impl Config {
 pub struct Gateway {
     socket: Option<Socket>,
     config: Config,
+    heartbeat_interval: time::Interval,
 }
 
 impl Gateway {
@@ -70,10 +76,17 @@ impl Gateway {
         Self {
             socket: None,
             config,
+            heartbeat_interval: time::interval(Duration::from_secs(15)),
         }
     }
 
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
+        enum Action {
+            Heartbeat,
+            Message(Option<Result<WsMessage, WsError>>),
+        }
+
+        // todo: use tracing instead of println
         match self.socket {
             Some(_) => {}
             None => {
@@ -82,22 +95,47 @@ impl Gateway {
             }
         };
 
-        let socket = self
-            .socket
-            .as_mut()
-            .ok_or(ReceiveError::new(ReceiveErrorKind::Reconnect, None))?;
+        loop {
+            let next_action = |cx: &mut Context<'_>| {
+                if self.heartbeat_interval.poll_tick(cx).is_ready() {
+                    return Poll::Ready(Action::Heartbeat);
+                }
 
-        match socket.next().await {
-            Some(res) => res
-                .map(|msg| {
+                if let Poll::Ready(message) =
+                    Pin::new(self.socket.as_mut().expect("connected")).poll_next(cx)
+                {
+                    return Poll::Ready(Action::Message(message));
+                }
+
+                Poll::Pending
+            };
+
+            match poll_fn(next_action).await {
+                Action::Heartbeat => {
+                    println!("sending heartbeat");
+                    self.send(&ClientEvent::Ping { data: 0 })
+                        .await
+                        .map_err(|err| {
+                            ReceiveError::new(ReceiveErrorKind::SendMessage, Some(Box::new(err)))
+                        })?;
+
+                    continue;
+                }
+                Action::Message(Some(Ok(msg))) => {
                     println!("got message");
-                    Self::decode_server_event(msg)
-                })
-                .map_err(|err| ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err))))?,
-            None => {
-                println!("received none, disconnecting");
-                self.reset();
-                Err(ReceiveError::new(ReceiveErrorKind::Io, None))
+                    return Self::decode_server_event(msg).map_err(|err| {
+                        ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
+                    });
+                }
+                Action::Message(None) => {
+                    println!("received none, disconnecting");
+                    self.reset();
+                    return Err(ReceiveError::new(ReceiveErrorKind::Io, None));
+                }
+                Action::Message(Some(Err(err))) => {
+                    println!("got error");
+                    return Err(ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err))));
+                }
             }
         }
     }
