@@ -10,6 +10,7 @@ use std::{
 
 use error::{ReceiveError, ReceiveErrorKind, SendError, SendErrorKind};
 use futures::{future::poll_fn, SinkExt, Stream};
+use http::{header::USER_AGENT, HeaderValue};
 use rive_models::{
     authentication::Authentication,
     event::{ClientEvent, ServerEvent},
@@ -175,6 +176,7 @@ impl Gateway {
         let (socket, _) = tokio_websockets::ClientBuilder::from_uri(
             self.config.base_url.clone().try_into().expect("valid url"),
         )
+        .add_header(USER_AGENT, HeaderValue::from_static("rive-gateway"))
         .connect()
         .await
         .map_err(|source| ReceiveError::new(ReceiveErrorKind::Reconnect, Some(Box::new(source))))?;
