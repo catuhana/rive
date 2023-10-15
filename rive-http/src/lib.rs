@@ -104,7 +104,10 @@ impl Client {
     pub fn new_base_url(authentication: Authentication, base_url: impl Into<String>) -> Self {
         Client {
             base_url: base_url.into(),
-            client: reqwest::Client::new(),
+            client: reqwest::Client::builder()
+                .user_agent("rive-http")
+                .build()
+                .unwrap(),
             authentication,
         }
     }
