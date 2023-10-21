@@ -42,7 +42,7 @@ enum NextAction {
 pub struct Gateway {
     socket: Option<Socket>,
     config: Config,
-    heartbeat_interval: time::Interval,
+    heartbeat_interval: Option<time::Interval>,
     next_action: Option<NextAction>,
 }
 
@@ -63,7 +63,7 @@ impl Gateway {
         Self {
             socket: None,
             config,
-            heartbeat_interval: time::interval(HEARTBEAT_INTERVAL),
+            heartbeat_interval: None,
             next_action: None,
         }
     }
@@ -95,7 +95,10 @@ impl Gateway {
                 }
 
                 if self.config.heartbeat.is_some()
-                    && self.heartbeat_interval.poll_tick(cx).is_ready()
+                    && self
+                        .heartbeat_interval
+                        .as_mut()
+                        .map_or(false, |interval| interval.poll_tick(cx).is_ready())
                 {
                     return Poll::Ready(Action::Heartbeat);
                 }
@@ -136,9 +139,16 @@ impl Gateway {
                 }
                 Action::Message(Some(Ok(msg))) => {
                     debug!("received a message");
-                    return Self::decode_server_event(msg).map_err(|err| {
+
+                    let event = Self::decode_server_event(msg).map_err(|err| {
                         ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
                     });
+
+                    if matches!(event, Ok(ServerEvent::Authenticated)) {
+                        self.heartbeat_interval = Some(time::interval(HEARTBEAT_INTERVAL));
+                    }
+
+                    return event;
                 }
                 Action::Message(None) => {
                     debug!("API connection closed");
@@ -190,6 +200,7 @@ impl Gateway {
 
     fn reset(&mut self) {
         self.socket = None;
+        self.heartbeat_interval = None;
     }
 
     fn encode_client_event(event: &ClientEvent) -> Result<WsMessage, SendError> {
