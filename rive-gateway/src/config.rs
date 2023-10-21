@@ -7,7 +7,7 @@ use crate::{HeartbeatFn, BASE_URL};
 fn default_heartbeat_fn() -> i32 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .expect("system clock may have gone backwards")
         .as_secs() as i32
 }
 
