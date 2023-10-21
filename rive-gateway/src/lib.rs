@@ -1,6 +1,10 @@
 #![doc = include_str!("../README.md")]
 
+mod builder;
+mod config;
 pub mod error;
+pub use builder::GatewayBuilder;
+pub use config::Config;
 
 use std::{
     pin::Pin,
@@ -24,37 +28,7 @@ type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 /// Base WebSocket API URL of official Revolt instance
 pub const BASE_URL: &str = "wss://ws.revolt.chat";
 
-/// Gateway configuration
-#[derive(Debug, Clone)]
-pub struct Config {
-    /// Auth token. If it is not [`Authentication::None`] then the event will be sent automatically.
-    pub auth: Authentication,
-    /// WebSocket API base URL
-    pub base_url: String,
-    /// Whether auto heartbeat is enabled
-    pub heartbeat: bool,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            auth: Authentication::None,
-            base_url: BASE_URL.to_string(),
-            heartbeat: true,
-        }
-    }
-}
-
-impl Config {
-    /// Creates a new [`GatewayConfig`].
-    pub fn new(auth: Authentication, base_url: String, heartbeat: bool) -> Self {
-        Self {
-            auth,
-            base_url,
-            heartbeat,
-        }
-    }
-}
+const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(15);
 
 #[derive(Debug)]
 enum NextAction {
@@ -62,7 +36,6 @@ enum NextAction {
 }
 
 /// A wrapper for Revolt WebSocket API
-// TODO: config builder
 #[derive(Debug)]
 pub struct Gateway {
     socket: Option<Socket>,
@@ -77,20 +50,29 @@ impl Gateway {
     }
 
     pub fn with_url(url: impl Into<String>, auth: Authentication) -> Self {
-        Self::with_config(Config::new(auth, url.into(), true))
+        Self::with_config(Config {
+            auth,
+            base_url: url.into(),
+            ..Default::default()
+        })
     }
 
     pub fn with_config(config: Config) -> Self {
         Self {
             socket: None,
             config,
-            heartbeat_interval: time::interval(Duration::from_secs(15)),
+            heartbeat_interval: time::interval(HEARTBEAT_INTERVAL),
             next_action: None,
         }
     }
 
+    pub fn builder() -> GatewayBuilder {
+        GatewayBuilder::new()
+    }
+
     #[instrument(skip(self))]
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
+        #[derive(Debug)]
         enum Action {
             Connect,
             Authenticate,
@@ -110,7 +92,9 @@ impl Gateway {
                     }
                 }
 
-                if self.heartbeat_interval.poll_tick(cx).is_ready() {
+                if self.config.heartbeat.is_some()
+                    && self.heartbeat_interval.poll_tick(cx).is_ready()
+                {
                     return Poll::Ready(Action::Heartbeat);
                 }
 
@@ -134,15 +118,19 @@ impl Gateway {
                         token: self.config.auth.value(),
                     })
                     .await
-                    .map_err(|source| ReceiveError::from_send(source))?;
+                    .map_err(ReceiveError::from_send)?;
                 }
                 Action::Heartbeat => {
-                    debug!("sending heartbeat event");
-                    self.send(&ClientEvent::Ping { data: 0 })
+                    if let Some(heartbeat_fn) = self.config.heartbeat {
+                        debug!("sending heartbeat event");
+                        self.send(&ClientEvent::Ping {
+                            data: (heartbeat_fn)(),
+                        })
                         .await
                         .map_err(|err| {
                             ReceiveError::new(ReceiveErrorKind::SendMessage, Some(Box::new(err)))
                         })?;
+                    }
                 }
                 Action::Message(Some(Ok(msg))) => {
                     debug!("received a message");
@@ -197,14 +185,6 @@ impl Gateway {
         self.reset();
         Ok(())
     }
-
-    // async fn reconnect(&mut self) -> Result<(), ReceiveError> {
-    //     self.disconnect().await.map_err(|source| {
-    //         ReceiveError::new(ReceiveErrorKind::SendMessage, Some(Box::new(source)))
-    //     })?;
-    //     self.connect().await?;
-    //     Ok(())
-    // }
 
     fn reset(&mut self) {
         self.socket = None;
