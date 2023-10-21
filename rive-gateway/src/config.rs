@@ -2,7 +2,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use rive_models::authentication::Authentication;
 
-use crate::BASE_URL;
+use crate::{HeartbeatFn, BASE_URL};
 
 fn default_heartbeat_fn() -> i32 {
     SystemTime::now()
@@ -18,7 +18,7 @@ pub struct Config {
     pub auth: Authentication,
     /// WebSocket API base URL
     pub base_url: String,
-    pub heartbeat: Option<fn() -> i32>,
+    pub heartbeat: Option<HeartbeatFn>,
 }
 
 impl Default for Config {

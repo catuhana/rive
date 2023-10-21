@@ -1,6 +1,6 @@
 use rive_models::authentication::Authentication;
 
-use crate::{Config, Gateway};
+use crate::{Config, Gateway, HeartbeatFn};
 
 /// Builder to configure and construct an [`InMemoryCache`].
 ///
@@ -24,7 +24,7 @@ impl GatewayBuilder {
         self
     }
 
-    pub fn heartbeat_fn(mut self, heartbeat: Option<fn() -> i32>) -> GatewayBuilder {
+    pub fn heartbeat_fn(mut self, heartbeat: Option<HeartbeatFn>) -> GatewayBuilder {
         self.0.heartbeat = heartbeat;
         self
     }

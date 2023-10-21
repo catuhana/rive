@@ -23,6 +23,8 @@ use tokio::{net::TcpStream, time};
 use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebsocketStream};
 use tracing::{debug, instrument};
 
+pub type HeartbeatFn = fn() -> i32;
+
 type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 
 /// Base WebSocket API URL of official Revolt instance
