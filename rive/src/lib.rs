@@ -52,7 +52,6 @@ pub mod cache_inmemory {
 /// | [`rive_autumn::Error`]          | [`AutumnError`]         |
 /// | [`rive_cache_inmemory::Config`] | [`InMemoryCacheConfig`] |
 /// | [`rive_gateway::BASE_URL`]      | [`GATEWAY_BASE_URL`]    |
-/// | [`rive_gateway::Error`]         | [`GatewayError`]        |
 /// | [`rive_http::BASE_URL`]         | [`HTTP_BASE_URL`]       |
 /// | [`rive_http::Error`]            | [`HttpError`]           |
 ///
@@ -61,7 +60,6 @@ pub mod cache_inmemory {
 /// [`AutumnError`]: crate::prelude::AutumnError
 /// [`InMemoryCacheConfig`]: crate::prelude::InMemoryCacheConfig
 /// [`GATEWAY_BASE_URL`]: crate::prelude::GATEWAY_BASE_URL
-/// [`GatewayError`]: crate::prelude::GatewayError
 /// [`HTTP_BASE_URL`]: crate::prelude::HTTP_BASE_URL
 /// [`HttpError`]: crate::prelude::HttpError
 pub mod prelude {

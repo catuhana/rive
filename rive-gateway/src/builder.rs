@@ -2,9 +2,9 @@ use rive_models::authentication::Authentication;
 
 use crate::{Config, Gateway, HeartbeatFn};
 
-/// Builder to configure and construct an [`InMemoryCache`].
+/// Builder to configure and construct a [`Gateway`].
 ///
-/// [`InMemoryCache`]: crate::InMemoryCache
+/// [`Gateway`]: crate::Gateway
 #[derive(Debug, Default)]
 #[must_use]
 pub struct GatewayBuilder(Config);

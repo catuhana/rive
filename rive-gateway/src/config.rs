@@ -28,7 +28,7 @@ impl Default for Config {
 }
 
 impl Config {
-    /// Creates a new [`GatewayConfig`].
+    /// Creates a new [`Config`].
     pub fn new() -> Self {
         Self {
             auth: Authentication::None,
