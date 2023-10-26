@@ -138,21 +138,25 @@ impl Gateway {
                     }
                 }
                 Action::Message(Some(Ok(msg))) => {
-                    debug!("received a message");
+                    if let Some(text) = msg.as_text() {
+                        debug!("received a text message");
+                        let event = Self::decode_server_event(text).map_err(|err| {
+                            ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
+                        });
 
-                    let event = Self::decode_server_event(msg).map_err(|err| {
-                        ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
-                    });
+                        if matches!(event, Ok(ServerEvent::Authenticated)) {
+                            self.heartbeat_interval = Some(time::interval(HEARTBEAT_INTERVAL));
+                        }
 
-                    if matches!(event, Ok(ServerEvent::Authenticated)) {
-                        self.heartbeat_interval = Some(time::interval(HEARTBEAT_INTERVAL));
+                        return event;
+                    } else if msg.is_close() {
+                        debug!("received a close message");
+                        self.disconnect();
                     }
-
-                    return event;
                 }
                 Action::Message(None) => {
                     debug!("API connection closed");
-                    self.reset();
+                    self.disconnect();
                     return Err(ReceiveError::new(ReceiveErrorKind::Io, None));
                 }
                 Action::Message(Some(Err(err))) => {
@@ -187,18 +191,21 @@ impl Gateway {
         Ok(())
     }
 
-    pub async fn disconnect(&mut self) -> Result<(), SendError> {
-        self.socket
+    pub async fn close(&mut self) -> Result<(), SendError> {
+        let res = self
+            .socket
             .as_mut()
             .ok_or(SendError::new(SendErrorKind::Send, None))?
-            .close()
+            .send(WsMessage::close(None, ""))
             .await
-            .map_err(|source| SendError::new(SendErrorKind::Send, Some(Box::new(source))))?;
-        self.reset();
-        Ok(())
+            .map_err(|source| SendError::new(SendErrorKind::Send, Some(Box::new(source))));
+
+        self.disconnect();
+
+        res
     }
 
-    fn reset(&mut self) {
+    fn disconnect(&mut self) {
         self.socket = None;
         self.heartbeat_interval = None;
     }
@@ -209,8 +216,8 @@ impl Gateway {
             .map_err(|source| SendError::new(SendErrorKind::Serialize, Some(Box::new(source))))
     }
 
-    fn decode_server_event(msg: WsMessage) -> Result<ServerEvent, ReceiveError> {
-        serde_json::from_str(msg.as_text().expect("message is text")).map_err(|source| {
+    fn decode_server_event(value: &str) -> Result<ServerEvent, ReceiveError> {
+        serde_json::from_str(value).map_err(|source| {
             ReceiveError::new(ReceiveErrorKind::Deserialize, Some(Box::new(source)))
         })
     }
