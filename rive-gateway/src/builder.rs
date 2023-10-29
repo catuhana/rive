@@ -1,6 +1,6 @@
-use rive_models::authentication::Authentication;
+use rive_models::{authentication::Authentication, event::Ping};
 
-use crate::{Config, Gateway, HeartbeatFn};
+use crate::{Config, Gateway};
 
 /// Builder to configure and construct a [`Gateway`].
 ///
@@ -24,7 +24,7 @@ impl GatewayBuilder {
         self
     }
 
-    pub fn heartbeat_fn(mut self, heartbeat: Option<HeartbeatFn>) -> GatewayBuilder {
+    pub fn heartbeat_fn(mut self, heartbeat: Option<fn() -> Ping>) -> GatewayBuilder {
         self.0.heartbeat = heartbeat;
         self
     }

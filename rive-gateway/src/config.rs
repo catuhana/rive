@@ -1,14 +1,18 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use rive_models::authentication::Authentication;
+use rive_models::{authentication::Authentication, event::Ping};
 
-use crate::{HeartbeatFn, BASE_URL};
+use crate::BASE_URL;
 
-fn default_heartbeat_fn() -> i32 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("system clock may have gone backwards")
-        .as_secs() as i32
+fn default_heartbeat_fn() -> Ping {
+    Ping::Binary(
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system clock may have gone backwards")
+            .as_millis()
+            .to_be_bytes()
+            .to_vec(),
+    )
 }
 
 /// Gateway configuration
