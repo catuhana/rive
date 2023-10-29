@@ -140,8 +140,8 @@ impl Gateway {
                 Action::Message(Some(Ok(msg))) => {
                     if let Some(text) = msg.as_text() {
                         debug!("received a text message");
-                        let event = Self::decode_server_event(text).map_err(|err| {
-                            ReceiveError::new(ReceiveErrorKind::Io, Some(Box::new(err)))
+                        let event = Self::deserialize_server_event(text).map_err(|err| {
+                            ReceiveError::new(ReceiveErrorKind::Deserialize, Some(Box::new(err)))
                         });
 
                         if matches!(event, Ok(ServerEvent::Authenticated)) {
