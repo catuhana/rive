@@ -18,6 +18,14 @@ use crate::{
     webhook::{FieldsWebhook, PartialWebhook, Webhook},
 };
 
+/// Ping packet
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum Ping {
+    Binary(Vec<u8>),
+    Number(usize),
+}
+
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
 #[serde(tag = "type")]
 pub enum ErrorId {
@@ -175,11 +183,11 @@ pub enum ServerEvent {
 }
 
 /// Event sent by client
-#[derive(Serialize, Debug, Clone, Eq, PartialEq)]
+#[derive(Serialize, Debug, Clone)]
 #[serde(tag = "type")]
 pub enum ClientEvent {
     Authenticate { token: String },
-    Ping { data: i32 },
+    Ping { data: Ping },
     BeginTyping { channel: Id<ChannelMarker> },
     EndTyping { channel: Id<ChannelMarker> },
 }
@@ -231,7 +239,7 @@ pub struct ReadyEvent {
 #[derive(Deserialize, Debug, Clone)]
 pub struct PongEvent {
     /// Client echo data
-    pub data: u32,
+    pub data: Ping,
 }
 
 /// Message update event data
