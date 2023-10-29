@@ -186,7 +186,9 @@ impl Gateway {
         .map_err(|source| ReceiveError::new(ReceiveErrorKind::Reconnect, Some(Box::new(source))))?;
 
         self.socket = Some(socket);
-        self.next_action = Some(NextAction::Authenticate);
+        if !matches!(self.config.auth, Authentication::None) {
+            self.next_action = Some(NextAction::Authenticate);
+        }
 
         Ok(())
     }
