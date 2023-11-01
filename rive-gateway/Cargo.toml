@@ -21,6 +21,10 @@ tokio = { version = "1", features = ["macros", "rt", "time"] }
 tokio-websockets = { version = "0.4", features = ["client", "fastrand"] }
 tracing = "0.1"
 
+[dev-dependencies]
+# this is needed for examples in docstrings to pass compilation tests
+tokio = { version = "1", features = ["rt-multi-thread"] }
+
 [features]
 default = ["native-tls"]
 native-tls = ["tokio-websockets/native-tls", "tokio-websockets/openssl"]

@@ -23,34 +23,90 @@ use tokio::{net::TcpStream, time};
 use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebsocketStream};
 use tracing::{debug, instrument};
 
-pub type HeartbeatFn = fn() -> i32;
-
+/// Type alias of a raw Websocket object.
 type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
 
-/// Base WebSocket API URL of official Revolt instance
+/// Base WebSocket API URL of official Revolt instance.
 pub const BASE_URL: &str = "wss://ws.revolt.chat";
 
+/// Default heartbeat interval.
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(15);
 
+/// The next action that the client should perform.
 #[derive(Debug)]
 enum NextAction {
+    /// Send authentication packet
     Authenticate,
 }
 
-/// A wrapper for Revolt WebSocket API
+/// Client for Revolt Websocket API.
+///
+/// Initially the client does not connect to the API. The connection attempt
+/// occurs after the first call to [`next_event`]. After that, [`next_event`]
+/// must be called repeatedly in order for the client to maintain the connection
+/// and update the internal state.
+///
+/// # Examples
+///
+/// Print new messages and joined users:
+///
+/// ```no_run
+/// use std::{env, error::Error};
+///
+/// use tracing::{info, warn};
+///
+/// use rive_gateway::Gateway;
+/// use rive_models::{authentication::Authentication, event::ServerEvent};
+///
+/// # #[tokio::main]
+/// # async fn main() -> Result<(), Box<dyn Error>> {
+/// let auth = Authentication::BotToken(env::var("TOKEN")?);
+/// let mut gateway = Gateway::new(auth);
+///
+/// loop {
+///     match gateway.next_event().await {
+///         Ok(event) => match event {
+///             ServerEvent::Message(message) => {
+///                 info!("New message with content: {:?}", message.content);
+///             }
+///             ServerEvent::ServerMemberJoin(event) => {
+///                 info!(
+///                     "User with ID {} joined server with ID {}",
+///                     event.user, event.id
+///                 )
+///             }
+///             _ => {}
+///         },
+///         Err(err) => {
+///             warn!(?err, "error receiving event");
+///             break;
+///         }
+///     }
+/// }
+/// # Ok(()) }
+/// ```
+///
+/// [`next_event`]: Gateway::next_event
 #[derive(Debug)]
 pub struct Gateway {
+    /// Websocket connection.
     socket: Option<Socket>,
+    /// User provided configuration.
     config: Config,
+    /// Interval of periodic heartbeat sending.
     heartbeat_interval: Option<time::Interval>,
+    /// Next action client should perform in response of the Websocket events.
     next_action: Option<NextAction>,
 }
 
 impl Gateway {
+    /// Create a new [`Gateway`] with given authentication token and default
+    /// configuration.
     pub fn new(auth: Authentication) -> Self {
         Self::with_url(BASE_URL, auth)
     }
 
+    /// Create a new [`Gateway`] with given base URL and authentication token.
     pub fn with_url(url: impl Into<String>, auth: Authentication) -> Self {
         Self::with_config(Config {
             auth,
@@ -59,6 +115,7 @@ impl Gateway {
         })
     }
 
+    /// Create a new [`Gateway`] with given configuration.
     pub fn with_config(config: Config) -> Self {
         Self {
             socket: None,
@@ -68,17 +125,40 @@ impl Gateway {
         }
     }
 
+    /// Create a new builder to configure and create a [`Gateway`].
     pub fn builder() -> GatewayBuilder {
         GatewayBuilder::new()
     }
 
+    /// Wait for the next Revolt event.
+    ///
+    /// # Errors
+    ///
+    /// Returns the error type [`ReceiveErrorKind::Reconnect`] if it failed to
+    /// connect to the API.
+    ///
+    /// Returns the error type [`ReceiveErrorKind::Io`] if an error occurred
+    /// with the current Websocket connection.
+    ///
+    /// Returns the error type [`ReceiveErrorKind::Deserialize`] if the incoming
+    /// event failed to deserialize.
+    ///
+    /// Returns an error type [`ReceiveErrorKind::Io`] if an outgoing event,
+    /// such as authentication or heartbeat, could not be sent.
+    ///
+    /// [`ReceiveErrorKind`]: crate::error::ReceiveErrorKind
     #[instrument(skip(self))]
     pub async fn next_event(&mut self) -> Result<ServerEvent, ReceiveError> {
+        /// The next action client should handle.
         #[derive(Debug)]
         enum Action {
+            /// Establish a new connection.
             Connect,
+            /// Send an authentication event.
             Authenticate,
+            /// Send a heartbeat event.
             Heartbeat,
+            /// Handle an incoming message from socket.
             Message(Option<Result<WsMessage, WsError>>),
         }
 
@@ -156,6 +236,8 @@ impl Gateway {
                 }
                 Action::Message(None) => {
                     debug!("API connection closed");
+                    // we don't need to send close packet because
+                    // tokio-websocket does it internally.
                     self.disconnect();
                     return Err(ReceiveError::new(ReceiveErrorKind::Io, None));
                 }
@@ -167,6 +249,18 @@ impl Gateway {
         }
     }
 
+    /// Send a client event.
+    ///
+    /// # Errors
+    ///
+    /// Returns the error type [`SendErrorKind::Send`] if it failed to send a
+    /// connection close  message, either if the connection is already closed or
+    /// if sending a message over the socket failed.
+    ///
+    /// Returns a [`SendErrorKind::Serialize`] it if failed to serialize the
+    /// event.
+    ///
+    /// [`SendErrorKind`]: crate::error::SendErrorKind
     pub async fn send(&mut self, event: &ClientEvent) -> Result<(), SendError> {
         self.socket
             .as_mut()
@@ -176,6 +270,17 @@ impl Gateway {
             .map_err(|source| SendError::new(SendErrorKind::Send, Some(Box::new(source))))
     }
 
+    /// Connect to the API.
+    ///
+    /// After connection sends an authentication event, if the token is
+    /// provided.
+    ///
+    /// # Errors
+    ///
+    /// Returns a error type [`ReceiveErrorKind::Reconnect`] if it failed to
+    /// connect to the API.
+    ///
+    /// [`ReceiveErrorKind`]: crate::error::ReceiveErrorKind
     async fn connect(&mut self) -> Result<(), ReceiveError> {
         let (socket, _) = tokio_websockets::ClientBuilder::from_uri(
             self.config.base_url.clone().try_into().expect("valid url"),
@@ -193,6 +298,15 @@ impl Gateway {
         Ok(())
     }
 
+    /// Send a Websocket close mesaage.
+    ///
+    /// # Errors
+    ///
+    /// Returns the error type [`SendErrorKind::Send`] if it failed to send a
+    /// connection close  message, either if the connection is already closed or
+    /// if sending a message over the socket failed.
+    ///
+    /// [`SendErrorKind`]: crate::error::SendErrorKind
     pub async fn close(&mut self) -> Result<(), SendError> {
         let res = self
             .socket
@@ -207,18 +321,35 @@ impl Gateway {
         res
     }
 
+    /// Reset the connection state.
     fn disconnect(&mut self) {
         self.socket = None;
         self.heartbeat_interval = None;
     }
 
+    /// Serialize the client event to outgoing Websocket message.
+    ///
+    /// # Errors
+    ///
+    /// Returns the error type [`SendErrorKind::Serialize`] if it failed to
+    /// serialize the event.
+    ///
+    /// [`SendErrorKind`]: crate::error::SendErrorKind
     fn encode_client_event(event: &ClientEvent) -> Result<WsMessage, SendError> {
         serde_json::to_string(event)
             .map(WsMessage::text)
             .map_err(|source| SendError::new(SendErrorKind::Serialize, Some(Box::new(source))))
     }
 
-    fn decode_server_event(value: &str) -> Result<ServerEvent, ReceiveError> {
+    /// Deserialize an incoming message to server event.
+    ///
+    /// # Errors
+    ///
+    /// Returns the error type [`ReceiveErrorKind::Deserialize`] if it failed to
+    /// deserialize the event.
+    ///
+    /// [`SendErrorKind`]: crate::error::SendErrorKind
+    fn deserialize_server_event(value: &str) -> Result<ServerEvent, ReceiveError> {
         serde_json::from_str(value).map_err(|source| {
             ReceiveError::new(ReceiveErrorKind::Deserialize, Some(Box::new(source)))
         })
