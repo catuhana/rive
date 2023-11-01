@@ -52,7 +52,6 @@ pub mod cache_inmemory {
 /// | [`rive_autumn::Error`]          | [`AutumnError`]         |
 /// | [`rive_cache_inmemory::Config`] | [`InMemoryCacheConfig`] |
 /// | [`rive_gateway::BASE_URL`]      | [`GATEWAY_BASE_URL`]    |
-/// | [`rive_gateway::Error`]         | [`GatewayError`]        |
 /// | [`rive_http::BASE_URL`]         | [`HTTP_BASE_URL`]       |
 /// | [`rive_http::Error`]            | [`HttpError`]           |
 ///
@@ -61,7 +60,6 @@ pub mod cache_inmemory {
 /// [`AutumnError`]: crate::prelude::AutumnError
 /// [`InMemoryCacheConfig`]: crate::prelude::InMemoryCacheConfig
 /// [`GATEWAY_BASE_URL`]: crate::prelude::GATEWAY_BASE_URL
-/// [`GatewayError`]: crate::prelude::GatewayError
 /// [`HTTP_BASE_URL`]: crate::prelude::HTTP_BASE_URL
 /// [`HttpError`]: crate::prelude::HttpError
 pub mod prelude {
@@ -79,9 +77,7 @@ pub mod prelude {
         Config as InMemoryCacheConfig, InMemoryCache, InMemoryCacheBuilder, InMemoryCacheIter,
         InMemoryCacheStats, IterReference, Reference, ResourceIter,
     };
-    pub use rive_gateway::{
-        Error as GatewayError, Gateway, GatewayConfig, BASE_URL as GATEWAY_BASE_URL,
-    };
+    pub use rive_gateway::{error::*, Config, Gateway, BASE_URL as GATEWAY_BASE_URL};
     pub use rive_http::{Client, Error as HttpError, BASE_URL as HTTP_BASE_URL};
 
     pub use crate::Rive;
@@ -92,7 +88,7 @@ pub mod prelude {
 #[derive(Debug, Clone)]
 pub struct Rive {
     pub http: rive_http::Client,
-    pub gateway: Gateway,
+    pub gateway: Arc<Gateway>,
     pub autumn: rive_autumn::Client,
     pub cache: Arc<InMemoryCache>,
 }
@@ -101,18 +97,18 @@ impl Rive {
     /// Creates a new [`Rive`].
     // TODO: make a separated error struct instead of gateway error exclusively?
     // i mean that's kinda crappy isn't it? ------------>  VVVVVVVVVVVVVVVVVVV
-    pub async fn new(auth: Authentication) -> Result<Self, rive_gateway::Error> {
+    pub async fn new(auth: Authentication) -> Self {
         let http = rive_http::Client::new(auth.clone());
-        let gateway = Gateway::connect(auth).await?;
+        let gateway = Arc::new(Gateway::new(auth));
         let autumn = rive_autumn::Client::new();
         let cache = Arc::new(InMemoryCache::new());
 
-        Ok(Self {
+        Self {
             http,
             gateway,
             autumn,
             cache,
-        })
+        }
     }
 
     /// Handle an incoming event.
