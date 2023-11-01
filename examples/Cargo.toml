@@ -5,13 +5,16 @@ publish = false
 edition = "2021"
 
 [dev-dependencies]
+futures = "0.3"
 rive = { path = "../rive" }
 rive-autumn = { path = "../rive-autumn" }
 rive-http = { path = "../rive-http" }
 rive-gateway = { path = "../rive-gateway" }
 rive-models = { path = "../rive-models" }
 rive-cache-inmemory = { path = "../rive-cache-inmemory" }
-futures = "0.3"
+tokio = { version = "1", features = ["full"] }
+tracing-subscriber = "0.3"
+tracing = "0.1"
 
 [[example]]
 name = "ping-pong"
@@ -29,6 +32,3 @@ path = "file-upload.rs"
 name = "in-memory-cache"
 path = "in-memory-cache.rs"
 
-[dependencies]
-futures = "0.3"
-tokio = { version = "1", features = ["full"] }
