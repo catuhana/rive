@@ -10,8 +10,7 @@ There's also a simple API for iterating over resource entities and getting cache
 
 Update a cache with incoming events from the gateway:
 
-```rust
-use futures::StreamExt;
+```rust no_run
 use std::{env, error::Error};
 
 use rive_cache_inmemory::InMemoryCache;
@@ -22,7 +21,7 @@ use rive_models::authentication::Authentication;
 async fn main() -> Result<(), Box<dyn Error>> {
     let auth = Authentication::SessionToken(env::var("TOKEN")?);
 
-    let mut gateway = Gateway::connect(auth).await?;
+    let mut gateway = Gateway::new(auth);
 
     // Create a cache with messages and emojis caching disabled:
     let cache = InMemoryCache::builder()
@@ -30,11 +29,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .cache_emojis(false)
         .build();
 
-    while let Some(event) = gateway.next().await {
-        let event = event?;
-
-        // Update the cache with the event:
-        cache.update(&event);
+    loop {
+        match gateway.next_event().await {
+            Ok(event) => {
+                // Update the cache with the event:
+                cache.update(&event);
+            }
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
+            }
+        }
     }
 
     Ok(())

@@ -13,3 +13,9 @@ keywords.workspace = true
 [dependencies]
 rive-models = { path = "../rive-models", version = "1" }
 dashmap = "5"
+
+[dev-dependencies]
+# this is needed for examples in docstrings to pass compilation tests
+futures = "0.3"
+rive-gateway = { path = "../rive-gateway", version = "1", default-features = false }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
