@@ -11,12 +11,10 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-async-channel = "1.8"
 futures = "0.3"
 http = "0.2"
 rive-models = { path = "../rive-models", version = "1", default-features = false }
 serde_json = "1"
-thiserror = "1"
 tokio = { version = "1", features = ["macros", "rt", "time"] }
 tokio-websockets = { version = "0.4", features = ["client", "fastrand"] }
 tracing = "0.1"
