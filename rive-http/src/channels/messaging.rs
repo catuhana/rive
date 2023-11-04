@@ -141,7 +141,7 @@ impl Client {
     pub async fn edit_message(
         &self,
         channel_id: &Id<ChannelMarker>,
-        message_id: &Id<ChannelMarker>,
+        message_id: &Id<MessageMarker>,
         data: &EditMessageData,
     ) -> Result<Message> {
         Ok(self
