@@ -29,7 +29,7 @@ impl Standby {
     /// Update bystander state by processing an incoming event.
     ///
     /// The method is called in the main event loop.
-    pub fn update(&self, event: ServerEvent) {
+    pub fn process(&self, event: ServerEvent) {
         if self.tx.receiver_count() > 0 {
             self.tx.send(event).expect("non-zero amount of receivers");
         }

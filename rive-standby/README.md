@@ -65,7 +65,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
         // Feed a bystander with an event, which will fulfill any futures
         // that are waiting for the specific event.
-        standby.update(event.clone());
+        standby.process(event.clone());
 
         match event {
             ServerEvent::Message(msg) => {
