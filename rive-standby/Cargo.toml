@@ -11,3 +11,10 @@ keywords.workspace = true
 [dependencies]
 rive-models = { path = "../rive-models", version = "1", default-features = false }
 tokio = { version = "1", features = ["sync"] }
+
+[dev-dependencies]
+# this is needed for examples in docstrings to pass compilation tests
+rive-gateway = { path = "../rive-gateway", version = "1" }
+anyhow = "1.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+tracing = "0.1"

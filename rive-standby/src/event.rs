@@ -1,3 +1,5 @@
+//! Utilities used by the bystander to process events.
+
 use rive_models::{
     channel::Channel,
     emoji::Emoji,
@@ -21,12 +23,20 @@ mod private {
     pub trait Sealed {}
 }
 
+/// Trait for [`ServerEvent`] variants processing by the bystander.
+///
+/// This trait is sealed and cannot be implemented.
+///
+/// [`ServerEvent`]: rive_models::event::ServerEvent
 pub trait StandbyEvent: private::Sealed {
+    /// Return the inner event data or none depending on the match of the event.
     fn from_server_event(event: ServerEvent) -> Option<Self>
     where
         Self: Sized;
 }
 
+/// Macro for shorthand impl of the [`StandbyEvent`] for [`ServerEvent`]
+/// variants.
 macro_rules! impl_event {
     ($from:tt => $to:ty) => {
         impl private::Sealed for $to {}
