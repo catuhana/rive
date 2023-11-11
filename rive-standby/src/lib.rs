@@ -56,3 +56,9 @@ impl Standby {
         }
     }
 }
+
+impl Default for Standby {
+    fn default() -> Self {
+        Self::new()
+    }
+}
