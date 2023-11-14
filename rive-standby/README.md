@@ -1,6 +1,6 @@
 # rive-standby
 
-`rive-standby` is an implementation of a special structure that processes incoming items and allows tasks to wait for some specific event that satisfies some given condition.
+`rive-standby` is an implementation of a special bystander that processes incoming events and allows tasks to wait for some specific event that satisfies some given condition.
 
 Suppose we want to wait in our client for a ✅ or ❌ response from a certain user to confirm an action. To do this, we can use application-level state or create a special stream that filters incoming events from the main event loop, but this is not very convenient and may not always be suitable. And that's what this crate is for.
 
