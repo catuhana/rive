@@ -1,5 +1,7 @@
 [package]
 name = "rive-standby"
+description = "Utility to wait for a specific event for the Rive ecosystem."
+categories = [ "asynchronous" ]
 version = "1.0.0"
 authors.workspace = true
 edition.workspace = true
