@@ -51,6 +51,10 @@ An implementation of in-memory cache.
 
 It processes incoming events, and adds/modifies/removes resources depending on the event type and data.
 
+### [`rive-standby`](https://crates.io/crates/rive-standby)
+
+A utility for waiting for a specific event in an asynchronous task that matches a given condition.
+
 ## Credits
 
 - Models were taken directly from the Revolt's [backend](https://github.com/revoltchat/backend).
