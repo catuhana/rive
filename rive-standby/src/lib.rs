@@ -62,3 +62,51 @@ impl Default for Standby {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+    use std::time::Duration;
+
+    use rive_models::event::ServerEvent;
+    use rive_models::event::{Ping, PongEvent};
+    use tokio::task::JoinSet;
+    use tokio::time::sleep;
+
+    use crate::Standby;
+
+    /// Create 10 tasks waiting for an event produced on the main thread.
+    #[tokio::test]
+    async fn test_standby() {
+        let reference_event = PongEvent {
+            data: Ping::Number(123),
+        };
+
+        let mut futures = JoinSet::new();
+
+        let standby = Arc::new(Standby::new());
+
+        for _ in 0..10 {
+            let standby = Arc::clone(&standby);
+            let reference_event = reference_event.clone();
+
+            futures.spawn(async move {
+                let event = standby.wait_for::<PongEvent>(|_| true).await;
+                assert_eq!(format!("{:?}", event), format!("{:?}", reference_event));
+            });
+        }
+
+        // for some reason, without this line, bystander processes the event
+        // faster than futures are subscribed, causing deadlock
+        //
+        // perhaps this is a bug? i could not catch this issue in a real
+        // application though
+        sleep(Duration::ZERO).await;
+
+        standby.process(ServerEvent::Pong(reference_event.clone()));
+
+        while let Some(res) = futures.join_next().await {
+            res.unwrap();
+        }
+    }
+}
