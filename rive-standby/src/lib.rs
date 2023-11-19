@@ -65,13 +65,10 @@ impl Default for Standby {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Arc;
-    use std::time::Duration;
+    use std::{sync::Arc, time::Duration};
 
-    use rive_models::event::ServerEvent;
-    use rive_models::event::{Ping, PongEvent};
-    use tokio::task::JoinSet;
-    use tokio::time::sleep;
+    use rive_models::event::{Ping, PongEvent, ServerEvent};
+    use tokio::{task::JoinSet, time::sleep};
 
     use crate::Standby;
 
