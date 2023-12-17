@@ -1,15 +1,18 @@
-use std::{env, error::Error};
+use std::{env, error::Error, sync::Arc, vec};
 
-use rive_models::{authentication::Authentication, data::SendMessageData, event::ServerEvent};
+use rive_models::{authentication::Authentication, event::ServerEvent};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    tracing_subscriber::fmt().init();
+    tracing_subscriber::fmt()
+        .with_max_level(Level::DEBUG)
+        .init();
 
     let auth = Authentication::BotToken(env::var("TOKEN")?);
 
     let mut gateway = rive_gateway::Gateway::new(auth.clone());
-    let http = rive_http::Client::new(auth.clone());
+    let http = Arc::new(rive_http_new::Client::new(auth.clone()));
 
     loop {
         match gateway.next_event().await {
@@ -28,15 +31,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 async fn handle_event(
     event: ServerEvent,
-    http: rive_http::Client,
+    http: Arc<rive_http_new::Client>,
 ) -> Result<(), Box<dyn Error + Sync + Send>> {
     if let ServerEvent::Message(message) = event {
         if message.content.is_some_and(|c| c.starts_with("!ping")) {
-            let data = SendMessageData {
-                content: Some("Pong!".to_owned()),
-                ..Default::default()
-            };
-            http.send_message(&message.channel, &data).await?;
+            http.send_message(&message.channel).content("Pong!").await?;
         };
     }
 

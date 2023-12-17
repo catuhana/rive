@@ -4,7 +4,7 @@ use serde::Serialize;
 use crate::{
     bot::FieldsBot,
     channel::{ChannelType, FieldsChannel},
-    embed::SendableEmbed,
+    embed::{SendableEmbed, SendableEmbedBorrowed},
     emoji::EmojiParent,
     id::{
         marker::{
@@ -13,7 +13,7 @@ use crate::{
         Id,
     },
     member::FieldsMember,
-    message::{Interactions, Masquerade, MessageSort, Reply},
+    message::{InteractionsBorrowed, MasqueradeBorrowed, MessageSort, ReplyBorrowed},
     mfa::MFAData,
     permission::{Override, Permission},
     report::{ReportStatus, ReportedContent},
@@ -27,27 +27,27 @@ fn if_false(t: &bool) -> bool {
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
-pub struct SendMessageData {
+pub struct SendMessageData<'a> {
     /// Message content to send
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub content: Option<String>,
+    pub content: Option<&'a str>,
     /// Attachments to include in message
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub attachments: Option<Vec<Id<AttachmentMarker>>>,
+    pub attachments: Option<&'a [Id<AttachmentMarker>]>,
     /// Messages to reply to
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub replies: Option<Vec<Reply>>,
+    pub replies: Option<&'a [ReplyBorrowed<'a>]>,
     /// Embeds to include in message
     ///
     /// Text embed content contributes to the content length cap
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub embeds: Option<Vec<SendableEmbed>>,
+    pub embeds: Option<&'a [SendableEmbedBorrowed<'a>]>,
     /// Masquerade to apply to this message
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub masquerade: Option<Masquerade>,
+    pub masquerade: Option<&'a MasqueradeBorrowed<'a>>,
     /// Information about how this message should be interacted with
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub interactions: Option<Interactions>,
+    pub interactions: Option<&'a InteractionsBorrowed<'a>>,
 }
 
 /// User data

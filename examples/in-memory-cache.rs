@@ -51,8 +51,10 @@ async fn handle_event(
         if content.starts_with("!messages") {
             let count = cache.stats().messages();
 
+            let content = format!("Cached messages: {count}");
+
             let data = SendMessageData {
-                content: Some(format!("Cached messages: {count}")),
+                content: Some(&content),
                 ..Default::default()
             };
             http.send_message(&message.channel, &data).await?;
@@ -70,7 +72,7 @@ async fn handle_event(
             };
 
             let data = SendMessageData {
-                content: Some(response),
+                content: Some(&response),
                 ..Default::default()
             };
             http.send_message(&message.channel, &data).await?;

@@ -56,7 +56,7 @@ impl Client {
     pub async fn send_message(
         &self,
         channel_id: &Id<ChannelMarker>,
-        data: &SendMessageData,
+        data: &SendMessageData<'_>,
     ) -> Result<Message> {
         Ok(self
             .client

@@ -9,6 +9,7 @@ futures = "0.3"
 rive = { path = "../rive" }
 rive-autumn = { path = "../rive-autumn" }
 rive-http = { path = "../rive-http" }
+rive-http-new = { path = "../rive-http-new", version = "1" }
 rive-gateway = { path = "../rive-gateway" }
 rive-models = { path = "../rive-models" }
 rive-cache-inmemory = { path = "../rive-cache-inmemory" }

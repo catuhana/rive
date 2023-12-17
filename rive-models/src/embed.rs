@@ -29,6 +29,36 @@ pub struct SendableEmbed {
     pub colour: Option<String>,
 }
 
+impl SendableEmbed {
+    pub fn as_borrowed<'a>(&'a self) -> SendableEmbedBorrowed<'a> {
+        SendableEmbedBorrowed {
+            icon_url: self.icon_url.as_deref(),
+            url: self.url.as_deref(),
+            title: self.title.as_deref(),
+            description: self.description.as_deref(),
+            media: self.media.as_deref(),
+            colour: self.colour.as_deref(),
+        }
+    }
+}
+
+/// Representation of a text embed before it is sent.
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+pub struct SendableEmbedBorrowed<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub icon_url: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub media: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub colour: Option<&'a str>,
+}
+
 /// Image
 #[derive(Deserialize, Debug, Clone)]
 pub struct Image {

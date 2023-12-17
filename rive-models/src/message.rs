@@ -120,6 +120,26 @@ pub struct Interactions {
     pub restrict_reactions: bool,
 }
 
+impl Interactions {
+    pub fn as_borrowed(&self) -> InteractionsBorrowed<'_> {
+        InteractionsBorrowed {
+            reactions: self.reactions.as_ref(),
+            restrict_reactions: self.restrict_reactions,
+        }
+    }
+}
+
+/// Information to guide interactions on this message
+#[derive(Serialize, Debug, Clone, Default)]
+pub struct InteractionsBorrowed<'a> {
+    /// Reactions which should always appear and be distinct
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub reactions: Option<&'a HashSet<String>>,
+    /// Whether reactions should be restricted to the given list
+    #[serde(default)]
+    pub restrict_reactions: bool,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Masquerade {
     /// Replace the display name shown on this message
@@ -137,6 +157,35 @@ pub struct Masquerade {
     /// This can be any valid CSS colour
     #[serde(skip_serializing_if = "Option::is_none")]
     pub colour: Option<String>,
+}
+
+impl Masquerade {
+    pub fn as_borrowed<'a>(&'a self) -> MasqueradeBorrowed<'a> {
+        MasqueradeBorrowed {
+            name: self.name.as_deref(),
+            avatar: self.avatar.as_deref(),
+            colour: self.colour.as_deref(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct MasqueradeBorrowed<'a> {
+    /// Replace the display name shown on this message
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<&'a str>,
+
+    /// Replace the avatar shown on this message (URL to image file)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub avatar: Option<&'a str>,
+
+    /// Replace the display role colour shown on this message
+    ///
+    /// Must have `ManageRole` permission to use
+    ///
+    /// This can be any valid CSS colour
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub colour: Option<&'a str>,
 }
 
 /// System message type
@@ -223,6 +272,24 @@ pub enum BulkMessageResponse {
 pub struct Reply {
     /// Message ID
     pub id: Id<MessageMarker>,
+    /// Whether this reply should mention the message's author
+    pub mention: bool,
+}
+
+impl Reply {
+    pub fn as_borrowed(&self) -> ReplyBorrowed<'_> {
+        ReplyBorrowed {
+            id: &self.id,
+            mention: self.mention,
+        }
+    }
+}
+
+/// Representation of a message reply before it is sent
+#[derive(Serialize, Clone, Debug)]
+pub struct ReplyBorrowed<'a> {
+    /// Message ID
+    pub id: &'a Id<MessageMarker>,
     /// Whether this reply should mention the message's author
     pub mention: bool,
 }

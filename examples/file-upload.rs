@@ -20,8 +20,9 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let upload_data = autumn.upload("attachments", file_name, file).await?;
 
+    let attachments = [upload_data.id];
     let data = SendMessageData {
-        attachments: Some(vec![upload_data.id]),
+        attachments: Some(&attachments),
         ..Default::default()
     };
     http.send_message(&channel_id, &data).await?;

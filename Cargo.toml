@@ -5,6 +5,7 @@ members = [
     "rive",
     "rive-models",
     "rive-http",
+    "rive-http-new",
     "rive-gateway",
     "rive-autumn",
     "rive-cache-inmemory",
