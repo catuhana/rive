@@ -32,9 +32,10 @@ pub struct Client {
 impl Client {
     pub(crate) async fn execute(&self, request: impl TryIntoRequest) -> Result<Response> {
         let request = request.try_into_request()?;
+
         let request = http::Request::builder()
             .method(request.method)
-            .uri(format!("{}{}", self.config.base_url, request.path))
+            .uri(self.config.base_url.clone() + &request.path)
             .header(
                 self.config.authentication.header_key(),
                 self.config.authentication.value(),
