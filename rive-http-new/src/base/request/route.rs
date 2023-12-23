@@ -1,4 +1,4 @@
-use std::fmt;
+use std::fmt::{self, Display};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Route<'a> {
@@ -17,7 +17,9 @@ impl<'a> fmt::Display for Route<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Route::SendMessage { channel_id } => {
-                f.write_fmt(format_args!("/channels/{channel_id}/messages"))
+                f.write_str("/channels/")?;
+                Display::fmt(channel_id, f)?;
+                f.write_str("/messages")
             }
         }
     }
