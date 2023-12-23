@@ -160,7 +160,7 @@ pub struct Masquerade {
 }
 
 impl Masquerade {
-    pub fn as_borrowed<'a>(&'a self) -> MasqueradeBorrowed<'a> {
+    pub fn as_borrowed(&self) -> MasqueradeBorrowed<'_> {
         MasqueradeBorrowed {
             name: self.name.as_deref(),
             avatar: self.avatar.as_deref(),

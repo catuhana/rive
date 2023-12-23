@@ -30,7 +30,7 @@ pub struct SendableEmbed {
 }
 
 impl SendableEmbed {
-    pub fn as_borrowed<'a>(&'a self) -> SendableEmbedBorrowed<'a> {
+    pub fn as_borrowed(&self) -> SendableEmbedBorrowed<'_> {
         SendableEmbedBorrowed {
             icon_url: self.icon_url.as_deref(),
             url: self.url.as_deref(),
