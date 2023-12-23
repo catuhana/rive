@@ -178,7 +178,7 @@ impl Remove<FieldsMember> for Member {
                 ..self
             },
             FieldsMember::Roles => Member {
-                roles: vec![],
+                roles: Vec::new(),
                 ..self
             },
             FieldsMember::Timeout => Member {
