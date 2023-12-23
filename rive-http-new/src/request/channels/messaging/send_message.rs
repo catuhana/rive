@@ -17,16 +17,16 @@ use crate::{
 
 pub struct SendMessageRequest<'a> {
     client: &'a Client,
-    data: SendMessageData<'a>,
     channel_id: &'a Id<ChannelMarker>,
+    data: SendMessageData<'a>,
 }
 
 impl<'a> SendMessageRequest<'a> {
     pub fn new(client: &'a Client, channel_id: &'a Id<ChannelMarker>) -> Self {
         Self {
-            client: &client,
+            client,
+            channel_id,
             data: SendMessageData::default(),
-            channel_id: channel_id,
         }
     }
 
@@ -42,6 +42,7 @@ impl<'a> SendMessageRequest<'a> {
         self.data.attachments = Some(attachments);
         self
     }
+
     pub fn replies(mut self, replies: &'a [ReplyBorrowed<'a>]) -> SendMessageRequest<'a> {
         self.data.replies = Some(replies);
         self

@@ -68,6 +68,8 @@ impl Client {
         }
     }
 
+    // TODO: remove this attribute when it will be used
+    #[allow(dead_code)]
     pub(crate) async fn wind(&self, request: impl TryIntoRequest) -> Result<()> {
         let response = self.execute(request).await?;
 
