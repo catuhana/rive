@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{
     attachment::Attachment,
@@ -14,7 +14,18 @@ bitflags::bitflags! {
         const Official = 2;
     }
 }
-crate::impl_serde_bitflags!(BotFlags);
+
+impl Serialize for BotFlags {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_u64(self.bits())
+    }
+}
+
+impl<'de> Deserialize<'de> for BotFlags {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 /// Public bot
 #[derive(Deserialize, Debug, Clone)]

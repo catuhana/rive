@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     attachment::Attachment,
@@ -89,7 +89,12 @@ bitflags::bitflags! {
         const Official = 2;
     }
 }
-crate::impl_serde_bitflags!(ServerFlags);
+
+impl<'de> Deserialize<'de> for ServerFlags {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 /// Representation of a server on Revolt
 #[derive(Deserialize, Debug, Clone)]

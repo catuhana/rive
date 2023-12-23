@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 bitflags::bitflags! {
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -79,7 +79,17 @@ bitflags::bitflags! {
         // % Bits 53 to 64: do not use
     }
 }
-crate::impl_serde_bitflags!(Permission);
+impl Serialize for Permission {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_u64(self.bits())
+    }
+}
+
+impl<'de> Deserialize<'de> for Permission {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 bitflags::bitflags! {
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -91,7 +101,12 @@ bitflags::bitflags! {
         const Invite = 1 << 3;
     }
 }
-crate::impl_serde_bitflags!(UserPermission);
+
+impl<'de> Deserialize<'de> for UserPermission {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 /// Representation of a single permission override
 /// as it appears on models and in the database
