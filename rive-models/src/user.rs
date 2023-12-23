@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     attachment::Attachment,
@@ -115,7 +115,12 @@ bitflags::bitflags! {
         const ReservedRelevantJokeBadge2 = 1 << 10;
     }
 }
-crate::impl_serde_bitflags!(Badges);
+
+impl<'de> Deserialize<'de> for Badges {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 bitflags::bitflags! {
     /// User flag enum
@@ -131,7 +136,12 @@ bitflags::bitflags! {
         const Spam = 8;
     }
 }
-crate::impl_serde_bitflags!(UserFlags);
+
+impl<'de> Deserialize<'de> for UserFlags {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(Self::from_bits_truncate(u64::deserialize(deserializer)?))
+    }
+}
 
 /// Bot information for if the user is a bot
 #[derive(Deserialize, Debug, Clone)]
