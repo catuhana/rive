@@ -15,6 +15,7 @@ use crate::{
     Client, ResponseFuture, Result,
 };
 
+#[must_use = "requests must be configured and executed"]
 pub struct SendMessageRequest<'a> {
     client: &'a Client,
     channel_id: &'a Id<ChannelMarker>,
@@ -22,11 +23,18 @@ pub struct SendMessageRequest<'a> {
 }
 
 impl<'a> SendMessageRequest<'a> {
-    pub fn new(client: &'a Client, channel_id: &'a Id<ChannelMarker>) -> Self {
+    pub(crate) const fn new(client: &'a Client, channel_id: &'a Id<ChannelMarker>) -> Self {
         Self {
             client,
             channel_id,
-            data: SendMessageData::default(),
+            data: SendMessageData {
+                content: None,
+                attachments: None,
+                replies: None,
+                embeds: None,
+                masquerade: None,
+                interactions: None,
+            },
         }
     }
 

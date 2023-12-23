@@ -97,7 +97,10 @@ impl Client {
         Self { config, client }
     }
 
-    pub fn send_message<'a>(&'a self, channel_id: &'a Id<ChannelMarker>) -> SendMessageRequest<'a> {
+    pub const fn send_message<'a>(
+        &'a self,
+        channel_id: &'a Id<ChannelMarker>,
+    ) -> SendMessageRequest<'a> {
         SendMessageRequest::new(self, channel_id)
     }
 }
