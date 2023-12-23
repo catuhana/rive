@@ -1,3 +1,5 @@
+> Note: the new major version is being worked on in the [`v2`](https://codeberg.org/rive/rive/src/branch/v2) branch, which will then be merged into the `main` branch. Only bug fixes are accepted into the `main`.
+
 # Rive
 
 [//]: <> (DO NOT FORGET TO CHANGE THE BRANCH NAME TO main BEFORE MERGING PLEAAAASE)
