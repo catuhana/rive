@@ -3,6 +3,7 @@ pub mod error;
 pub mod request;
 
 mod client;
+mod connector;
 pub use client::Client;
 
 mod config;

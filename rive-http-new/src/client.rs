@@ -1,9 +1,6 @@
 use http_body_util::Full;
 use hyper::body::Bytes;
-use hyper_util::{
-    client::legacy::{connect::HttpConnector, Client as HyperClient},
-    rt::TokioExecutor,
-};
+use hyper_util::{client::legacy::Client as HyperClient, rt::TokioExecutor};
 use rive_models::{
     authentication::Authentication,
     id::{marker::ChannelMarker, Id},
@@ -12,16 +9,11 @@ use serde::de::DeserializeOwned;
 
 use crate::{
     base::{request::TryIntoRequest, response::Response},
+    connector::{create_connector, Connector},
     error::{Error, ErrorKind},
     request::channels::messaging::SendMessageRequest,
     Config, Result, BASE_URL,
 };
-
-#[cfg(feature = "native-tls")]
-type Connector = hyper_tls::HttpsConnector<HttpConnector>;
-
-#[cfg(not(feature = "native-tls"))]
-type Connector = HttpConnector;
 
 #[derive(Debug)]
 pub struct Client {
@@ -90,7 +82,7 @@ impl Client {
     }
 
     pub fn with_config(config: Config) -> Self {
-        let connector = Connector::new();
+        let connector = create_connector();
         let executor = TokioExecutor::new();
         let client = HyperClient::builder(executor).build(connector);
 
