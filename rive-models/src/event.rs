@@ -33,7 +33,7 @@ pub enum ErrorId {
     InternalError {
         at: String,
     },
-    InvalidSenssion,
+    InvalidSession,
     OnboardingNotFinished,
     AlreadyAuthenticated,
     MalformedData {

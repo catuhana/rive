@@ -12,11 +12,11 @@ keywords.workspace = true
 
 [dependencies]
 futures = "0.3"
-http = "0.2"
+http = "1"
 rive-models = { path = "../rive-models", version = "1", default-features = false }
 serde_json = "1"
 tokio = { version = "1", features = ["macros", "rt", "time"] }
-tokio-websockets = { version = "0.4", features = ["client", "fastrand"] }
+tokio-websockets = { version = "0.5", features = ["client", "fastrand"] }
 tracing = "0.1"
 
 [dev-dependencies]

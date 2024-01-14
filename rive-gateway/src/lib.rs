@@ -20,11 +20,11 @@ use rive_models::{
     event::{ClientEvent, ServerEvent},
 };
 use tokio::{net::TcpStream, time};
-use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebsocketStream};
+use tokio_websockets::{Error as WsError, MaybeTlsStream, Message as WsMessage, WebSocketStream};
 use tracing::{debug, instrument};
 
 /// Type alias of a raw Websocket object.
-type Socket = WebsocketStream<MaybeTlsStream<TcpStream>>;
+type Socket = WebSocketStream<MaybeTlsStream<TcpStream>>;
 
 /// Base WebSocket API URL of official Revolt instance.
 pub const BASE_URL: &str = "wss://ws.revolt.chat";
