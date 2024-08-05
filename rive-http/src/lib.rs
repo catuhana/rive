@@ -97,13 +97,13 @@ pub struct Client {
 impl Client {
     /// Create a client instance with the API base URL of Revolt official instance.
     pub fn new(authentication: Authentication) -> Self {
-        Client::new_base_url(authentication, BASE_URL)
+        Self::new_base_url(authentication, BASE_URL)
     }
 
     /// Create a client instance with given base URL.
-    pub fn new_base_url(authentication: Authentication, base_url: impl Into<String>) -> Self {
-        Client {
-            base_url: base_url.into(),
+    pub fn new_base_url(authentication: Authentication, base_url: impl ToString) -> Self {
+        Self {
+            base_url: base_url.to_string(),
             client: reqwest::Client::builder()
                 .user_agent("rive-http")
                 .build()

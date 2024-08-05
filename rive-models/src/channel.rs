@@ -151,7 +151,7 @@ pub struct PartialChannel {
 }
 
 /// Channel type
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Default)]
 pub enum ChannelType {
     #[default]
     Text,
@@ -159,7 +159,7 @@ pub enum ChannelType {
 }
 
 /// Optional fields on channel object
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum FieldsChannel {
     Description,
     Icon,
@@ -195,7 +195,7 @@ pub enum PartialInvite {
 }
 
 /// Composite primary key consisting of channel and user ID
-#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[derive(Deserialize, Debug, PartialEq, Eq, Clone)]
 pub struct ChannelCompositeKey {
     /// Channel ID
     pub channel: Id<ChannelMarker>,

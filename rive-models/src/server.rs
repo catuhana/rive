@@ -217,7 +217,7 @@ pub struct BanList {
 }
 
 /// Optional fields on server object
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum FieldsServer {
     Description,
     Categories,
@@ -227,7 +227,7 @@ pub enum FieldsServer {
 }
 
 /// Optional fields on server object
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum FieldsRole {
     Colour,
 }

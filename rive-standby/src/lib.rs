@@ -23,7 +23,7 @@ impl Standby {
     /// Create a new [`Standby`].
     pub fn new() -> Self {
         let (tx, _) = channel(1);
-        Standby { tx }
+        Self { tx }
     }
 
     /// Update bystander state by processing an incoming event.

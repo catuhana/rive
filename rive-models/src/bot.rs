@@ -117,7 +117,7 @@ pub struct OwnedBot {
 }
 
 /// Optional fields on bot object
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum FieldsBot {
     Token,
     InteractionsURL,

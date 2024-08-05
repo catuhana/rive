@@ -14,17 +14,17 @@ impl GatewayBuilder {
         Self(Config::new())
     }
 
-    pub fn auth(mut self, auth: Authentication) -> GatewayBuilder {
+    pub fn auth(mut self, auth: Authentication) -> Self {
         self.0.auth = auth;
         self
     }
 
-    pub fn base_url(mut self, base_url: String) -> GatewayBuilder {
+    pub fn base_url(mut self, base_url: String) -> Self {
         self.0.base_url = base_url;
         self
     }
 
-    pub fn heartbeat_fn(mut self, heartbeat: Option<fn() -> Ping>) -> GatewayBuilder {
+    pub fn heartbeat_fn(mut self, heartbeat: Option<fn() -> Ping>) -> Self {
         self.0.heartbeat = heartbeat;
         self
     }

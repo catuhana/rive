@@ -19,10 +19,10 @@ compile_error!(
 );
 
 #[cfg(feature = "native")]
-pub(crate) type Connector = hyper_tls::HttpsConnector<HttpConnector>;
+pub type Connector = hyper_tls::HttpsConnector<HttpConnector>;
 
 #[cfg(any(feature = "rustls-native-roots", feature = "rustls-webpki-roots"))]
-pub(crate) type Connector = hyper_rustls::HttpsConnector<HttpConnector>;
+pub type Connector = hyper_rustls::HttpsConnector<HttpConnector>;
 
 #[cfg(not(any(
     feature = "native",
@@ -31,7 +31,7 @@ pub(crate) type Connector = hyper_rustls::HttpsConnector<HttpConnector>;
 )))]
 pub(crate) type Connector = HttpConnector;
 
-pub(crate) fn create_connector() -> Connector {
+pub fn create_connector() -> Connector {
     let mut connector = HttpConnector::new();
     connector.enforce_http(false);
 

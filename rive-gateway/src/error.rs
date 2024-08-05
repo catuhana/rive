@@ -56,7 +56,7 @@ impl ReceiveError {
 
     /// An immutable reference to the type of error that occurred.
     #[must_use]
-    pub fn kind(&self) -> &ReceiveErrorKind {
+    pub const fn kind(&self) -> &ReceiveErrorKind {
         &self.kind
     }
 
@@ -121,7 +121,7 @@ impl SendError {
 
     /// An immutable reference to the type of error that occurred.
     #[must_use]
-    pub fn kind(&self) -> &SendErrorKind {
+    pub const fn kind(&self) -> &SendErrorKind {
         &self.kind
     }
 

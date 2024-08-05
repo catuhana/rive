@@ -121,7 +121,7 @@ pub struct Interactions {
 }
 
 impl Interactions {
-    pub fn as_borrowed(&self) -> InteractionsBorrowed<'_> {
+    pub const fn as_borrowed(&self) -> InteractionsBorrowed<'_> {
         InteractionsBorrowed {
             reactions: self.reactions.as_ref(),
             restrict_reactions: self.restrict_reactions,
@@ -277,7 +277,7 @@ pub struct Reply {
 }
 
 impl Reply {
-    pub fn as_borrowed(&self) -> ReplyBorrowed<'_> {
+    pub const fn as_borrowed(&self) -> ReplyBorrowed<'_> {
         ReplyBorrowed {
             id: &self.id,
             mention: self.mention,

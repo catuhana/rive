@@ -53,13 +53,13 @@ impl Default for Client {
 impl Client {
     /// Create a client with Revolt official instance base URL.
     pub fn new() -> Self {
-        Client::new_base_url(BASE_URL)
+        Self::new_base_url(BASE_URL)
     }
 
     /// Create a client instance with given base URL.
-    pub fn new_base_url(base_url: impl Into<String>) -> Self {
-        Client {
-            base_url: base_url.into(),
+    pub fn new_base_url(base_url: impl ToString) -> Self {
+        Self {
+            base_url: base_url.to_string(),
             client: reqwest::Client::new(),
         }
     }
@@ -81,7 +81,7 @@ impl Client {
     /// Download an attachment by its tag and ID.
     pub async fn download(
         &self,
-        tag: impl Into<String>,
+        tag: impl ToString,
         id: &Id<AttachmentMarker>,
     ) -> Result<impl AsyncRead> {
         let response = self
@@ -89,7 +89,7 @@ impl Client {
             .get(format!(
                 "{}/{}/{}",
                 self.base_url,
-                tag.into(),
+                tag.to_string(),
                 id.value_ref()
             ))
             .send()
@@ -111,18 +111,18 @@ impl Client {
     /// Upload an attachment.
     pub async fn upload(
         &self,
-        tag: impl Into<String>,
-        filename: impl Into<String>,
+        tag: impl ToString,
+        filename: impl ToString,
         contents: impl AsyncRead + Send + Sync + 'static,
     ) -> Result<UploadData> {
         let stream = FramedRead::new(contents, BytesCodec::new());
         let body = Body::wrap_stream(stream);
-        let part = Part::stream(body).file_name(filename.into());
+        let part = Part::stream(body).file_name(filename.to_string());
         let form = Form::new().part("file", part);
 
         let response = self
             .client
-            .post(format!("{}/{}", self.base_url, tag.into()))
+            .post(format!("{}/{}", self.base_url, tag.to_string()))
             .multipart(form)
             .send()
             .await?;

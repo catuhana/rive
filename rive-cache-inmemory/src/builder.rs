@@ -14,37 +14,37 @@ impl InMemoryCacheBuilder {
     }
 
     /// Set whether users should be cached.
-    pub fn cache_users(mut self, value: bool) -> Self {
+    pub const fn cache_users(mut self, value: bool) -> Self {
         self.0.cache_users = value;
         self
     }
 
     /// Set whether servers should be cached.
-    pub fn cache_servers(mut self, value: bool) -> Self {
+    pub const fn cache_servers(mut self, value: bool) -> Self {
         self.0.cache_servers = value;
         self
     }
 
     /// Set whether channels should be cached.
-    pub fn cache_channels(mut self, value: bool) -> Self {
+    pub const fn cache_channels(mut self, value: bool) -> Self {
         self.0.cache_channels = value;
         self
     }
 
     /// Set whether messages should be cached.
-    pub fn cache_messages(mut self, value: bool) -> Self {
+    pub const fn cache_messages(mut self, value: bool) -> Self {
         self.0.cache_messages = value;
         self
     }
 
     /// Set whether emojis should be cached.
-    pub fn cache_emojis(mut self, value: bool) -> Self {
+    pub const fn cache_emojis(mut self, value: bool) -> Self {
         self.0.cache_emojis = value;
         self
     }
 
     /// Set whether members should be cached.
-    pub fn cache_members(mut self, value: bool) -> Self {
+    pub const fn cache_members(mut self, value: bool) -> Self {
         self.0.cache_members = value;
         self
     }

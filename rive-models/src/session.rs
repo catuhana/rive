@@ -9,7 +9,6 @@ use serde::Deserialize;
 
 /// Web Push subscription
 #[derive(Deserialize, Debug, Clone)]
-#[cfg_attr(feature = "schemas", derive(JsonSchema))]
 pub struct WebPushSubscription {
     pub endpoint: String,
     pub p256dh: String,

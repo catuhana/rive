@@ -38,38 +38,32 @@ impl<'a> SendMessageRequest<'a> {
         }
     }
 
-    pub fn content(mut self, content: &'a str) -> SendMessageRequest<'a> {
+    pub const fn content(mut self, content: &'a str) -> Self {
         self.data.content = Some(content);
         self
     }
 
-    pub fn attachments(
-        mut self,
-        attachments: &'a [Id<AttachmentMarker>],
-    ) -> SendMessageRequest<'a> {
+    pub const fn attachments(mut self, attachments: &'a [Id<AttachmentMarker>]) -> Self {
         self.data.attachments = Some(attachments);
         self
     }
 
-    pub fn replies(mut self, replies: &'a [ReplyBorrowed<'a>]) -> SendMessageRequest<'a> {
+    pub const fn replies(mut self, replies: &'a [ReplyBorrowed<'a>]) -> Self {
         self.data.replies = Some(replies);
         self
     }
 
-    pub fn embeds(mut self, embeds: &'a [SendableEmbedBorrowed<'a>]) -> SendMessageRequest<'a> {
+    pub const fn embeds(mut self, embeds: &'a [SendableEmbedBorrowed<'a>]) -> Self {
         self.data.embeds = Some(embeds);
         self
     }
 
-    pub fn masquerade(mut self, masquerade: &'a MasqueradeBorrowed) -> SendMessageRequest<'a> {
+    pub const fn masquerade(mut self, masquerade: &'a MasqueradeBorrowed) -> Self {
         self.data.masquerade = Some(masquerade);
         self
     }
 
-    pub fn interactions(
-        mut self,
-        interactions: &'a InteractionsBorrowed,
-    ) -> SendMessageRequest<'a> {
+    pub const fn interactions(mut self, interactions: &'a InteractionsBorrowed) -> Self {
         self.data.interactions = Some(interactions);
         self
     }

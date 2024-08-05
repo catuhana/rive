@@ -20,7 +20,7 @@ pub mod http {
     pub use rive_http::*;
 }
 
-/// Client for the Revolt WebSocket API
+/// Client for the Revolt `WebSocket` API
 ///
 /// A re-export of [`rive_gateway`].
 pub mod gateway {
@@ -97,7 +97,7 @@ impl Rive {
     /// Creates a new [`Rive`].
     // TODO: make a separated error struct instead of gateway error exclusively?
     // i mean that's kinda crappy isn't it? ------------>  VVVVVVVVVVVVVVVVVVV
-    pub async fn new(auth: Authentication) -> Self {
+    pub fn new(auth: Authentication) -> Self {
         let http = rive_http::Client::new(auth.clone());
         let gateway = Arc::new(Gateway::new(auth));
         let autumn = rive_autumn::Client::new();

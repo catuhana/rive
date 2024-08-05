@@ -15,33 +15,33 @@ pub trait Remove<T> {
 impl Remove<FieldsUser> for User {
     fn remove(self, field: &FieldsUser) -> Self {
         match field {
-            FieldsUser::Avatar => User {
+            FieldsUser::Avatar => Self {
                 avatar: None,
                 ..self
             },
-            FieldsUser::StatusText => User {
+            FieldsUser::StatusText => Self {
                 status: self.status.map(|s| UserStatus { text: None, ..s }),
                 ..self
             },
-            FieldsUser::StatusPresence => User {
+            FieldsUser::StatusPresence => Self {
                 status: self.status.map(|s| UserStatus {
                     presence: None,
                     ..s
                 }),
                 ..self
             },
-            FieldsUser::ProfileContent => User {
+            FieldsUser::ProfileContent => Self {
                 profile: self.profile.map(|p| UserProfile { content: None, ..p }),
                 ..self
             },
-            FieldsUser::ProfileBackground => User {
+            FieldsUser::ProfileBackground => Self {
                 profile: self.profile.map(|p| UserProfile {
                     background: None,
                     ..p
                 }),
                 ..self
             },
-            FieldsUser::DisplayName => User {
+            FieldsUser::DisplayName => Self {
                 avatar: None,
                 ..self
             },
@@ -52,20 +52,20 @@ impl Remove<FieldsUser> for User {
 impl Remove<FieldsServer> for Server {
     fn remove(self, field: &FieldsServer) -> Self {
         match field {
-            FieldsServer::Description => Server {
+            FieldsServer::Description => Self {
                 description: None,
                 ..self
             },
-            FieldsServer::Categories => Server {
+            FieldsServer::Categories => Self {
                 categories: None,
                 ..self
             },
-            FieldsServer::SystemMessages => Server {
+            FieldsServer::SystemMessages => Self {
                 system_messages: None,
                 ..self
             },
-            FieldsServer::Icon => Server { icon: None, ..self },
-            FieldsServer::Banner => Server {
+            FieldsServer::Icon => Self { icon: None, ..self },
+            FieldsServer::Banner => Self {
                 banner: None,
                 ..self
             },
@@ -76,7 +76,7 @@ impl Remove<FieldsServer> for Server {
 impl Remove<FieldsChannel> for Channel {
     fn remove(self, field: &FieldsChannel) -> Self {
         match self {
-            Channel::Group {
+            Self::Group {
                 id,
                 name,
                 owner,
@@ -86,7 +86,7 @@ impl Remove<FieldsChannel> for Channel {
                 last_message_id,
                 permissions,
                 nsfw,
-            } => Channel::Group {
+            } => Self::Group {
                 id,
                 name,
                 owner,
@@ -103,7 +103,7 @@ impl Remove<FieldsChannel> for Channel {
                 permissions,
                 nsfw,
             },
-            Channel::TextChannel {
+            Self::TextChannel {
                 id,
                 server,
                 name,
@@ -113,7 +113,7 @@ impl Remove<FieldsChannel> for Channel {
                 default_permissions,
                 role_permissions,
                 nsfw,
-            } => Channel::TextChannel {
+            } => Self::TextChannel {
                 id,
                 server,
                 name,
@@ -133,7 +133,7 @@ impl Remove<FieldsChannel> for Channel {
                 role_permissions,
                 nsfw,
             },
-            Channel::VoiceChannel {
+            Self::VoiceChannel {
                 id,
                 server,
                 name,
@@ -142,7 +142,7 @@ impl Remove<FieldsChannel> for Channel {
                 default_permissions,
                 role_permissions,
                 nsfw,
-            } => Channel::VoiceChannel {
+            } => Self::VoiceChannel {
                 id,
                 server,
                 name,
@@ -169,19 +169,19 @@ impl Remove<FieldsChannel> for Channel {
 impl Remove<FieldsMember> for Member {
     fn remove(self, field: &FieldsMember) -> Self {
         match field {
-            FieldsMember::Nickname => Member {
+            FieldsMember::Nickname => Self {
                 nickname: None,
                 ..self
             },
-            FieldsMember::Avatar => Member {
+            FieldsMember::Avatar => Self {
                 avatar: None,
                 ..self
             },
-            FieldsMember::Roles => Member {
+            FieldsMember::Roles => Self {
                 roles: Vec::new(),
                 ..self
             },
-            FieldsMember::Timeout => Member {
+            FieldsMember::Timeout => Self {
                 timeout: None,
                 ..self
             },
@@ -192,7 +192,7 @@ impl Remove<FieldsMember> for Member {
 impl Remove<FieldsRole> for Role {
     fn remove(self, field: &FieldsRole) -> Self {
         match field {
-            FieldsRole::Colour => Role {
+            FieldsRole::Colour => Self {
                 colour: None,
                 ..self
             },

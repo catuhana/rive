@@ -27,7 +27,7 @@ impl RequestBuilder {
         Self::new().route(route)
     }
 
-    pub fn route(self, route: Route) -> RequestBuilder {
+    pub fn route(self, route: Route) -> Self {
         self.and_then(move |mut request| {
             request.method = route.method();
             request.path = route.to_string();
@@ -35,7 +35,7 @@ impl RequestBuilder {
         })
     }
 
-    pub fn json<T>(self, object: &T) -> RequestBuilder
+    pub fn json<T>(self, object: &T) -> Self
     where
         T: Serialize,
     {
@@ -56,8 +56,14 @@ impl RequestBuilder {
     where
         F: FnOnce(Request) -> Result<Request>,
     {
-        RequestBuilder {
+        Self {
             inner: self.inner.and_then(func),
         }
+    }
+}
+
+impl Default for RequestBuilder {
+    fn default() -> Self {
+        Self::new()
     }
 }

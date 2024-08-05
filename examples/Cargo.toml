@@ -32,4 +32,3 @@ path = "file-upload.rs"
 [[example]]
 name = "in-memory-cache"
 path = "in-memory-cache.rs"
-

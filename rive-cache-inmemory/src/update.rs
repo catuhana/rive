@@ -38,31 +38,31 @@ pub trait CacheUpdate: private::Sealed {
 impl CacheUpdate for ServerEvent {
     fn update(&self, cache: &InMemoryCache) {
         match self {
-            ServerEvent::Bulk(event) => cache.update(event),
-            ServerEvent::Ready(event) => cache.update(event),
-            ServerEvent::UserUpdate(event) => cache.update(event),
-            ServerEvent::ServerCreate(event) => cache.update(event),
-            ServerEvent::ServerUpdate(event) => cache.update(event),
-            ServerEvent::ServerDelete(event) => cache.update(event),
-            ServerEvent::ChannelCreate(event) => cache.update(event),
-            ServerEvent::ChannelUpdate(event) => cache.update(event),
-            ServerEvent::ChannelDelete(event) => cache.update(event),
-            ServerEvent::Message(event) => cache.update(event),
-            ServerEvent::MessageUpdate(event) => cache.update(event),
-            ServerEvent::MessageAppend(event) => cache.update(event),
-            ServerEvent::MessageReact(event) => cache.update(event),
-            ServerEvent::MessageUnreact(event) => cache.update(event),
-            ServerEvent::MessageRemoveReaction(event) => cache.update(event),
-            ServerEvent::MessageDelete(event) => cache.update(event),
-            ServerEvent::BulkMessageDelete(event) => cache.update(event),
-            ServerEvent::EmojiCreate(event) => cache.update(event),
-            ServerEvent::EmojiDelete(event) => cache.update(event),
-            ServerEvent::ServerMemberJoin(event) => cache.update(event),
-            ServerEvent::ServerMemberUpdate(event) => cache.update(event),
-            ServerEvent::ServerMemberLeave(event) => cache.update(event),
-            ServerEvent::ServerRoleUpdate(event) => cache.update(event),
-            ServerEvent::ServerRoleDelete(event) => cache.update(event),
-            ServerEvent::UserPlatformWipe(event) => cache.update(event),
+            Self::Bulk(event) => cache.update(event),
+            Self::Ready(event) => cache.update(event),
+            Self::UserUpdate(event) => cache.update(event),
+            Self::ServerCreate(event) => cache.update(event),
+            Self::ServerUpdate(event) => cache.update(event),
+            Self::ServerDelete(event) => cache.update(event),
+            Self::ChannelCreate(event) => cache.update(event),
+            Self::ChannelUpdate(event) => cache.update(event),
+            Self::ChannelDelete(event) => cache.update(event),
+            Self::Message(event) => cache.update(event),
+            Self::MessageUpdate(event) => cache.update(event),
+            Self::MessageAppend(event) => cache.update(event),
+            Self::MessageReact(event) => cache.update(event),
+            Self::MessageUnreact(event) => cache.update(event),
+            Self::MessageRemoveReaction(event) => cache.update(event),
+            Self::MessageDelete(event) => cache.update(event),
+            Self::BulkMessageDelete(event) => cache.update(event),
+            Self::EmojiCreate(event) => cache.update(event),
+            Self::EmojiDelete(event) => cache.update(event),
+            Self::ServerMemberJoin(event) => cache.update(event),
+            Self::ServerMemberUpdate(event) => cache.update(event),
+            Self::ServerMemberLeave(event) => cache.update(event),
+            Self::ServerRoleUpdate(event) => cache.update(event),
+            Self::ServerRoleDelete(event) => cache.update(event),
+            Self::UserPlatformWipe(event) => cache.update(event),
             _ => {}
         };
     }
@@ -126,7 +126,7 @@ impl CacheUpdate for UserUpdateEvent {
         };
         let new_user = update_fields(user, &self.data, &self.clear);
 
-        cache.users.insert(new_user.id.clone(), new_user.clone());
+        cache.users.insert(new_user.id.clone(), new_user);
     }
 }
 
@@ -155,7 +155,7 @@ impl CacheUpdate for ServerUpdateEvent {
             Some(server) => server.clone(),
             None => return,
         };
-        let new_server = update_fields(server.clone(), &self.data, &self.clear);
+        let new_server = update_fields(server, &self.data, &self.clear);
 
         cache.servers.insert(new_server.id.clone(), new_server);
     }
@@ -189,7 +189,7 @@ impl CacheUpdate for ChannelUpdateEvent {
             Some(channel) => channel.clone(),
             None => return,
         };
-        let new_channel = update_fields(channel.clone(), &self.data, &self.clear);
+        let new_channel = update_fields(channel, &self.data, &self.clear);
 
         cache
             .channels
@@ -240,18 +240,17 @@ impl CacheUpdate for MessageAppendEvent {
             None => return,
         };
 
-        // it should work like this, right? it's 3 AM im kinda eepy
-        let new_embeds = match message.embeds {
-            Some(embeds) => match &self.append.embeds {
+        let new_embeds = message.embeds.map_or_else(
+            || self.append.embeds.clone(),
+            |embeds| match &self.append.embeds {
                 Some(append_embeds) => {
-                    let mut emb = embeds;
-                    emb.extend(append_embeds.clone());
-                    Some(emb)
+                    let mut embeds = embeds;
+                    embeds.extend(append_embeds.clone());
+                    Some(embeds)
                 }
                 None => Some(embeds),
             },
-            None => self.append.embeds.clone(),
-        };
+        );
 
         let new_message = Message {
             embeds: new_embeds,
@@ -273,7 +272,7 @@ impl CacheUpdate for MessageReactEvent {
             None => return,
         };
 
-        let mut new_message = message.clone();
+        let mut new_message = message;
         new_message
             .reactions
             .entry(self.emoji_id.clone())
@@ -295,7 +294,7 @@ impl CacheUpdate for MessageUnreactEvent {
             None => return,
         };
 
-        let mut new_message = message.clone();
+        let mut new_message = message;
         if let Entry::Occupied(mut entry) = new_message.reactions.entry(self.emoji_id.clone()) {
             entry.get_mut().remove(&self.user_id);
             if entry.get().is_empty() {
@@ -318,7 +317,7 @@ impl CacheUpdate for MessageRemoveReactionEvent {
             None => return,
         };
 
-        let mut new_message = message.clone();
+        let mut new_message = message;
         new_message.reactions.remove(&self.emoji_id);
 
         cache.messages.insert(new_message.id.clone(), new_message);

@@ -156,7 +156,7 @@ impl<T> PartialEq for Id<T> {
 
 impl<T> Clone for Id<T> {
     fn clone(&self) -> Self {
-        Id::new(self.value.clone())
+        Self::new(self.value.clone())
     }
 }
 
@@ -168,7 +168,7 @@ impl<T> From<Id<T>> for String {
 
 impl<T> From<String> for Id<T> {
     fn from(value: String) -> Self {
-        Id::new(value)
+        Self::new(value)
     }
 }
 
@@ -205,7 +205,7 @@ impl<'de, T> Deserialize<'de> for Id<T> {
                 self,
                 deserializer: D,
             ) -> Result<Self::Value, D::Error> {
-                deserializer.deserialize_any(IdVisitor::new())
+                deserializer.deserialize_any(Self::new())
             }
 
             fn visit_str<E: de::Error>(self, v: &str) -> Result<Self::Value, E> {

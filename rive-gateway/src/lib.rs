@@ -107,16 +107,16 @@ impl Gateway {
     }
 
     /// Create a new [`Gateway`] with given base URL and authentication token.
-    pub fn with_url(url: impl Into<String>, auth: Authentication) -> Self {
+    pub fn with_url(url: impl ToString, auth: Authentication) -> Self {
         Self::with_config(Config {
             auth,
-            base_url: url.into(),
+            base_url: url.to_string(),
             ..Default::default()
         })
     }
 
     /// Create a new [`Gateway`] with given configuration.
-    pub fn with_config(config: Config) -> Self {
+    pub const fn with_config(config: Config) -> Self {
         Self {
             socket: None,
             config,

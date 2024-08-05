@@ -9,13 +9,13 @@ use rive_models::{
 /// Unwrap and clone [a] or return [b]
 #[inline(always)]
 fn unwrap<T: Clone>(a: &Option<T>, b: T) -> T {
-    a.as_ref().map(Clone::clone).unwrap_or(b)
+    a.clone().unwrap_or(b)
 }
 
 /// Return either [a] or [b]
 #[inline(always)]
 fn either<T: Clone>(a: &Option<T>, b: Option<T>) -> Option<T> {
-    a.as_ref().map(Clone::clone).or(b)
+    a.clone().or(b)
 }
 
 /// A trait for updating resource fields.
@@ -26,7 +26,7 @@ pub trait Patch<T> {
 
 impl Patch<PartialUser> for User {
     fn patch(self, partial: &PartialUser) -> Self {
-        User {
+        Self {
             id: unwrap(&partial.id, self.id),
             username: unwrap(&partial.username, self.username),
             discriminator: unwrap(&partial.discriminator, self.discriminator),
@@ -47,7 +47,7 @@ impl Patch<PartialUser> for User {
 
 impl Patch<PartialServer> for Server {
     fn patch(self, partial: &PartialServer) -> Self {
-        Server {
+        Self {
             id: self.id,
             owner: unwrap(&partial.owner, self.owner),
             name: unwrap(&partial.name, self.name),
@@ -68,21 +68,21 @@ impl Patch<PartialServer> for Server {
 }
 
 impl Patch<PartialChannel> for Channel {
-    fn patch(self, partial: &PartialChannel) -> Channel {
+    fn patch(self, partial: &PartialChannel) -> Self {
         match self {
-            Channel::SavedMessages { id, user } => Channel::SavedMessages { id, user },
-            Channel::DirectMessage {
+            Self::SavedMessages { id, user } => Self::SavedMessages { id, user },
+            Self::DirectMessage {
                 id,
                 active,
                 recipients,
                 last_message_id,
-            } => Channel::DirectMessage {
+            } => Self::DirectMessage {
                 id,
                 active: unwrap(&partial.active, active),
                 recipients,
                 last_message_id: either(&partial.last_message_id, last_message_id),
             },
-            Channel::Group {
+            Self::Group {
                 id,
                 name,
                 owner,
@@ -92,7 +92,7 @@ impl Patch<PartialChannel> for Channel {
                 last_message_id,
                 permissions,
                 nsfw,
-            } => Channel::Group {
+            } => Self::Group {
                 id,
                 name: unwrap(&partial.name, name),
                 owner: unwrap(&partial.owner, owner),
@@ -103,7 +103,7 @@ impl Patch<PartialChannel> for Channel {
                 permissions: either(&partial.permissions, permissions),
                 nsfw: unwrap(&partial.nsfw, nsfw),
             },
-            Channel::TextChannel {
+            Self::TextChannel {
                 id,
                 server,
                 name,
@@ -113,7 +113,7 @@ impl Patch<PartialChannel> for Channel {
                 default_permissions,
                 role_permissions,
                 nsfw,
-            } => Channel::TextChannel {
+            } => Self::TextChannel {
                 id,
                 server,
                 name: unwrap(&partial.name, name),
@@ -124,7 +124,7 @@ impl Patch<PartialChannel> for Channel {
                 role_permissions: unwrap(&partial.role_permissions, role_permissions),
                 nsfw: unwrap(&partial.nsfw, nsfw),
             },
-            Channel::VoiceChannel {
+            Self::VoiceChannel {
                 id,
                 server,
                 name,
@@ -133,7 +133,7 @@ impl Patch<PartialChannel> for Channel {
                 default_permissions,
                 role_permissions,
                 nsfw,
-            } => Channel::VoiceChannel {
+            } => Self::VoiceChannel {
                 id,
                 server,
                 name: unwrap(&partial.name, name),
@@ -149,7 +149,7 @@ impl Patch<PartialChannel> for Channel {
 
 impl Patch<PartialMessage> for Message {
     fn patch(self, partial: &PartialMessage) -> Self {
-        Message {
+        Self {
             id: unwrap(&partial.id, self.id),
             nonce: either(&partial.nonce, self.nonce),
             channel: unwrap(&partial.channel, self.channel),
@@ -170,7 +170,7 @@ impl Patch<PartialMessage> for Message {
 
 impl Patch<PartialMember> for Member {
     fn patch(self, partial: &PartialMember) -> Self {
-        Member {
+        Self {
             id: unwrap(&partial.id, self.id),
             joined_at: unwrap(&partial.joined_at, self.joined_at),
             nickname: either(&partial.nickname, self.nickname),
@@ -183,7 +183,7 @@ impl Patch<PartialMember> for Member {
 
 impl Patch<PartialRole> for Role {
     fn patch(self, partial: &PartialRole) -> Self {
-        Role {
+        Self {
             name: unwrap(&partial.name, self.name),
             permissions: unwrap(&partial.permissions, self.permissions),
             colour: either(&partial.colour, self.colour),

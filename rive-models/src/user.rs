@@ -11,7 +11,7 @@ use crate::{
 };
 
 /// User's relationship with another user (or themselves)
-#[derive(Deserialize, Debug, Clone, PartialEq)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum RelationshipStatus {
     None,
     User,
@@ -40,7 +40,7 @@ pub struct Mutuals {
 }
 
 /// Presence status
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum Presence {
     /// User is online
     Online,
@@ -226,7 +226,7 @@ pub struct PartialUser {
 }
 
 /// Optional fields on user object
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum FieldsUser {
     Avatar,
     StatusText,

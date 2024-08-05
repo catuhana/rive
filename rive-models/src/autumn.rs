@@ -4,7 +4,7 @@ use serde::Deserialize;
 
 use crate::id::{marker::AttachmentMarker, Id};
 
-fn default_as_true() -> bool {
+const fn default_as_true() -> bool {
     true
 }
 

@@ -30,7 +30,7 @@ An all-in-one crate that re-exports all other crates. It also provides an object
 
 ### [`rive-models`](https://crates.io/crates/rive-models)
 
-Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from WebSocket or `data` for containing fields used in API requests.
+Models defining structures, enumerations and bitflags of all Revolt API entities. Models are split into sub-modules, for example `user` for containing types specific to the user's entity, `event` for containing events coming from `WebSocket` or `data` for containing fields used in API requests.
 
 Models can be serialized or deserialized using [`Serde`](https://serde.rs).
 
@@ -40,7 +40,7 @@ HTTP client supporting all of the Revolt REST API. It is based on [`reqwest`](ht
 
 ### [`rive-gateway`](https://crates.io/crates/rive-gateway)
 
-Implementation of Revolt's WebSocket API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
+Implementation of Revolt's `WebSocket` API. This is responsible for receiving events in real-time from Revolt and sending *some* information. It is based on [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite).
 
 It also includes a basic automatic heartbeat mechanism (server pinging to keep the connection alive). If you want more advanced features such as server latency measurement, you'll need to implement it yourself.
 

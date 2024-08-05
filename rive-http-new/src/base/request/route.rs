@@ -6,7 +6,7 @@ pub enum Route<'a> {
 }
 
 impl<'a> Route<'a> {
-    pub fn method(&self) -> &'static str {
+    pub const fn method(&self) -> &'static str {
         match self {
             Route::SendMessage { .. } => "POST",
         }

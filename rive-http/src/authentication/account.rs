@@ -109,10 +109,10 @@ impl Client {
     }
 
     /// Change the associated account email.
-    pub async fn verify_email(&self, code: impl Into<String>) -> Result<EmailVerification> {
+    pub async fn verify_email(&self, code: impl ToString + Send) -> Result<EmailVerification> {
         Ok(self
             .client
-            .post(ep!(self, "/auth/account/verify/{}", code.into()))
+            .post(ep!(self, "/auth/account/verify/{}", code.to_string()))
             .send()
             .await?
             .process_error()
