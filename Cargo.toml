@@ -9,13 +9,13 @@ members = [
     "rive-gateway",
     "rive-autumn",
     "rive-cache-inmemory",
-    "rive-standby"
+    "rive-standby",
 ]
 
 [workspace.package]
 authors = ["Rive contributors"]
 edition = "2021"
 license = "LGPL-2.1-or-later"
-repository = "https://codeberg.org/rive/rive.git"
+repository = "https://github.com/tuhana/rive"
 rust-version = "1.64"
 keywords = ["revolt", "revolt-api", "rive"]
