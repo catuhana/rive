@@ -195,7 +195,7 @@ pub struct ServerBan {
 
 /// Banned user
 ///
-/// Just enoguh user information to list bans.
+/// Just enough user information to list bans.
 #[derive(Deserialize, Debug, Clone)]
 pub struct BannedUser {
     /// Id of the banned user

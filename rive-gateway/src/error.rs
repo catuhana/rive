@@ -5,7 +5,7 @@ use std::{
     fmt::{self, Display, Formatter},
 };
 
-/// Type of [`ReceiveError`] that occured.
+/// Type of [`ReceiveError`] that occurred.
 ///
 /// [`ReceiveError`]: crate::error::ReceiveError
 #[derive(Debug)]
@@ -88,7 +88,7 @@ impl Error for ReceiveError {
     }
 }
 
-/// Type of [`SendError`] that occured.
+/// Type of [`SendError`] that occurred.
 ///
 /// [`SendError`]: crate::error::SendError
 #[derive(Debug)]

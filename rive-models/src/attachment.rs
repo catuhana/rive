@@ -54,7 +54,7 @@ pub struct Attachment {
     /// Whether this attachment was reported
     pub reported: Option<bool>,
 
-    // NOTE: Theese 3 fields will be deprecated in the next update
+    // NOTE: These 3 fields will be deprecated in the next update
     pub message_id: Option<Id<MessageMarker>>,
     pub user_id: Option<Id<UserMarker>>,
     pub server_id: Option<Id<ServerMarker>>,

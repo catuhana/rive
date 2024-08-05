@@ -30,7 +30,7 @@ impl Client {
             .await?)
     }
 
-    /// Retreive a member.
+    /// Retrieve a member.
     pub async fn fetch_member(
         &self,
         server_id: &Id<ServerMarker>,
