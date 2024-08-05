@@ -1,7 +1,7 @@
 # Rive
 
 > [!IMPORTANT]
-> This repository is a fork of official [rive](https://codeberg.org/rive/rive).
+> This repository is a fork of the official [rive](https://codeberg.org/rive/rive). This repositories goal is NOT maintaining rive further, but fixing some existing issues (like Clippy or behavioural) and dependencies for personal use.
 
 [//]: <> (DO NOT FORGET TO CHANGE THE BRANCH NAME TO main BEFORE MERGING PLEAAAASE)
 ![Rive banner](https://codeberg.org/rive/rive/raw/branch/v2/assets/rive_banner.png)
