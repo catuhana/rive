@@ -11,17 +11,17 @@ rust-version.workspace = true
 keywords.workspace = true
 
 [dependencies]
-futures = "0.3"
-http = "1"
+futures = "0.3.30"
+http = "1.1.0"
 rive-models = { path = "../rive-models", version = "1", default-features = false }
-serde_json = "1"
-tokio = { version = "1", features = ["macros", "rt", "time"] }
-tokio-websockets = { version = "0.5", features = ["client", "fastrand"] }
-tracing = "0.1"
+serde_json = "1.0.122"
+tokio = { version = "1.39.2", features = ["macros", "rt", "time"] }
+tokio-websockets = { version = "0.9", features = ["client", "fastrand"] }
+tracing = "0.1.40"
 
 [dev-dependencies]
 # this is needed for examples in docstrings to pass compilation tests
-tokio = { version = "1", features = ["rt-multi-thread"] }
+tokio = { version = "1.39.2", features = ["rt-multi-thread"] }
 
 [features]
 default = ["native-tls"]
