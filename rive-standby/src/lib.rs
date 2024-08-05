@@ -38,7 +38,7 @@ impl Standby {
     /// Wait for specific [event].
     ///
     /// [event]: rive_models::event
-    pub async fn wait_for<T>(&self, predictate: impl Fn(&T) -> bool) -> T
+    pub async fn wait_for<T>(&self, predictate: impl Fn(&T) -> bool + Send) -> T
     where
         T: StandbyEvent,
     {

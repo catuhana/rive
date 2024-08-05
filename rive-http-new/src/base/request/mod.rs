@@ -20,6 +20,6 @@ impl Request {
     }
 }
 
-pub trait TryIntoRequest {
+pub trait TryIntoRequest: Send {
     fn try_into_request(self) -> Result<Request>;
 }

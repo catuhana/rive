@@ -81,7 +81,7 @@ impl Client {
     /// Download an attachment by its tag and ID.
     pub async fn download(
         &self,
-        tag: impl ToString,
+        tag: impl ToString + Send,
         id: &Id<AttachmentMarker>,
     ) -> Result<impl AsyncRead> {
         let response = self
@@ -111,8 +111,8 @@ impl Client {
     /// Upload an attachment.
     pub async fn upload(
         &self,
-        tag: impl ToString,
-        filename: impl ToString,
+        tag: impl ToString + Send,
+        filename: impl ToString + Send,
         contents: impl AsyncRead + Send + Sync + 'static,
     ) -> Result<UploadData> {
         let stream = FramedRead::new(contents, BytesCodec::new());

@@ -16,7 +16,7 @@ use rive_models::{authentication::Authentication, error::ApiError};
 
 type Result<T> = std::result::Result<T, Error>;
 
-pub(crate) mod prelude {
+pub mod prelude {
     pub(crate) use crate::{ep, Client, RequestBuilderExt, ResponseExt, Result};
 }
 

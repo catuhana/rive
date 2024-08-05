@@ -1,4 +1,4 @@
-use std::{env, error::Error, sync::Arc, vec};
+use std::{env, error::Error, sync::Arc};
 
 use rive_models::{authentication::Authentication, event::ServerEvent};
 use tracing::Level;
